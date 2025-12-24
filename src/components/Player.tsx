@@ -19,5 +19,12 @@ export const Player = () => {
     }
   });
 
-  return <BVHEcctrl position={[0, 0.8, 0]} debug={false} paused={paused} delay={0.5} />;
+  return (
+    <BVHEcctrl
+      position={[0, 0.8, 5]}
+      debug={false}
+      paused={paused}
+      delay={0.5}
+    />
+  );
 };

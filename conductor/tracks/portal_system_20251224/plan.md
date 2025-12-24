@@ -1,7 +1,7 @@
 # Plan - Portal System
 
 ## Phase 1: Foundation & State
-- [ ] Task: Define the `useWorldStore` in `src/store/` to manage portal state (URL, loadingStatus, isUIVisible).
+- [x] Task: Define the `useWorldStore` in `src/store/` to manage portal state (URL, loadingStatus, isUIVisible).
 - [ ] Task: Create a basic `Portal` component in `src/components/` that renders a sphere.
 - [ ] Task: Implement the `PortalUI` 2D component with the URL input field.
 

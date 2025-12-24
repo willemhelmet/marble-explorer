@@ -5,6 +5,7 @@ import { SparkRenderer } from "./SparkRenderer.ts";
 import { Player } from "./components/Player.tsx";
 import { Splat } from "./components/Splat.tsx";
 import { FloorCollider } from "./components/FloorCollider.tsx";
+import { Portal } from "./components/Portal.tsx";
 
 export const Scene = () => {
   const renderer = useThree((state) => state.gl);
@@ -21,6 +22,7 @@ export const Scene = () => {
       <SparkRenderer args={[sparkRendererArgs]}>
         <Splat />
       </SparkRenderer>
+      <Portal position={[0, 1, -3]} />
     </>
   );
 };
