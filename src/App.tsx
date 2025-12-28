@@ -9,8 +9,10 @@ import {
 import { Scene } from "./Scene.tsx";
 import { MainMenu } from "./components/ui/MainMenu.tsx";
 import { PauseMenu } from "./components/ui/PauseMenu.tsx";
+import { PortalUI } from "./components/ui/PortalUI.tsx";
 import { useMyStore } from "./store/store.ts";
 import { MobileControls } from "./components/MobileControls.tsx";
+import { ControlsManager } from "./components/ControlsManager.tsx";
 
 function App() {
   const isMobile = useMyStore((state) => state.isMobile);
@@ -25,13 +27,16 @@ function App() {
   };
 
   const handleLock = () => {
-    resume();
+    if (status === "paused") {
+      resume();
+    }
   };
 
   return (
     <>
       {status === "intro" && <MainMenu />}
       {status === "paused" && <PauseMenu />}
+      {status === "portal_open" && <PortalUI />}
 
       <div className="flex h-screen w-screen">
         <KeyboardControls
@@ -53,11 +58,13 @@ function App() {
             }}
           >
             <Scene />
+            <ControlsManager />
             {!isMobile && (
               <PointerLockControls
                 selector="#playButton"
                 onUnlock={handleUnlock}
                 onLock={handleLock}
+                makeDefault
               />
             )}
             {isMobile && <CameraControls smoothTime={0} />}

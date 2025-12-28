@@ -1,6 +1,11 @@
 import { type StateCreator } from "zustand";
 
-export type PortalStatus = "idle" | "fetching" | "initializing" | "ready" | "error";
+export type PortalStatus =
+  | "idle"
+  | "fetching"
+  | "initializing"
+  | "ready"
+  | "error";
 
 export interface WorldAssets {
   splatUrl: string;
@@ -14,8 +19,6 @@ export interface PortalSlice {
   portalUrl: string;
   /** Current state of the portal and API interaction */
   portalStatus: PortalStatus;
-  /** Controls the visibility of the 2D URL input overlay */
-  isPortalUIVisible: boolean;
   /** The downloaded asset URLs from the Marble API */
   assets: WorldAssets | null;
   /** Error message to display if the API call or loading fails */
@@ -26,7 +29,6 @@ export interface PortalSlice {
   // --- Actions ---
   setPortalUrl: (url: string) => void;
   setPortalStatus: (status: PortalStatus) => void;
-  setPortalUIVisible: (visible: boolean) => void;
   setAssets: (assets: WorldAssets | null) => void;
   setError: (error: string | null) => void;
   setIsPlayerInside: (isInside: boolean) => void;
@@ -43,7 +45,6 @@ export const createPortalSlice: StateCreator<
   // Initial State
   portalUrl: "",
   portalStatus: "idle",
-  isPortalUIVisible: false,
   assets: null,
   error: null,
   isPlayerInside: false,
@@ -51,7 +52,6 @@ export const createPortalSlice: StateCreator<
   // Actions
   setPortalUrl: (url) => set({ portalUrl: url }),
   setPortalStatus: (status) => set({ portalStatus: status }),
-  setPortalUIVisible: (visible) => set({ isPortalUIVisible: visible }),
   setAssets: (assets) => set({ assets, portalStatus: assets ? "ready" : "idle" }),
   setError: (error) => set({ error, portalStatus: "error" }),
   setIsPlayerInside: (isInside) => set({ isPlayerInside: isInside }),
@@ -63,3 +63,4 @@ export const createPortalSlice: StateCreator<
     isPlayerInside: false
   }),
 });
+

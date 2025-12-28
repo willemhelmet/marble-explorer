@@ -1,6 +1,6 @@
 import { type StateCreator } from "zustand";
 
-export type GameStatus = "intro" | "playing" | "paused";
+export type GameStatus = "intro" | "playing" | "paused" | "portal_open";
 
 export interface GameSlice {
   status: GameStatus;
@@ -8,6 +8,8 @@ export interface GameSlice {
   start: () => void;
   pause: () => void;
   resume: () => void;
+  openPortalUI: () => void;
+  closePortalUI: () => void;
 }
 
 export const createGameSlice: StateCreator<
@@ -21,4 +23,6 @@ export const createGameSlice: StateCreator<
   start: () => set(() => ({ status: "playing" })),
   pause: () => set(() => ({ status: "paused" })),
   resume: () => set(() => ({ status: "playing" })),
+  openPortalUI: () => set(() => ({ status: "portal_open" })),
+  closePortalUI: () => set(() => ({ status: "playing" })),
 });

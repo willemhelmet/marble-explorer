@@ -1,17 +1,30 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { SplatMesh } from "@sparkjsdev/spark";
+import { useMyStore } from "../store/store";
 
 export const Splat = () => {
-  const splat = useMemo(() => {
-    // Assets are resolved relative to the base URL
-    const baseUrl = import.meta.env.BASE_URL;
-    const splatUrl = baseUrl + "PUT_FILENAME_HERE";
+  const assets = useMyStore((state) => state.assets);
+  const [splat, setSplat] = useState<SplatMesh | null>(null);
+
+  useEffect(() => {
+    if (!assets?.splatUrl) {
+      setSplat(null);
+      return;
+    }
 
     const splatMesh = new SplatMesh({
-      url: splatUrl,
+      url: assets.splatUrl,
     });
-    return splatMesh;
-  }, []);
+    setSplat(splatMesh);
+
+    return () => {
+      // Basic Three.js cleanup
+      splatMesh.geometry.dispose();
+      (splatMesh.material as any).dispose();
+    };
+  }, [assets?.splatUrl]);
+
+  if (!splat) return null;
 
   return (
     <>
