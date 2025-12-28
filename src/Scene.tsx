@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import { Grid } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer.ts";
 import { Player } from "./components/Player.tsx";
-// import { Splat } from "./components/Splat.tsx";
+import { Splat } from "./components/Splat.tsx";
 import { FloorCollider } from "./components/FloorCollider.tsx";
 import { Portal } from "./components/Portal.tsx";
 import { WorldCollider } from "./components/WorldCollider.tsx";
@@ -35,7 +35,7 @@ export const Scene = () => {
 
       {/* Loaded World Assets */}
       <SparkRenderer args={[sparkRendererArgs]}>
-        {/* <Splat /> */}
+        <Splat />
       </SparkRenderer>
       <WorldCollider />
     </>

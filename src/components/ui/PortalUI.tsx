@@ -39,9 +39,11 @@ export const PortalUI = () => {
     try {
       const assets = await fetchWorldAssets(portalUrl);
       setAssets(assets); // This also sets status to 'ready'
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Portal Error:", err);
-      setError(err.message || "Failed to fetch world assets");
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to fetch world assets";
+      setError(errorMessage);
     }
   };
 

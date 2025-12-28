@@ -1,15 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Sphere, Text } from "@react-three/drei";
 import { useMyStore } from "../store/store";
-import { useFrame, useThree, type GroupProps } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
 
-export const Portal = (props: GroupProps) => {
-  const {
-    portalStatus,
-    openPortalUI,
-    setIsPlayerInside,
-  } = useMyStore();
+export const Portal = (props: ThreeElements["group"]) => {
+  const { portalStatus, openPortalUI, setIsPlayerInside } = useMyStore();
 
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
@@ -69,7 +65,7 @@ export const Portal = (props: GroupProps) => {
     };
   }, [hovered]);
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent click from passing through
     openPortalUI();
   };

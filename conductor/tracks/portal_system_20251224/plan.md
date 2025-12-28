@@ -15,4 +15,4 @@
 - [x] Task: Implement cleanup logic to ensure assets are disposed of when a new URL is loaded.
 
 ## Phase 4: Verification
-- [ ] Task: Conductor - User Manual Verification 'Portal System' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Portal System' (Protocol in workflow.md)
