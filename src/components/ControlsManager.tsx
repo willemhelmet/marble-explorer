@@ -1,9 +1,10 @@
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { useMyStore } from "../store/store";
+import type { PointerLockControls } from "three/examples/jsm/Addons.js";
 
 export const ControlsManager = () => {
-  const controls = useThree((state) => state.controls) as any; // Cast to any because standard OrbitControls might not have lock/unlock types inferred correctly if mixed
+  const controls = useThree((state) => state.controls) as PointerLockControls | null;
   const status = useMyStore((state) => state.status);
 
   useEffect(() => {
