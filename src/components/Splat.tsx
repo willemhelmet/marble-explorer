@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from "react";
 import { SplatMesh } from "@sparkjsdev/spark";
 import { useMyStore } from "../store/store";
+import { type ThreeElements } from "@react-three/fiber";
 
-export const Splat = () => {
+export const Splat = (props: ThreeElements["group"]) => {
   const assets = useMyStore((state) => state.assets);
   const splatUrl = assets?.splatUrl;
 
@@ -25,6 +26,9 @@ export const Splat = () => {
 
   if (!splat) return null;
 
-  return <primitive rotation={[Math.PI, 0, 0]} object={splat} />;
+  return (
+    <group {...props}>
+      <primitive rotation={[Math.PI, 0, 0]} object={splat} />;
+    </group>
+  );
 };
-

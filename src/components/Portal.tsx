@@ -1,13 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Sphere, Text } from "@react-three/drei";
 import { useMyStore } from "../store/store";
 import { useFrame, useThree, type ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
 
 export const Portal = (props: ThreeElements["group"]) => {
-  const { portalStatus, openPortalUI, setIsPlayerInside } = useMyStore();
+  const {
+    portalStatus,
+    openPortalUI,
+    setIsPlayerInside,
+    isHovered,
+    setIsHovered,
+  } = useMyStore();
 
-  const [hovered, setHovered] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
 
@@ -59,11 +64,11 @@ export const Portal = (props: ThreeElements["group"]) => {
 
   // Cursor handling
   useEffect(() => {
-    document.body.style.cursor = hovered ? "pointer" : "auto";
+    document.body.style.cursor = isHovered ? "pointer" : "auto";
     return () => {
       document.body.style.cursor = "auto";
     };
-  }, [hovered]);
+  }, [isHovered]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent click from passing through
@@ -89,13 +94,13 @@ export const Portal = (props: ThreeElements["group"]) => {
       <Sphere
         args={[1, 8, 8]}
         onClick={handleClick}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
+        onPointerOver={() => setIsHovered(true)}
+        onPointerOut={() => setIsHovered(false)}
       >
         <meshStandardMaterial
           color={getStatusColor()}
           emissive={getStatusColor()}
-          emissiveIntensity={hovered ? 0.8 : 0.5}
+          emissiveIntensity={isHovered ? 0.8 : 0.5}
           roughness={0.2}
           metalness={0.8}
           wireframe={portalStatus === "idle" || portalStatus === "fetching"}

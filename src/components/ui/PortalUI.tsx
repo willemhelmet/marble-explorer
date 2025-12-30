@@ -69,7 +69,6 @@ export const PortalUI = () => {
             <input
               id="marble-url"
               type="text"
-              autoFocus
               value={portalUrl}
               onChange={(e) => setPortalUrl(e.target.value)}
               placeholder="https://marble.worldlabs.ai/world/..."

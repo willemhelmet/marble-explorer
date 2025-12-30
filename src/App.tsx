@@ -46,6 +46,7 @@ function App() {
             { name: "leftward", keys: ["ArrowLeft", "KeyA"] },
             { name: "rightward", keys: ["ArrowRight", "KeyD"] },
             { name: "pause", keys: ["Escape"] },
+            { name: "create_portal", keys: ["p"] },
           ]}
         >
           {isMobile && status === "playing" && <MobileControls />}

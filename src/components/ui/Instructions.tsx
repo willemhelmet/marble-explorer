@@ -13,6 +13,9 @@ export const Instructions = ({ isMobile }: { isMobile: boolean }) => (
         <li>
           <span className="font-bold">Esc</span> to Pause
         </li>
+        <li>
+          <span className="font-bold">P</span> to Create a Portal
+        </li>
       </ul>
     )}
   </div>
