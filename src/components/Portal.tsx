@@ -26,6 +26,7 @@ export const Portal = (props: ThreeElements["group"]) => {
       // If player is inside the sphere (radius 1 + buffer)
       if (distance < 1.2) {
         setIsPlayerInside(true);
+        setIsHovered(false);
       }
     }
   });

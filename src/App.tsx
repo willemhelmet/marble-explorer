@@ -11,7 +11,7 @@ import { MainMenu } from "./components/ui/MainMenu.tsx";
 import { PauseMenu } from "./components/ui/PauseMenu.tsx";
 import { PortalUI } from "./components/ui/PortalUI.tsx";
 import { useMyStore } from "./store/store.ts";
-import { MobileControls } from "./components/MobileControls.tsx";
+import { MobileControls } from "./components/ui/MobileControls.tsx";
 import { ControlsManager } from "./components/ControlsManager.tsx";
 
 function App() {

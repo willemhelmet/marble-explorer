@@ -78,6 +78,7 @@ export const Crosshair = ({ visible }: CrosshairProps) => {
           fragmentShader={fragmentShader}
           transparent={true}
           depthTest={false}
+          depthWrite={false}
         />
       </Plane>
     </ScreenSpace>

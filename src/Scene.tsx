@@ -3,13 +3,12 @@ import { useThree } from "@react-three/fiber";
 import { Grid /*useKeyboardControls*/ } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer.ts";
 import { Player } from "./components/Player.tsx";
-import { Splat } from "./components/Splat.tsx";
 import { FloorCollider } from "./components/FloorCollider.tsx";
 import { Portal } from "./components/Portal.tsx";
-import { WorldCollider } from "./components/WorldCollider.tsx";
 import { useMyStore } from "./store/store.ts";
 // import { characterStatus } from "bvhecctrl";
 import { Crosshair } from "./components/ui/Crosshair.tsx";
+import { World } from "./components/marble/World.tsx";
 
 export const Scene = () => {
   const renderer = useThree((state) => state.gl);
@@ -35,25 +34,33 @@ export const Scene = () => {
 
   return (
     <>
+      <ambientLight intensity={10} />
+      <directionalLight intensity={10} position={[1, 1, 1]} />
+
       <color attach="background" args={[0, 0, 0]} />
       {/* Lobby Environment */}
       {!isPlayerInside && (
         <>
           <axesHelper />
           <Grid infiniteGrid={true} sectionColor={"#bbb"} cellColor={"#444"} />
-          <FloorCollider />
           <Portal position={portalPos} />
         </>
       )}
 
       <Player />
       <Crosshair visible={status === "playing" && isHovered} />
+      <FloorCollider />
 
       {/* Loaded World Assets */}
       <SparkRenderer args={[sparkRendererArgs]}>
-        <Splat position={portalPos} />
+        {isPlayerInside && (
+          <World
+            position={portalPos}
+            rotation={[Math.PI, 0, 0]}
+            scale={[2, 2, 2]}
+          />
+        )}
       </SparkRenderer>
-      <WorldCollider />
     </>
   );
 };
