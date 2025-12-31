@@ -6,3 +6,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## [ ] Track: Implement the core "Portal" system, including the 3D sphere trigger, the URL input UI, and the basic API fetching logic to retrieve world assets.
 *Link: [./conductor/tracks/portal_system_20251224/](./conductor/tracks/portal_system_20251224/)*
+
+---
+
+## [ ] Track: Transition to a dynamic, multi-portal architecture with a World Registry (mock server) allowing users to create and navigate between multiple worlds/portals.
+*Link: [./conductor/tracks/multi_portal_system_20251230/](./conductor/tracks/multi_portal_system_20251230/)*
