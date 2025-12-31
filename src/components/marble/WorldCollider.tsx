@@ -1,27 +1,17 @@
 import { useMyStore } from "../../store/store";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Bvh } from "@react-three/drei";
 import { StaticCollider } from "bvhecctrl";
 import { useEffect, useMemo } from "react";
-import { Mesh, MeshBasicMaterial } from "three";
+import { type ThreeElements } from "@react-three/fiber";
 
-const LoadedCollider = ({ url }: { url: string }) => {
+const LoadedCollider = ({
+  url,
+  ...props
+}: { url: string } & ThreeElements["group"]) => {
   const { scene } = useGLTF(url);
 
   const clonedScene = useMemo(() => {
-    const clone = scene.clone();
-    const invisibleMaterial = new MeshBasicMaterial({
-      transparent: true,
-      opacity: 0,
-      depthWrite: false,
-    });
-
-    clone.traverse((child) => {
-      if ((child as Mesh).isMesh) {
-        (child as Mesh).material = invisibleMaterial;
-      }
-    });
-
-    return clone;
+    return scene.clone();
   }, [scene]);
 
   useEffect(() => {
@@ -32,16 +22,20 @@ const LoadedCollider = ({ url }: { url: string }) => {
   }, [url]);
 
   return (
-    <StaticCollider>
-      <primitive object={clonedScene} />
-    </StaticCollider>
+    <group {...props}>
+      <StaticCollider key={url}>
+        <Bvh firstHitOnly>
+          <primitive object={clonedScene} visible={false} />
+        </Bvh>
+      </StaticCollider>
+    </group>
   );
 };
 
-export const WorldCollider = () => {
+export const WorldCollider = (props: ThreeElements["group"]) => {
   const assets = useMyStore((state) => state.assets);
 
   if (!assets?.meshUrl) return null;
 
-  return <LoadedCollider url={assets.meshUrl} />;
+  return <LoadedCollider url={assets.meshUrl} {...props} />;
 };
