@@ -25,18 +25,18 @@ _Refactor Scene to render portals from the Registry._
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Portal
       Components' (Protocol in workflow.md) a4e1113
 
-## Phase 3: Portal Creation Workflow
+## Phase 3: Portal Creation Workflow [checkpoint: df4602e]
 
 _Implement the "Spawn Empty -> Edit" workflow._
 
-- [ ] Task: Implement 'P' key listener: Spawns a new `Portal` entry in the
-      current world with `url: null` (Empty/Wireframe) at player position.
-- [ ] Task: Update `Portal.tsx` click handler: If portal is empty (or clicked)
-      open `PortalUI` focused on _this_ portal instance.
-- [ ] Task: Update `PortalUI.tsx` to save the URL to the specific portal ID in
-      the store upon confirmation.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Portal Creation
-      Workflow' (Protocol in workflow.md)
+- [x] Task: Implement 'P' key listener: Spawns a new `Portal` entry in the
+      current world with `url: null` (Empty/Wireframe) at player position. df4602e
+- [x] Task: Update `Portal.tsx` click handler: If portal is empty (or clicked)
+      open `PortalUI` focused on _this_ portal instance. df4602e
+- [x] Task: Update `PortalUI.tsx` to save the URL to the specific portal ID in
+      the store upon confirmation. df4602e
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Portal Creation
+      Workflow' (Protocol in workflow.md) df4602e
 
 ## Phase 4: World Transition (Scene Swap)
 
