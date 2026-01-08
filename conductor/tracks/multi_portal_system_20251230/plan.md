@@ -22,7 +22,7 @@ _Refactor Scene to render portals from the Registry._
       specific data and render as "Wireframe" if URL is missing. 5143eec
 - [x] Task: Map over `currentWorld.portals` in `Scene.tsx` to render
       `<Portal />` instances. 5143eec
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Portal
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Portal
       Components' (Protocol in workflow.md)
 
 ## Phase 3: Portal Creation Workflow
