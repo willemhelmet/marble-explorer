@@ -51,8 +51,7 @@ export const Scene = () => {
 
   return (
     <>
-      <ambientLight intensity={10} />
-      <directionalLight intensity={10} position={[1, 1, 1]} />
+      <ambientLight intensity={1} />
 
       {/*WHP: Doesn't work anymore while BVH is active???*/}
       <color attach="background" args={[0, 0, 0]} />

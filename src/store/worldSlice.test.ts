@@ -56,4 +56,15 @@ describe("worldSlice", () => {
     const state = useStore.getState();
     expect(state.currentWorldId).toBe("world-a");
   });
+
+  it("should set and clear the editing portal", () => {
+    useStore.getState().setEditingPortal("hub", "p1");
+    let state = useStore.getState();
+    expect(state.editingPortal).toEqual({ worldId: "hub", portalId: "p1" });
+
+    useStore.getState().setEditingPortal(null, null);
+    state = useStore.getState();
+    expect(state.editingPortal).toBeNull();
+  });
 });
+
