@@ -4,6 +4,10 @@ import { useMyStore } from "../store/store";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { type Portal as PortalType } from "../store/worldSlice";
+import {
+  fetchWorldAssets,
+  extractWorldIdFromUrl,
+} from "../services/apiService";
 
 export const Portal = ({ portal }: { portal: PortalType }) => {
   const {
@@ -12,9 +16,12 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     setIsHovered: setGlobalHover,
     currentWorldId,
     setEditingPortal,
+    switchWorld,
+    setAssets,
   } = useMyStore();
 
   const [isHovered, setIsHovered] = useState(false);
+  const isTransitioning = useRef(false);
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
 
@@ -24,16 +31,50 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     else setGlobalHover(false);
   }, [isHovered, setGlobalHover]);
 
+  const handleNavigation = async () => {
+    if (!portal.url) return;
+
+    if (portal.url === "hub") {
+      // Returning to the initial lobby
+      switchWorld("hub");
+      setIsPlayerInside(false);
+      setAssets(null);
+    } else {
+      // Traveling to a dynamic world
+      const targetWorldId = extractWorldIdFromUrl(portal.url);
+      if (targetWorldId) {
+        switchWorld(targetWorldId);
+        setIsPlayerInside(true);
+
+        // Ensure assets are loaded for this specific destination
+        try {
+          const assets = await fetchWorldAssets(portal.url);
+          setAssets(assets);
+        } catch (err) {
+          console.error("Auto-navigation fetch error:", err);
+        }
+      }
+    }
+
+    // Guard against immediate re-trigger
+    setTimeout(() => {
+      isTransitioning.current = false;
+    }, 1500);
+  };
+
   // Check for player entry
   useFrame(() => {
-    if (portal.status === "ready" && groupRef.current) {
+    if (isTransitioning.current) return;
+
+    if (portal.status === "ready" && portal.url && groupRef.current) {
       const portalPos = new THREE.Vector3();
       groupRef.current.getWorldPosition(portalPos);
       const distance = camera.position.distanceTo(portalPos);
 
       // If player is inside the sphere (radius 1 + buffer)
       if (distance < 1.2) {
-        setIsPlayerInside(true);
+        isTransitioning.current = true;
+        handleNavigation();
         setIsHovered(false);
       }
     }

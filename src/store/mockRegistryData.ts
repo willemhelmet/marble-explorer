@@ -25,8 +25,8 @@ export const mockRegistry: Registry = {
       {
         id: "portal-back-hub",
         position: new Vector3(0, 1, 4),
-        url: "https://marble.worldlabs.ai/world/34db2e21-4ee7-495c-a485-7b7d61ef8c75", // Hub
-        status: "idle",
+        url: "hub",
+        status: "ready",
       },
     ],
   },
@@ -36,8 +36,8 @@ export const mockRegistry: Registry = {
       {
         id: "portal-back-hub",
         position: new Vector3(0, 1, 4),
-        url: "https://marble.worldlabs.ai/world/34db2e21-4ee7-495c-a485-7b7d61ef8c75", // Hub
-        status: "idle",
+        url: "hub",
+        status: "ready",
       },
     ],
   },
