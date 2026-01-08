@@ -50,11 +50,11 @@ _Implement the navigation logic between Registry entries._
 - [x] Task: Conductor - User Manual Verification 'Phase 4: World Transition'
       (Protocol in workflow.md) 068a76c
 
-## Phase 5: Cleanup & Polish
+## Phase 5: Cleanup & Polish [checkpoint: cf9a79d]
 
 _Remove legacy single-portal code._
 
-- [ ] Task: Remove obsolete single-portal state from `portalSlice.ts`.
-- [ ] Task: Verify no regressions in Lobby rendering.
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Cleanup & Polish'
-      (Protocol in workflow.md)
+- [x] Task: Remove obsolete single-portal state from `portalSlice.ts`. cf9a79d
+- [x] Task: Verify no regressions in Lobby rendering. cf9a79d
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Cleanup & Polish'
+      (Protocol in workflow.md) cf9a79d
