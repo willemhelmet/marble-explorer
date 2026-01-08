@@ -1,6 +1,6 @@
 # Plan: Multi-Portal System & World Registry
 
-## Phase 1: Data Architecture & World Slice
+## Phase 1: Data Architecture & World Slice [checkpoint: 3c85c03]
 
 _Establish the World Registry with dummy data for testing._
 
@@ -10,8 +10,8 @@ _Establish the World Registry with dummy data for testing._
       A, World B) and import it as the initial state. d84b188
 - [x] Task: Implement actions: `addPortal(worldId, portal)`,
       `updatePortal(worldId, portalId, data)`, and `switchWorld(worldId)`. d84b188
-- [~] Task: Conductor - User Manual Verification 'Phase 1: Data Architecture'
-      (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Data Architecture'
+      (Protocol in workflow.md) 3c85c03
 
 ## Phase 2: Dynamic Portal Components
 
