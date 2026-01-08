@@ -4,12 +4,12 @@
 
 _Establish the World Registry with dummy data for testing._
 
-- [ ] Task: Create `store/worldSlice.ts` to manage `worldRegistry` and `currentWorldId`.
-- [ ] Task: Define types: `Portal` (id, position, url, status) and `Registry`.
-- [ ] Task: Create a `mockRegistryData.ts` file with seed data (Hub world, World
-      A, World B) and import it as the initial state.
-- [ ] Task: Implement actions: `addPortal(worldId, portal)`,
-      `updatePortal(worldId, portalId, data)`, and `switchWorld(worldId)`.
+- [x] Task: Create `store/worldSlice.ts` to manage `worldRegistry` and `currentWorldId`. d84b188
+- [x] Task: Define types: `Portal` (id, position, url, status) and `Registry`. d84b188
+- [x] Task: Create a `mockRegistryData.ts` file with seed data (Hub world, World
+      A, World B) and import it as the initial state. d84b188
+- [x] Task: Implement actions: `addPortal(worldId, portal)`,
+      `updatePortal(worldId, portalId, data)`, and `switchWorld(worldId)`. d84b188
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Data Architecture'
       (Protocol in workflow.md)
 
