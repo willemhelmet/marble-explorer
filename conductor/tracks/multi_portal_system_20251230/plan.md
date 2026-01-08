@@ -17,11 +17,11 @@ _Establish the World Registry with dummy data for testing._
 
 _Refactor Scene to render portals from the Registry._
 
-- [ ] Task: Update `src/Scene.tsx` to subscribe to `worldSlice`.
-- [ ] Task: Refactor `src/components/Portal.tsx` to accept props for its
-      specific data and render as "Wireframe" if URL is missing.
-- [ ] Task: Map over `currentWorld.portals` in `Scene.tsx` to render
-      `<Portal />` instances.
+- [x] Task: Update `src/Scene.tsx` to subscribe to `worldSlice`. 5143eec
+- [x] Task: Refactor `src/components/Portal.tsx` to accept props for its
+      specific data and render as "Wireframe" if URL is missing. 5143eec
+- [x] Task: Map over `currentWorld.portals` in `Scene.tsx` to render
+      `<Portal />` instances. 5143eec
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Portal
       Components' (Protocol in workflow.md)
 
