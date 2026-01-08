@@ -1,0 +1,7 @@
+{
+  "track_id": "hub_refactor_20260104",
+  "title": "Refactor Hub to World System",
+  "description": "Unified scene architecture treating the Hub as a standard world entity and parenting all world assets (geometry, colliders, portals) to a common World Anchor container.",
+  "status": "todo",
+  "created_at": "2026-01-04"
+}
