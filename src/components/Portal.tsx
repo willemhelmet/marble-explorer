@@ -10,6 +10,8 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     openPortalUI,
     setIsPlayerInside,
     setIsHovered: setGlobalHover,
+    currentWorldId,
+    setEditingPortal,
   } = useMyStore();
 
   const [isHovered, setIsHovered] = useState(false);
@@ -79,6 +81,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
   const handleClick = (e: any) => {
     e.stopPropagation(); // Prevent click from passing through
+    setEditingPortal(currentWorldId, portal.id);
     openPortalUI();
   };
 

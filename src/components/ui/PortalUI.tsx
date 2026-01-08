@@ -7,10 +7,12 @@ export const PortalUI = () => {
     portalUrl,
     setPortalUrl,
     closePortalUI,
-    setPortalStatus,
     setAssets,
     setError,
-    pause, // Add this
+    pause,
+    editingPortal,
+    updatePortal,
+    setEditingPortal,
   } = useMyStore();
 
   useEffect(() => {
@@ -29,25 +31,38 @@ export const PortalUI = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!portalUrl.trim()) return;
+    if (!portalUrl.trim() || !editingPortal) return;
 
-    // Start the fetching process
-    setPortalStatus("fetching");
-    closePortalUI(); // Hide UI immediately so user sees the portal update
+    const { worldId, portalId } = editingPortal;
+
+    // Start the fetching process for this specific portal
+    updatePortal(worldId, portalId, {
+      url: portalUrl,
+      status: "fetching",
+    });
+
+    closePortalUI(); // Hide UI immediately
     setError(null); // Clear previous errors
 
     try {
       const assets = await fetchWorldAssets(portalUrl);
-      setAssets(assets); // This also sets status to 'ready'
+      // Update the specific portal in the registry
+      updatePortal(worldId, portalId, { status: "ready" });
+      // Update global assets for the scene to render
+      setAssets(assets);
+      // Clear editing state
+      setEditingPortal(null, null);
     } catch (err: unknown) {
       console.error("Portal Error:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to fetch world assets";
       setError(errorMessage);
+      updatePortal(worldId, portalId, { status: "error" });
     }
   };
 
   const handleCancel = () => {
+    setEditingPortal(null, null);
     closePortalUI();
   };
 

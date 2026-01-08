@@ -1,12 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
-import { Grid /*useKeyboardControls*/ } from "@react-three/drei";
+import { Grid, useKeyboardControls } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer.ts";
 import { Player } from "./components/Player.tsx";
 import { FloorCollider } from "./components/FloorCollider.tsx";
 import { Portal } from "./components/Portal.tsx";
 import { useMyStore } from "./store/store.ts";
-// import { characterStatus } from "bvhecctrl";
+import { characterStatus } from "bvhecctrl";
 import { Crosshair } from "./components/ui/Crosshair.tsx";
 import { World } from "./components/marble/World.tsx";
 import { WorldCollider } from "./components/marble/WorldCollider.tsx";
@@ -22,7 +22,28 @@ export const Scene = () => {
 
   const worldRegistry = useMyStore((state) => state.worldRegistry);
   const currentWorldId = useMyStore((state) => state.currentWorldId);
+  const addPortal = useMyStore((state) => state.addPortal);
   const currentWorld = worldRegistry[currentWorldId];
+
+  const [subscribeKeys] = useKeyboardControls();
+
+  useEffect(() => {
+    return subscribeKeys(
+      (state) => state.create_portal,
+      (pressed) => {
+        if (pressed && status === "playing") {
+          const newPortal = {
+            id: `portal-${Date.now()}`,
+            position: characterStatus.position.clone(),
+            url: null,
+            status: "idle" as const,
+          };
+          addPortal(currentWorldId, newPortal);
+          console.log("Portal spawned at", characterStatus.position);
+        }
+      },
+    );
+  }, [subscribeKeys, status, currentWorldId, addPortal]);
 
   const sparkRendererArgs = useMemo(() => {
     return { renderer, maxStdDev: Math.sqrt(5) };
