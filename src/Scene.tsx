@@ -23,6 +23,8 @@ export const Scene = () => {
   const worldRegistry = useMyStore((state) => state.worldRegistry);
   const currentWorldId = useMyStore((state) => state.currentWorldId);
   const addPortal = useMyStore((state) => state.addPortal);
+  const openPortalUI = useMyStore((state) => state.openPortalUI);
+  const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const currentWorld = worldRegistry[currentWorldId];
 
   const [subscribeKeys] = useKeyboardControls();
@@ -39,11 +41,20 @@ export const Scene = () => {
             status: "idle" as const,
           };
           addPortal(currentWorldId, newPortal);
+          setEditingPortal(currentWorldId, newPortal.id);
+          openPortalUI();
           console.log("Portal spawned at", characterStatus.position);
         }
       },
     );
-  }, [subscribeKeys, status, currentWorldId, addPortal]);
+  }, [
+    subscribeKeys,
+    status,
+    currentWorldId,
+    addPortal,
+    setEditingPortal,
+    openPortalUI,
+  ]);
 
   const sparkRendererArgs = useMemo(() => {
     return { renderer, maxStdDev: Math.sqrt(5) };
@@ -51,7 +62,8 @@ export const Scene = () => {
 
   return (
     <>
-      <ambientLight intensity={1} />
+      <ambientLight intensity={10} />
+      <directionalLight intensity={10} position={[1, 1, 1]} />
 
       {/*WHP: Doesn't work anymore while BVH is active???*/}
       <color attach="background" args={[0, 0, 0]} />
