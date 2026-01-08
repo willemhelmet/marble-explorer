@@ -1,24 +1,30 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Sphere, Text } from "@react-three/drei";
 import { useMyStore } from "../store/store";
-import { useFrame, useThree, type ThreeElements } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { type Portal as PortalType } from "../store/worldSlice";
 
-export const Portal = (props: ThreeElements["group"]) => {
+export const Portal = ({ portal }: { portal: PortalType }) => {
   const {
-    portalStatus,
     openPortalUI,
     setIsPlayerInside,
-    isHovered,
-    setIsHovered,
+    setIsHovered: setGlobalHover,
   } = useMyStore();
 
+  const [isHovered, setIsHovered] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
 
+  // Sync global hover for crosshair
+  useEffect(() => {
+    if (isHovered) setGlobalHover(true);
+    else setGlobalHover(false);
+  }, [isHovered, setGlobalHover]);
+
   // Check for player entry
   useFrame(() => {
-    if (portalStatus === "ready" && groupRef.current) {
+    if (portal.status === "ready" && groupRef.current) {
       const portalPos = new THREE.Vector3();
       groupRef.current.getWorldPosition(portalPos);
       const distance = camera.position.distanceTo(portalPos);
@@ -31,9 +37,9 @@ export const Portal = (props: ThreeElements["group"]) => {
     }
   });
 
-  // Visual state based on portalStatus
+  // Visual state based on portal.status
   const getStatusColor = () => {
-    switch (portalStatus) {
+    switch (portal.status) {
       case "fetching":
       case "initializing":
         return "#3b82f6"; // Blue-500
@@ -48,7 +54,7 @@ export const Portal = (props: ThreeElements["group"]) => {
   };
 
   const getStatusText = () => {
-    switch (portalStatus) {
+    switch (portal.status) {
       case "fetching":
         return "FETCHING...";
       case "initializing":
@@ -59,7 +65,7 @@ export const Portal = (props: ThreeElements["group"]) => {
         return "ERROR";
       case "idle":
       default:
-        return "OPEN PORTAL";
+        return portal.url ? "OPEN PORTAL" : "EMPTY PORTAL";
     }
   };
 
@@ -71,13 +77,13 @@ export const Portal = (props: ThreeElements["group"]) => {
     };
   }, [isHovered]);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: any) => {
     e.stopPropagation(); // Prevent click from passing through
     openPortalUI();
   };
 
   return (
-    <group {...props} ref={groupRef}>
+    <group position={portal.position} ref={groupRef}>
       {/* Floating Status Text */}
       <Text
         position={[0, 1.5, 0]}
@@ -104,7 +110,7 @@ export const Portal = (props: ThreeElements["group"]) => {
           emissiveIntensity={isHovered ? 0.8 : 0.5}
           roughness={0.2}
           metalness={0.8}
-          wireframe={portalStatus === "idle" || portalStatus === "fetching"}
+          wireframe={portal.url === null || portal.status === "fetching"}
         />
       </Sphere>
 

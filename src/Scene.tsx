@@ -20,19 +20,13 @@ export const Scene = () => {
   const isHovered = useMyStore((state) => state.isHovered);
   const assets = useMyStore((state) => state.assets);
 
+  const worldRegistry = useMyStore((state) => state.worldRegistry);
+  const currentWorldId = useMyStore((state) => state.currentWorldId);
+  const currentWorld = worldRegistry[currentWorldId];
+
   const sparkRendererArgs = useMemo(() => {
     return { renderer, maxStdDev: Math.sqrt(5) };
   }, [renderer]);
-
-  // useKeyboardControls((key) => {
-  //   if (key.create_portal) {
-  //     openPortalUI();
-  //     console.log(
-  //       "TODO: Create a portal at player position: ",
-  //       characterStatus.position,
-  //     );
-  //   }
-  // });
 
   return (
     <>
@@ -47,7 +41,9 @@ export const Scene = () => {
         <>
           <axesHelper />
           <Grid infiniteGrid={true} sectionColor={"#bbb"} cellColor={"#444"} />
-          <Portal position={portalPos} />
+          {currentWorld?.portals.map((portal) => (
+            <Portal key={portal.id} portal={portal} />
+          ))}
         </>
       )}
 
