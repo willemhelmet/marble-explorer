@@ -1,11 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMyStore } from "../../store/store";
 import { fetchWorldAssets } from "../../services/apiService";
 
 export const PortalUI = () => {
+  const [urlInput, setUrlInput] = useState("");
   const {
-    portalUrl,
-    setPortalUrl,
     closePortalUI,
     setAssets,
     setError,
@@ -31,13 +30,13 @@ export const PortalUI = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!portalUrl.trim() || !editingPortal) return;
+    if (!urlInput.trim() || !editingPortal) return;
 
     const { worldId, portalId } = editingPortal;
 
     // Start the fetching process for this specific portal
     updatePortal(worldId, portalId, {
-      url: portalUrl,
+      url: urlInput,
       status: "fetching",
     });
 
@@ -45,7 +44,7 @@ export const PortalUI = () => {
     setError(null); // Clear previous errors
 
     try {
-      const assets = await fetchWorldAssets(portalUrl);
+      const assets = await fetchWorldAssets(urlInput);
       // Update the specific portal in the registry
       updatePortal(worldId, portalId, { status: "ready" });
       // Update global assets for the scene to render
@@ -84,8 +83,8 @@ export const PortalUI = () => {
             <input
               id="marble-url"
               type="text"
-              value={portalUrl}
-              onChange={(e) => setPortalUrl(e.target.value)}
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
               placeholder="https://marble.worldlabs.ai/world/..."
               className="w-full border border-neutral-700 bg-neutral-900 px-4 py-3 font-mono text-white placeholder-neutral-600 focus:border-white focus:outline-none focus:ring-1 focus:ring-white"
             />
@@ -102,7 +101,7 @@ export const PortalUI = () => {
             <button
               type="submit"
               className="flex-1 border border-white bg-white px-6 py-3 font-mono text-sm font-bold uppercase text-black transition-colors hover:bg-neutral-200 disabled:opacity-50"
-              disabled={!portalUrl.trim()}
+              disabled={!urlInput.trim()}
             >
               Engage
             </button>
@@ -112,3 +111,4 @@ export const PortalUI = () => {
     </div>
   );
 };
+

@@ -18,6 +18,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     setEditingPortal,
     switchWorld,
     setAssets,
+    setWorldAnchorPosition,
   } = useMyStore();
 
   const [isHovered, setIsHovered] = useState(false);
@@ -43,6 +44,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       // Traveling to a dynamic world
       const targetWorldId = extractWorldIdFromUrl(portal.url);
       if (targetWorldId) {
+        setWorldAnchorPosition(portal.position);
         switchWorld(targetWorldId);
         setIsPlayerInside(true);
 

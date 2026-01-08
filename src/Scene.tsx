@@ -14,7 +14,7 @@ import { WorldCollider } from "./components/marble/WorldCollider.tsx";
 export const Scene = () => {
   const renderer = useThree((state) => state.gl);
   const isPlayerInside = useMyStore((state) => state.isPlayerInside);
-  const portalPos = useMyStore((state) => state.position);
+  const worldAnchorPos = useMyStore((state) => state.worldAnchorPosition);
   // const openPortalUI = useMyStore((state) => state.openPortalUI);
   const status = useMyStore((state) => state.status);
   const isHovered = useMyStore((state) => state.isHovered);
@@ -75,7 +75,7 @@ export const Scene = () => {
       {/* Loaded World Assets */}
       {assets && isPlayerInside && (
         <group
-          position={portalPos}
+          position={worldAnchorPos}
           rotation={[Math.PI, 0, 0]}
           scale={[2, 2, 2]}
         >
