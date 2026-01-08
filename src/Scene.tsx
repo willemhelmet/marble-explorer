@@ -77,13 +77,12 @@ export const Scene = () => {
         {/* 2. Geometry & Physics */}
         {isHub ? (
           <>
-            <axesHelper />
             <Grid
+              position={[0, -1, 0]}
               infiniteGrid={true}
               sectionColor={"#bbb"}
               cellColor={"#444"}
             />
-            <FloorCollider />
           </>
         ) : (
           assets && (
@@ -98,6 +97,9 @@ export const Scene = () => {
       </group>
 
       <Player />
+      <axesHelper />
+      <FloorCollider />
+
       <Crosshair visible={status === "playing" && isHovered} />
     </>
   );
