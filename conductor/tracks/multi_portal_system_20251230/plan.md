@@ -13,7 +13,7 @@ _Establish the World Registry with dummy data for testing._
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Data Architecture'
       (Protocol in workflow.md) 3c85c03
 
-## Phase 2: Dynamic Portal Components
+## Phase 2: Dynamic Portal Components [checkpoint: a4e1113]
 
 _Refactor Scene to render portals from the Registry._
 
@@ -22,8 +22,8 @@ _Refactor Scene to render portals from the Registry._
       specific data and render as "Wireframe" if URL is missing. 5143eec
 - [x] Task: Map over `currentWorld.portals` in `Scene.tsx` to render
       `<Portal />` instances. 5143eec
-- [~] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Portal
-      Components' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Dynamic Portal
+      Components' (Protocol in workflow.md) a4e1113
 
 ## Phase 3: Portal Creation Workflow
 
