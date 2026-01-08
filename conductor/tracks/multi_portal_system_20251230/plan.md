@@ -10,7 +10,7 @@ _Establish the World Registry with dummy data for testing._
       A, World B) and import it as the initial state. d84b188
 - [x] Task: Implement actions: `addPortal(worldId, portal)`,
       `updatePortal(worldId, portalId, data)`, and `switchWorld(worldId)`. d84b188
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Data Architecture'
+- [~] Task: Conductor - User Manual Verification 'Phase 1: Data Architecture'
       (Protocol in workflow.md)
 
 ## Phase 2: Dynamic Portal Components
