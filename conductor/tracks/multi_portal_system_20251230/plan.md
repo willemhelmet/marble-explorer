@@ -38,17 +38,17 @@ _Implement the "Spawn Empty -> Edit" workflow._
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Portal Creation
       Workflow' (Protocol in workflow.md) df4602e
 
-## Phase 4: World Transition (Scene Swap)
+## Phase 4: World Transition (Scene Swap) [checkpoint: 068a76c]
 
 _Implement the navigation logic between Registry entries._
 
-- [ ] Task: Update collision/entry logic in `Portal.tsx` to trigger `switchWorld`
-      (only if Portal has a valid URL).
-- [ ] Task: Ensure `switchWorld` updates the global `assets` (or triggers a
-      fetch) for the new world.
-- [ ] Task: Verify navigation with the dummy data (Hub -> World A -> World B).
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: World Transition'
-      (Protocol in workflow.md)
+- [x] Task: Update collision/entry logic in `Portal.tsx` to trigger `switchWorld`
+      (only if Portal has a valid URL). 068a76c
+- [x] Task: Ensure `switchWorld` updates the global `assets` (or triggers a
+      fetch) for the new world. 068a76c
+- [x] Task: Verify navigation with the dummy data (Hub -> World A -> World B). 068a76c
+- [x] Task: Conductor - User Manual Verification 'Phase 4: World Transition'
+      (Protocol in workflow.md) 068a76c
 
 ## Phase 5: Cleanup & Polish
 
