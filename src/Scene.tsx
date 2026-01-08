@@ -13,9 +13,7 @@ import { WorldCollider } from "./components/marble/WorldCollider.tsx";
 
 export const Scene = () => {
   const renderer = useThree((state) => state.gl);
-  const isPlayerInside = useMyStore((state) => state.isPlayerInside);
   const worldAnchorPos = useMyStore((state) => state.worldAnchorPosition);
-  // const openPortalUI = useMyStore((state) => state.openPortalUI);
   const status = useMyStore((state) => state.status);
   const isHovered = useMyStore((state) => state.isHovered);
   const assets = useMyStore((state) => state.assets);
@@ -26,6 +24,8 @@ export const Scene = () => {
   const openPortalUI = useMyStore((state) => state.openPortalUI);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const currentWorld = worldRegistry[currentWorldId];
+
+  const isHub = currentWorldId === "hub";
 
   const [subscribeKeys] = useKeyboardControls();
 
@@ -65,39 +65,40 @@ export const Scene = () => {
       <ambientLight intensity={10} />
       <directionalLight intensity={10} position={[1, 1, 1]} />
 
-      {/*WHP: Doesn't work anymore while BVH is active???*/}
       <color attach="background" args={[0, 0, 0]} />
 
-      {/* Lobby Environment */}
-      {!isPlayerInside && (
-        <>
-          <axesHelper />
-          <Grid infiniteGrid={true} sectionColor={"#bbb"} cellColor={"#444"} />
-        </>
-      )}
+      {/* World Container: Parents everything to the current world anchor */}
+      <group position={worldAnchorPos}>
+        {/* 1. Portals */}
+        {currentWorld?.portals.map((portal) => (
+          <Portal key={portal.id} portal={portal} />
+        ))}
 
-      {/* Render Portals for the Current World */}
-      {currentWorld?.portals.map((portal) => (
-        <Portal key={portal.id} portal={portal} />
-      ))}
+        {/* 2. Geometry & Physics */}
+        {isHub ? (
+          <>
+            <axesHelper />
+            <Grid
+              infiniteGrid={true}
+              sectionColor={"#bbb"}
+              cellColor={"#444"}
+            />
+            <FloorCollider />
+          </>
+        ) : (
+          assets && (
+            <group rotation={[Math.PI, 0, 0]} scale={[2, 2, 2]}>
+              <SparkRenderer args={[sparkRendererArgs]}>
+                <World />
+              </SparkRenderer>
+              <WorldCollider />
+            </group>
+          )
+        )}
+      </group>
 
       <Player />
       <Crosshair visible={status === "playing" && isHovered} />
-      <FloorCollider />
-
-      {/* Loaded World Assets */}
-      {assets && isPlayerInside && (
-        <group
-          position={worldAnchorPos}
-          rotation={[Math.PI, 0, 0]}
-          scale={[2, 2, 2]}
-        >
-          <SparkRenderer args={[sparkRendererArgs]}>
-            <World />
-          </SparkRenderer>
-          <WorldCollider />
-        </group>
-      )}
     </>
   );
 };

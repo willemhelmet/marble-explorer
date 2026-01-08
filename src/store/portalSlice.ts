@@ -20,8 +20,6 @@ export interface PortalSlice {
   assets: WorldAssets | null;
   /** Error message to display if the API call or loading fails */
   error: string | null;
-  /** Tracks if the player has entered the portal sphere */
-  isPlayerInside: boolean;
   /** Tracks if the crosshair is hovering over the portal */
   isHovered: boolean;
   /** The position of the portal that was entered, used to anchor world assets */
@@ -30,7 +28,6 @@ export interface PortalSlice {
   // --- Actions ---
   setAssets: (assets: WorldAssets | null) => void;
   setError: (error: string | null) => void;
-  setIsPlayerInside: (isInside: boolean) => void;
   setIsHovered: (isHovered: boolean) => void;
   setWorldAnchorPosition: (position: Vector3) => void;
   /** Resets the portal to its initial idle state and clears assets */
@@ -46,21 +43,18 @@ export const createPortalSlice: StateCreator<
   // Initial State
   assets: null,
   error: null,
-  isPlayerInside: false,
   isHovered: false,
   worldAnchorPosition: new Vector3(0, 1, -3),
 
   // Actions
   setAssets: (assets) => set({ assets }),
   setError: (error) => set({ error }),
-  setIsPlayerInside: (isInside) => set({ isPlayerInside: isInside }),
   setIsHovered: (isHovered) => set({ isHovered }),
   setWorldAnchorPosition: (position) => set({ worldAnchorPosition: position }),
   resetPortal: () =>
     set({
       assets: null,
       error: null,
-      isPlayerInside: false,
       isHovered: false,
     }),
 });

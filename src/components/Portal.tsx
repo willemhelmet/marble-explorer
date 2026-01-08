@@ -12,7 +12,6 @@ import {
 export const Portal = ({ portal }: { portal: PortalType }) => {
   const {
     openPortalUI,
-    setIsPlayerInside,
     setIsHovered: setGlobalHover,
     currentWorldId,
     setEditingPortal,
@@ -38,7 +37,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     if (portal.url === "hub") {
       // Returning to the initial lobby
       switchWorld("hub");
-      setIsPlayerInside(false);
       setAssets(null);
     } else {
       // Traveling to a dynamic world
@@ -46,7 +44,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       if (targetWorldId) {
         setWorldAnchorPosition(portal.position);
         switchWorld(targetWorldId);
-        setIsPlayerInside(true);
 
         // Ensure assets are loaded for this specific destination
         try {
