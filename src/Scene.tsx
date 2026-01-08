@@ -62,11 +62,13 @@ export const Scene = () => {
         <>
           <axesHelper />
           <Grid infiniteGrid={true} sectionColor={"#bbb"} cellColor={"#444"} />
-          {currentWorld?.portals.map((portal) => (
-            <Portal key={portal.id} portal={portal} />
-          ))}
         </>
       )}
+
+      {/* Render Portals for the Current World */}
+      {currentWorld?.portals.map((portal) => (
+        <Portal key={portal.id} portal={portal} />
+      ))}
 
       <Player />
       <Crosshair visible={status === "playing" && isHovered} />
