@@ -3,6 +3,7 @@ import { Sphere, Text } from "@react-three/drei";
 import { useMyStore } from "../store/store";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { characterStatus } from "bvhecctrl";
 import { type Portal as PortalType } from "../store/worldSlice";
 import {
   fetchWorldAssets,
@@ -51,9 +52,9 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           const assets = await fetchWorldAssets(portal.url);
 
           // 2. Atomic update of world state
-          // Calculate the new absolute anchor position:
-          // Local Portal Pos (portal.position) + Current World Anchor (worldAnchorPosition)
-          const newAnchor = portal.position.clone().add(worldAnchorPosition);
+          // We anchor the new world to the player's EXACT absolute position
+          // so that the player is at (0,0,0) local in the next world.
+          const newAnchor = characterStatus.position.clone();
           
           setWorldAnchorPosition(newAnchor);
           setAssets(assets);

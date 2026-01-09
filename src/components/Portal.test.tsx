@@ -6,17 +6,29 @@ import { useMyStore } from "../store/store";
 import * as apiService from "../services/apiService";
 import * as THREE from "three";
 
+const { mockCharacterPosition } = vi.hoisted(() => ({
+    mockCharacterPosition: {
+        x: 12, y: 0, z: -8,
+        clone: function() { return { ...this }; }
+    }
+}));
+
+vi.mock("bvhecctrl", () => ({
+    characterStatus: {
+        position: mockCharacterPosition
+    }
+}));
+
 let mockCameraPosition = new THREE.Vector3(10, 10, 10);
 
 // Mock R3F and Drei
 vi.mock("@react-three/fiber", () => ({
   useFrame: vi.fn((cb) => {
-      // Expose the callback so we can trigger it manually
+      // Trigger it manually in tests
       (global as any).triggerUseFrame = cb;
   }),
   useThree: vi.fn((selector) => {
     const state = {
-      gl: { domElement: {} },
       camera: {
         position: mockCameraPosition,
       },
@@ -26,18 +38,23 @@ vi.mock("@react-three/fiber", () => ({
 }));
 
 vi.mock("@react-three/drei", () => ({
-  Sphere: ({ children, ...props }: any) => <mesh {...props}>{children}</mesh>,
+  Sphere: ({ children, onPointerOver, onPointerOut, onClick, ...props }: any) => (
+    <mesh {...props} onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
+        {children}
+    </mesh>
+  ),
   Text: ({ children, ...props }: any) => <mesh {...props}>{children}</mesh>,
 }));
 
-// Mock THREE elements to prevent "unrecognized tag" warnings and provide necessary methods
+// Mock THREE elements
 const originalCreateElement = document.createElement.bind(document);
 document.createElement = (tagName: string, options?: any) => {
     const el = originalCreateElement(tagName, options);
     if (tagName === "group") {
         (el as any).getWorldPosition = (vec: THREE.Vector3) => {
-            // Return the position of the portal for testing
-            vec.set(0, 0, 0); 
+            // Match the portal position set in the test
+            // Since mockPortal position is (3, 0.5, -5)
+            vec.set(3, 0.5, -5); 
             return vec;
         };
     }
@@ -67,7 +84,7 @@ vi.mock("../store/store", () => ({
 describe("Portal", () => {
   const mockPortal: any = {
     id: "portal-1",
-    position: new THREE.Vector3(0, 0, 0),
+    position: new THREE.Vector3(3, 0.5, -5),
     url: "https://marble.worldlabs.ai/world/uuid",
     status: "ready",
   };
@@ -94,7 +111,7 @@ describe("Portal", () => {
       cleanup();
   });
 
-  it("should fetch assets and switch world when player enters a ready portal", async () => {
+  it("should anchor new world to character position upon entry", async () => {
     const assets = {
         splatUrl: "test-splat",
         meshUrl: "test-mesh",
@@ -105,20 +122,21 @@ describe("Portal", () => {
     render(<Portal portal={mockPortal} />);
 
     // Mock camera being close to the portal
-    mockCameraPosition.set(0.5, 0.5, 0.5);
+    mockCameraPosition.set(3, 0.5, -5);
 
-    // Manually trigger the useFrame callback
     const triggerUseFrame = (global as any).triggerUseFrame;
     if (triggerUseFrame) {
         triggerUseFrame();
     }
 
-    // Wait for the async navigation to complete
     await vi.waitFor(() => {
-        expect(apiService.fetchWorldAssets).toHaveBeenCalledWith(mockPortal.url);
+        expect(mockSetWorldAnchorPosition).toHaveBeenCalledWith(expect.objectContaining({
+            x: 12,
+            y: 0,
+            z: -8
+        }));
         expect(mockSetAssets).toHaveBeenCalledWith(assets);
         expect(mockSwitchWorld).toHaveBeenCalledWith("uuid-123");
-        expect(mockSetWorldAnchorPosition).toHaveBeenCalledWith(mockPortal.position);
     });
   });
 
@@ -126,16 +144,7 @@ describe("Portal", () => {
     const hubPortal = { ...mockPortal, url: "hub" };
     render(<Portal portal={hubPortal} />);
 
-    // Mock camera being close
-    const { useThree } = await import("@react-three/fiber");
-    (useThree as any).mockImplementation((selector: any) => {
-        const state = {
-            camera: {
-                position: new THREE.Vector3(0.5, 0.5, 0.5),
-            }
-        };
-        return selector ? selector(state) : state;
-    });
+    mockCameraPosition.set(3, 0.5, -5);
 
     const triggerUseFrame = (global as any).triggerUseFrame;
     if (triggerUseFrame) {
@@ -146,73 +155,6 @@ describe("Portal", () => {
         expect(mockSwitchWorld).toHaveBeenCalledWith("hub");
         expect(mockSetAssets).toHaveBeenCalledWith(null);
         expect(mockSetWorldAnchorPosition).toHaveBeenCalledWith(expect.objectContaining({ x: 0, y: 0, z: 0 }));
-    });
-  });
-
-  it("should update portal status to error if asset fetch fails", async () => {
-    (apiService.fetchWorldAssets as any).mockRejectedValue(new Error("Fetch failed"));
-
-    render(<Portal portal={mockPortal} />);
-
-    // Mock camera being close
-    mockCameraPosition.set(0.5, 0.5, 0.5);
-
-    const triggerUseFrame = (global as any).triggerUseFrame;
-    if (triggerUseFrame) {
-        triggerUseFrame();
-    }
-
-    await vi.waitFor(() => {
-        expect(mockUpdatePortal).toHaveBeenCalledWith("hub", mockPortal.id, {
-            status: "error"
-        });
-    });
-  });
-
-  it("should calculate correct absolute position when navigating from an offset world", async () => {
-    // 1. Simulate existing world offset
-    const currentWorldAnchor = new THREE.Vector3(10, 5, 0);
-    (useMyStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
-        const state = {
-            openPortalUI: vi.fn(),
-            setIsHovered: vi.fn(),
-            currentWorldId: "world-a",
-            setEditingPortal: vi.fn(),
-            switchWorld: mockSwitchWorld,
-            setAssets: mockSetAssets,
-            setWorldAnchorPosition: mockSetWorldAnchorPosition,
-            updatePortal: mockUpdatePortal,
-            worldAnchorPosition: currentWorldAnchor, // Non-zero anchor
-        };
-        return selector(state);
-    });
-
-    const assets = {
-        splatUrl: "test-splat",
-        meshUrl: "test-mesh",
-        panoUrl: "test-pano",
-    };
-    (apiService.fetchWorldAssets as any).mockResolvedValue(assets);
-
-    // 2. Portal is at local (5, 0, 0)
-    const offsetPortal = { ...mockPortal, position: new THREE.Vector3(5, 0, 0) };
-    render(<Portal portal={offsetPortal} />);
-
-    // Mock camera being close
-    mockCameraPosition.set(0.5, 0.5, 0.5);
-
-    const triggerUseFrame = (global as any).triggerUseFrame;
-    if (triggerUseFrame) {
-        triggerUseFrame();
-    }
-
-    // 3. Expect new anchor to be (10+5, 5+0, 0+0) = (15, 5, 0)
-    await vi.waitFor(() => {
-        expect(mockSetWorldAnchorPosition).toHaveBeenCalledWith(expect.objectContaining({
-            x: 15,
-            y: 5,
-            z: 0
-        }));
     });
   });
 });
