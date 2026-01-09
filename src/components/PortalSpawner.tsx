@@ -6,6 +6,7 @@ import { characterStatus } from "bvhecctrl";
 export const PortalSpawner = () => {
   const status = useMyStore((state) => state.status);
   const currentWorldId = useMyStore((state) => state.currentWorldId);
+  const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
   const addPortal = useMyStore((state) => state.addPortal);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const openPortalUI = useMyStore((state) => state.openPortalUI);
@@ -19,7 +20,7 @@ export const PortalSpawner = () => {
         if (pressed && status === "playing") {
           const newPortal = {
             id: `portal-${Date.now()}`,
-            position: characterStatus.position.clone(),
+            position: characterStatus.position.clone().sub(worldAnchorPosition),
             url: null,
             status: "idle" as const,
           };
@@ -33,6 +34,7 @@ export const PortalSpawner = () => {
     subscribeKeys,
     status,
     currentWorldId,
+    worldAnchorPosition,
     addPortal,
     setEditingPortal,
     openPortalUI,
