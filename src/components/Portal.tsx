@@ -20,6 +20,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
   );
+  const updatePortal = useMyStore((state) => state.updatePortal);
 
   const [isHovered, setIsHovered] = useState(false);
   const isTransitioning = useRef(false);
@@ -33,27 +34,36 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   }, [isHovered, setGlobalHover]);
 
   const handleNavigation = async () => {
-    if (!portal.url) return;
+    if (!portal.url || isTransitioning.current) return;
+    isTransitioning.current = true;
 
-    if (portal.url === "hub") {
-      // Returning to the initial lobby
-      switchWorld("hub");
-      setAssets(null);
-    } else {
-      // Traveling to a dynamic world
-      const targetWorldId = extractWorldIdFromUrl(portal.url);
-      if (targetWorldId) {
-        setWorldAnchorPosition(portal.position);
-        switchWorld(targetWorldId);
-
-        // Ensure assets are loaded for this specific destination
-        try {
+    try {
+      if (portal.url === "hub") {
+        // Returning to the initial lobby
+        setWorldAnchorPosition(new THREE.Vector3(0, 0, 0));
+        setAssets(null);
+        switchWorld("hub");
+      } else {
+        // Traveling to a dynamic world
+        const targetWorldId = extractWorldIdFromUrl(portal.url);
+        if (targetWorldId) {
+          // 1. Fetch assets FIRST before switching worlds to ensure we have them
+          // and to maintain the current world view during the "loading" phase
           const assets = await fetchWorldAssets(portal.url);
+
+          // 2. Atomic update of world state
+          setWorldAnchorPosition(portal.position);
           setAssets(assets);
-        } catch (err) {
-          console.error("Auto-navigation fetch error:", err);
+          switchWorld(targetWorldId);
         }
       }
+    } catch (err) {
+      console.error("Portal navigation error:", err);
+      // Update this specific portal's status to error so the user knows
+      const editingWorldId = currentWorldId; // The world where the portal exists
+      updatePortal(editingWorldId, portal.id, { status: "error" });
+      isTransitioning.current = false; // Allow retry if it failed
+      return;
     }
 
     // Guard against immediate re-trigger
@@ -73,7 +83,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
       // If player is inside the sphere (radius 1 + buffer)
       if (distance < 1.2) {
-        isTransitioning.current = true;
         handleNavigation();
         setIsHovered(false);
       }
