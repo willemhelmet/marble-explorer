@@ -26,7 +26,6 @@ export const PortalSpawner = () => {
           addPortal(currentWorldId, newPortal);
           setEditingPortal(currentWorldId, newPortal.id);
           openPortalUI();
-          console.log("Portal spawned at", characterStatus.position);
         }
       },
     );

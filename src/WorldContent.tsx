@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { useMemo, memo } from "react";
 import { useThree } from "@react-three/fiber";
 import { Grid } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer";
@@ -7,13 +7,13 @@ import { WorldCollider } from "./components/marble/WorldCollider";
 import { Portal } from "./components/Portal";
 import { Vector3 } from "three";
 import type { WorldAssets } from "./store/portalSlice";
-import type { Registry } from "./store/worldSlice";
+import type { World as WorldData } from "./store/worldSlice";
 
 interface WorldContentProps {
   currentWorldId: string;
   assets: WorldAssets | null;
   worldAnchorPos: Vector3;
-  worldRegistry: Registry;
+  currentWorld: WorldData | undefined;
 }
 
 /**
@@ -28,10 +28,9 @@ export const WorldContent = memo(
     currentWorldId,
     assets,
     worldAnchorPos,
-    worldRegistry,
+    currentWorld,
   }: WorldContentProps) => {
-    const { gl: renderer } = useThree();
-    const currentWorld = worldRegistry[currentWorldId];
+    const renderer = useThree((state) => state.gl);
     const isHub = currentWorldId === "hub";
 
     const sparkRendererArgs = useMemo(() => {
@@ -61,20 +60,11 @@ export const WorldContent = memo(
               <SparkRenderer args={[sparkRendererArgs]}>
                 <World />
               </SparkRenderer>
-              <WorldCollider />
+              {/* <WorldCollider /> */}
             </group>
           )
         )}
       </group>
-    );
-  },
-  (prev, next) => {
-    // Prevent re-render if core world properties haven't changed
-    return (
-      prev.currentWorldId === next.currentWorldId &&
-      prev.assets === next.assets &&
-      prev.worldAnchorPos.equals(next.worldAnchorPos) &&
-      prev.worldRegistry === next.worldRegistry
     );
   },
 );

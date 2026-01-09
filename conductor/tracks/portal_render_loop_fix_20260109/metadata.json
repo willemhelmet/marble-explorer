@@ -1,0 +1,8 @@
+{
+  "track_id": "portal_render_loop_fix_20260109",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-09T16:15:00Z",
+  "updated_at": "2026-01-09T16:15:00Z",
+  "description": "Fix infinite render loop caused by non-atomic store subscriptions in Portal component."
+}

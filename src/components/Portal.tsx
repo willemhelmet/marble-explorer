@@ -24,7 +24,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const [isHovered, setIsHovered] = useState(false);
   const isTransitioning = useRef(false);
   const groupRef = useRef<THREE.Group>(null);
-  const { camera } = useThree();
+  const camera = useThree((state) => state.camera);
 
   // Sync global hover for crosshair
   useEffect(() => {

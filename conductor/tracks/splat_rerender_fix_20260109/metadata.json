@@ -1,0 +1,8 @@
+{
+  "track_id": "splat_rerender_fix_20260109",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-09T15:45:00Z",
+  "updated_at": "2026-01-09T15:45:00Z",
+  "description": "Fix constant re-rendering of Gaussian Splats, especially when pausing with the Escape key."
+}

@@ -3,14 +3,15 @@ import { ScreenSpace, Plane } from "@react-three/drei";
 import { Mesh, ShaderMaterial, Color } from "three";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useMyStore } from "../../store/store";
 
-interface CrosshairProps {
-  visible: boolean;
-}
-
-export const Crosshair = ({ visible }: CrosshairProps) => {
+export const Crosshair = () => {
   const meshRef = useRef<Mesh>(null);
   const materialRef = useRef<ShaderMaterial>(null);
+
+  const status = useMyStore((state) => state.status);
+  const isHovered = useMyStore((state) => state.isHovered);
+  const visible = status === "playing" && isHovered;
 
   const uniforms = useMemo(
     () => ({
@@ -70,7 +71,12 @@ export const Crosshair = ({ visible }: CrosshairProps) => {
 
   return (
     <ScreenSpace depth={1}>
-      <Plane ref={meshRef} args={[0.05, 0.05]} scale={[0, 0, 0]}>
+      <Plane
+        ref={meshRef}
+        args={[0.05, 0.05]}
+        scale={[0, 0, 0]}
+        raycast={() => null} // Prevent blocking raycasts for portals
+      >
         <shaderMaterial
           ref={materialRef}
           uniforms={uniforms}
