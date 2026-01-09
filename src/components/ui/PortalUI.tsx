@@ -5,7 +5,6 @@ import { fetchWorldAssets } from "../../services/apiService";
 export const PortalUI = () => {
   const [urlInput, setUrlInput] = useState("");
   const closePortalUI = useMyStore((state) => state.closePortalUI);
-  const setAssets = useMyStore((state) => state.setAssets);
   const setError = useMyStore((state) => state.setError);
   const pause = useMyStore((state) => state.pause);
   const editingPortal = useMyStore((state) => state.editingPortal);
@@ -42,11 +41,9 @@ export const PortalUI = () => {
     setError(null); // Clear previous errors
 
     try {
-      const assets = await fetchWorldAssets(urlInput);
+      await fetchWorldAssets(urlInput);
       // Update the specific portal in the registry
       updatePortal(worldId, portalId, { status: "ready" });
-      // Update global assets for the scene to render
-      setAssets(assets);
       // Clear editing state
       setEditingPortal(null, null);
     } catch (err: unknown) {
