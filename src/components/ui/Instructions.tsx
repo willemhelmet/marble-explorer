@@ -11,6 +11,9 @@ export const Instructions = ({ isMobile }: { isMobile: boolean }) => (
           <span className="font-bold">W, A, S, D</span> to Move
         </li>
         <li>
+          <span className="font-bold">Shift</span> to Run
+        </li>
+        <li>
           <span className="font-bold">Esc</span> to Pause
         </li>
         <li>

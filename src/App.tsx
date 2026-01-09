@@ -50,6 +50,7 @@ function App() {
       { name: "rightward", keys: ["ArrowRight", "KeyD"] },
       { name: "pause", keys: ["Escape"] },
       { name: "create_portal", keys: ["p"] },
+      { name: "run", keys: ["Shift"] },
     ],
     [],
   );
