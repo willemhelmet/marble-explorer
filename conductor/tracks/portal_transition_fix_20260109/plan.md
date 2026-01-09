@@ -4,9 +4,9 @@
 
 _Decouple the UI from the global world state by removing immediate asset loading._
 
-- [ ] Task: Create unit tests for `PortalUI` to verify it updates the store correctly without calling `setAssets`.
-- [ ] Task: Modify `src/components/ui/PortalUI.tsx` to remove the `setAssets` call and rely on `updatePortal`.
-- [ ] Task: Verify that submitting the form only updates the portal status to "ready" and stores the URL.
+- [x] Task: Create unit tests for `PortalUI` to verify it updates the store correctly without calling `setAssets`. cc58f78
+- [x] Task: Modify `src/components/ui/PortalUI.tsx` to remove the `setAssets` call and rely on `updatePortal`. cc58f78
+- [x] Task: Verify that submitting the form only updates the portal status to "ready" and stores the URL. cc58f78
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: UI Refactor' (Protocol in workflow.md)
 
 ## Phase 2: Refactor Portal Component for Robust Navigation [checkpoint: auto]
