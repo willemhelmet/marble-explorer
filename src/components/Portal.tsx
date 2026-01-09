@@ -40,6 +40,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
     try {
       if (portal.url === "hub") {
+        console.log("[Portal] Navigating to Hub. Resetting anchor to (0,0,0)");
         // Returning to the initial lobby
         setWorldAnchorPosition(new THREE.Vector3(0, 0, 0));
         setAssets(null);
@@ -56,6 +57,14 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           // so that the player is at (0,0,0) local in the next world.
           const newAnchor = characterStatus.position.clone();
           
+          console.log("[Portal] Navigating to dynamic world.", {
+            portalId: portal.id,
+            targetWorldId,
+            playerWorldPos: characterStatus.position.toArray(),
+            currentWorldAnchor: worldAnchorPosition.toArray(),
+            calculatedNewAnchor: newAnchor.toArray()
+          });
+
           setWorldAnchorPosition(newAnchor);
           setAssets(assets);
           switchWorld(targetWorldId);

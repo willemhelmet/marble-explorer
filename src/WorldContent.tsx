@@ -33,6 +33,13 @@ export const WorldContent = memo(
     const renderer = useThree((state) => state.gl);
     const isHub = currentWorldId === "hub";
 
+    console.log("[WorldContent] Rendering world.", {
+      currentWorldId,
+      worldAnchorPos: worldAnchorPos.toArray(),
+      isHub,
+      portalCount: currentWorld?.portals.length || 0
+    });
+
     const sparkRendererArgs = useMemo(() => {
       return { renderer, maxStdDev: Math.sqrt(5) };
     }, [renderer]);
