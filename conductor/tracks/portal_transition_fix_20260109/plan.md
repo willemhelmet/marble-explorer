@@ -13,10 +13,10 @@ _Decouple the UI from the global world state by removing immediate asset loading
 
 _Consolidate world-switching logic within the Portal component's traversal handler._
 
-- [ ] Task: Create unit tests for `Portal.tsx` to verify `handleNavigation` correctly fetches assets and updates world state.
-- [ ] Task: Refactor `src/components/Portal.tsx` to include asset fetching within `handleNavigation`.
-- [ ] Task: Update `handleNavigation` to manage `setAssets`, `switchWorld`, and `setWorldAnchorPosition` atomically.
-- [ ] Task: Add error handling to `handleNavigation` to revert portal status or show an error state if the fetch fails.
+- [x] Task: Create unit tests for `Portal.tsx` to verify `handleNavigation` correctly fetches assets and updates world state. 6056e6e
+- [x] Task: Refactor `src/components/Portal.tsx` to include asset fetching within `handleNavigation`. 6056e6e
+- [x] Task: Update `handleNavigation` to manage `setAssets`, `switchWorld`, and `setWorldAnchorPosition` atomically. 6056e6e
+- [x] Task: Add error handling to `handleNavigation` to revert portal status or show an error state if the fetch fails. 6056e6e
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Navigation Refactor' (Protocol in workflow.md)
 
 ## Phase 3: Integration & Final Verification [checkpoint: auto]
