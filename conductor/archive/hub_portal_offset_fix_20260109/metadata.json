@@ -1,0 +1,8 @@
+{
+  "track_id": "hub_portal_offset_fix_20260109",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-09T14:45:00Z",
+  "updated_at": "2026-01-09T14:45:00Z",
+  "description": "Fix hub portal spawn offsets where players spawn outside world bounds or with incorrect height."
+}
