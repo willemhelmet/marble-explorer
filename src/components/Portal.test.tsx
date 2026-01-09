@@ -84,6 +84,7 @@ describe("Portal", () => {
             setAssets: mockSetAssets,
             setWorldAnchorPosition: mockSetWorldAnchorPosition,
             updatePortal: mockUpdatePortal,
+            worldAnchorPosition: new THREE.Vector3(0, 0, 0),
         };
         return selector(state);
     });
@@ -165,6 +166,53 @@ describe("Portal", () => {
         expect(mockUpdatePortal).toHaveBeenCalledWith("hub", mockPortal.id, {
             status: "error"
         });
+    });
+  });
+
+  it("should calculate correct absolute position when navigating from an offset world", async () => {
+    // 1. Simulate existing world offset
+    const currentWorldAnchor = new THREE.Vector3(10, 5, 0);
+    (useMyStore as unknown as ReturnType<typeof vi.fn>).mockImplementation((selector: any) => {
+        const state = {
+            openPortalUI: vi.fn(),
+            setIsHovered: vi.fn(),
+            currentWorldId: "world-a",
+            setEditingPortal: vi.fn(),
+            switchWorld: mockSwitchWorld,
+            setAssets: mockSetAssets,
+            setWorldAnchorPosition: mockSetWorldAnchorPosition,
+            updatePortal: mockUpdatePortal,
+            worldAnchorPosition: currentWorldAnchor, // Non-zero anchor
+        };
+        return selector(state);
+    });
+
+    const assets = {
+        splatUrl: "test-splat",
+        meshUrl: "test-mesh",
+        panoUrl: "test-pano",
+    };
+    (apiService.fetchWorldAssets as any).mockResolvedValue(assets);
+
+    // 2. Portal is at local (5, 0, 0)
+    const offsetPortal = { ...mockPortal, position: new THREE.Vector3(5, 0, 0) };
+    render(<Portal portal={offsetPortal} />);
+
+    // Mock camera being close
+    mockCameraPosition.set(0.5, 0.5, 0.5);
+
+    const triggerUseFrame = (global as any).triggerUseFrame;
+    if (triggerUseFrame) {
+        triggerUseFrame();
+    }
+
+    // 3. Expect new anchor to be (10+5, 5+0, 0+0) = (15, 5, 0)
+    await vi.waitFor(() => {
+        expect(mockSetWorldAnchorPosition).toHaveBeenCalledWith(expect.objectContaining({
+            x: 15,
+            y: 5,
+            z: 0
+        }));
     });
   });
 });

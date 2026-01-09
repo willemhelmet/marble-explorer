@@ -20,6 +20,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     (state) => state.setWorldAnchorPosition,
   );
   const updatePortal = useMyStore((state) => state.updatePortal);
+  const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
 
   const [isHovered, setIsHovered] = useState(false);
   const isTransitioning = useRef(false);
@@ -46,12 +47,15 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         // Traveling to a dynamic world
         const targetWorldId = extractWorldIdFromUrl(portal.url);
         if (targetWorldId) {
-          // 1. Fetch assets FIRST before switching worlds to ensure we have them
-          // and to maintain the current world view during the "loading" phase
+          // 1. Fetch assets FIRST before switching worlds
           const assets = await fetchWorldAssets(portal.url);
 
           // 2. Atomic update of world state
-          setWorldAnchorPosition(portal.position);
+          // Calculate the new absolute anchor position:
+          // Local Portal Pos (portal.position) + Current World Anchor (worldAnchorPosition)
+          const newAnchor = portal.position.clone().add(worldAnchorPosition);
+          
+          setWorldAnchorPosition(newAnchor);
           setAssets(assets);
           switchWorld(targetWorldId);
         }
