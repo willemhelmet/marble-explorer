@@ -19,15 +19,35 @@ const mocks = vi.hoisted(() => ({
     // Simulate Vector3 behavior minimally
     characterPosition: {
         x: 15, y: 0, z: 0,
-        clone: function() { return { ...this }; },
+        clone: function() { return { ...this, add: (v: any) => { this.x += v.x; this.y += v.y; this.z += v.z; return this; } }; },
         sub: function(v: any) {
             this.x -= v.x;
             this.y -= v.y;
             this.z -= v.z;
             return this;
+        },
+        add: function(v: any) {
+            this.x += v.x;
+            this.y += v.y;
+            this.z += v.z;
+            return this;
         }
     },
-    worldAnchorPosition: { x: 10, y: 0, z: 0 }
+    worldAnchorPosition: { x: 10, y: 0, z: 0 },
+    cameraDirection: { x: 0, y: 0, z: -1 } // Facing North
+}));
+
+vi.mock("@react-three/fiber", () => ({
+    useThree: () => ({
+        camera: {
+            getWorldDirection: (target: any) => {
+                target.x = mocks.cameraDirection.x;
+                target.y = mocks.cameraDirection.y;
+                target.z = mocks.cameraDirection.z;
+                return target;
+            }
+        }
+    })
 }));
 
 vi.mock("@react-three/drei", () => ({
@@ -70,8 +90,16 @@ describe("PortalSpawner", () => {
     }
 
     // Expected: playerPos (15) - anchorPos (10) = 5
+    // PLUS 1.5m in front (facing -Z means z should be -1.5)
+    // But wait, the previous test expected just 5. I should update that expectation or add a new one.
+    // Let's update the existing one to reflect the new requirement.
+    
     expect(mockAddPortal).toHaveBeenCalledWith("world-1", expect.objectContaining({
-      position: expect.objectContaining({ x: 5, y: 0, z: 0 })
+      position: expect.objectContaining({ 
+          x: 5, // 15 - 10 + (0 * 1.5)
+          y: 0, 
+          z: -1.5 // 0 - 0 + (-1 * 1.5)
+      })
     }));
   });
 });
