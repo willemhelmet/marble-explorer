@@ -9,7 +9,6 @@ import { useMyStore } from "./store/store.ts";
 import { characterStatus } from "bvhecctrl";
 import { Crosshair } from "./components/ui/Crosshair.tsx";
 import { World } from "./components/marble/World.tsx";
-import { WorldCollider } from "./components/marble/WorldCollider.tsx";
 
 export const Scene = () => {
   const renderer = useThree((state) => state.gl);
@@ -90,7 +89,6 @@ export const Scene = () => {
               <SparkRenderer args={[sparkRendererArgs]}>
                 <World />
               </SparkRenderer>
-              <WorldCollider />
             </group>
           )
         )}
