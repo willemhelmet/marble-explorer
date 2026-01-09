@@ -10,7 +10,6 @@ import {
 } from "../services/apiService";
 
 export const Portal = ({ portal }: { portal: PortalType }) => {
-  // Atomic selectors to prevent re-renders on unrelated store updates
   const openPortalUI = useMyStore((state) => state.openPortalUI);
   const setGlobalHover = useMyStore((state) => state.setIsHovered);
   const currentWorldId = useMyStore((state) => state.currentWorldId);
