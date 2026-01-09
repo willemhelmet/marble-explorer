@@ -1,10 +1,18 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { SplatMesh } from "@sparkjsdev/spark";
 import { useMyStore } from "../../store/store";
+import * as THREE from "three";
 
 export const Splat = () => {
   const assets = useMyStore((state) => state.assets);
   const splatUrl = assets?.splatUrl;
+
+  const ref = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    console.log("Splat mounted");
+    return () => console.log("Splat unmounted");
+  }, []);
 
   // 1. Use useMemo to create the mesh synchronously
   // The mesh is now ready on the very first render.
@@ -25,5 +33,9 @@ export const Splat = () => {
 
   if (!splat) return null;
 
-  return <primitive object={splat} />;
+  return (
+    <group ref={ref}>
+      <primitive object={splat} />
+    </group>
+  );
 };

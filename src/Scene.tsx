@@ -26,6 +26,20 @@ export const Scene = () => {
 
   const isHub = currentWorldId === "hub";
 
+  useEffect(() => {
+    console.log("Scene mounted");
+    return () => console.log("Scene unmounted");
+  }, []);
+
+  useEffect(() => {
+    console.log("Scene re-rendered. Dependencies changed:", {
+      status,
+      currentWorldId,
+      assets,
+      worldAnchorPos,
+    });
+  });
+
   const [subscribeKeys] = useKeyboardControls();
 
   useEffect(() => {
