@@ -4,15 +4,13 @@ import { fetchWorldAssets } from "../../services/apiService";
 
 export const PortalUI = () => {
   const [urlInput, setUrlInput] = useState("");
-  const {
-    closePortalUI,
-    setAssets,
-    setError,
-    pause,
-    editingPortal,
-    updatePortal,
-    setEditingPortal,
-  } = useMyStore();
+  const closePortalUI = useMyStore((state) => state.closePortalUI);
+  const setAssets = useMyStore((state) => state.setAssets);
+  const setError = useMyStore((state) => state.setError);
+  const pause = useMyStore((state) => state.pause);
+  const editingPortal = useMyStore((state) => state.editingPortal);
+  const updatePortal = useMyStore((state) => state.updatePortal);
+  const setEditingPortal = useMyStore((state) => state.setEditingPortal);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

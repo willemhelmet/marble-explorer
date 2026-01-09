@@ -1,4 +1,4 @@
-import { memo, useMemo, useEffect } from "react";
+import { memo, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
 import { Grid } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer";
@@ -33,12 +33,6 @@ export const WorldContent = memo(
     const { gl: renderer } = useThree();
     const currentWorld = worldRegistry[currentWorldId];
     const isHub = currentWorldId === "hub";
-
-    // Debug lifecycle to track unnecessary re-mounts
-    useEffect(() => {
-      console.log(`WorldContent mounted: ${currentWorldId}`);
-      return () => console.log(`WorldContent unmounted: ${currentWorldId}`);
-    }, [currentWorldId]);
 
     const sparkRendererArgs = useMemo(() => {
       return { renderer, maxStdDev: Math.sqrt(5) };

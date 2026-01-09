@@ -10,15 +10,16 @@ import {
 } from "../services/apiService";
 
 export const Portal = ({ portal }: { portal: PortalType }) => {
-  const {
-    openPortalUI,
-    setIsHovered: setGlobalHover,
-    currentWorldId,
-    setEditingPortal,
-    switchWorld,
-    setAssets,
-    setWorldAnchorPosition,
-  } = useMyStore();
+  // Atomic selectors to prevent re-renders on unrelated store updates
+  const openPortalUI = useMyStore((state) => state.openPortalUI);
+  const setGlobalHover = useMyStore((state) => state.setIsHovered);
+  const currentWorldId = useMyStore((state) => state.currentWorldId);
+  const setEditingPortal = useMyStore((state) => state.setEditingPortal);
+  const switchWorld = useMyStore((state) => state.switchWorld);
+  const setAssets = useMyStore((state) => state.setAssets);
+  const setWorldAnchorPosition = useMyStore(
+    (state) => state.setWorldAnchorPosition,
+  );
 
   const [isHovered, setIsHovered] = useState(false);
   const isTransitioning = useRef(false);
