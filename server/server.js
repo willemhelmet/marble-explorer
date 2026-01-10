@@ -1,4 +1,8 @@
 import { Server } from "socket.io";
+import { initDB } from "./db.js";
+
+// Initialize database
+initDB();
 
 const io = new Server({
   cors: {
@@ -17,20 +21,20 @@ io.on("connection", (socket) => {
     id: socket.id,
     position: [0, 0, 0],
     rotation: [0, 0, 0],
-    room: "jnl", // default room
+    room: "hub", // default room
   };
 
   // Add player to default room
-  if (!rooms.has("jnl")) {
-    rooms.set("jnl", new Set());
+  if (!rooms.has("hub")) {
+    rooms.set("hub", new Set());
   }
-  rooms.get("jnl").add(player);
+  rooms.get("hub").add(player);
 
   // Join the socket room
-  socket.join("jnl");
+  socket.join("hub");
 
   // Send only players in the same room to the new player
-  const roomPlayers = Array.from(rooms.get("jnl"));
+  const roomPlayers = Array.from(rooms.get("hub"));
   socket.emit("players", roomPlayers);
 
   socket.on("move", (position, rotation) => {
