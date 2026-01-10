@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { initDB, getPortalsForRoom } from "./db.js";
+import { initDB, getPortalsForRoom, createPortal } from "./db.js";
 
 // Initialize database
 initDB();
@@ -119,6 +119,18 @@ io.on("connection", (socket) => {
       // Still send portals just in case
       const portals = getPortalsForRoom(sceneName);
       socket.emit("portals", portals);
+    }
+  });
+
+  socket.on("create_portal", (portalData) => {
+    try {
+      const id = createPortal(portalData);
+      const newPortal = { ...portalData, id };
+      // Broadcast to all clients in the scene
+      io.to(portalData.from_scene).emit("portal_added", newPortal);
+    } catch (error) {
+      console.error("Error creating portal:", error.message);
+      socket.emit("portal_error", error.message);
     }
   });
 
