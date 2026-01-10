@@ -2,7 +2,7 @@
 
 ## Phase 1: Environment & Database Setup
 - [x] Task: Install `better-sqlite3` dependency in the server directory f352a98
-- [ ] Task: Initialize SQLite database (`disco.db`) and create `portals` table on server startup
+- [x] Task: Initialize SQLite database (`disco.db`) and create `portals` table on server startup f82eb21
 - [ ] Task: Conductor - User Manual Verification 'Environment & Database Setup' (Protocol in workflow.md)
 
 ## Phase 2: Room State & Portal Fetching
