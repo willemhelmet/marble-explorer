@@ -1,0 +1,8 @@
+{
+  "track_id": "world_centering_fix_20260109",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-09T15:45:00Z",
+  "updated_at": "2026-01-09T15:45:00Z",
+  "description": "Fix world centering issue where new worlds appear offset from the player upon entry."
+}

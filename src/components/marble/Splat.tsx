@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from "react";
 import { SplatMesh } from "@sparkjsdev/spark";
 import { useMyStore } from "../../store/store";
+import { type ThreeElements } from "@react-three/fiber";
 
-export const Splat = () => {
+export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
   const assets = useMyStore((state) => state.assets);
   const splatUrl = assets?.splatUrl;
 
@@ -25,5 +26,9 @@ export const Splat = () => {
 
   if (!splat) return null;
 
-  return <primitive object={splat} />;
+  return (
+    <>
+      <primitive object={splat} {...props} />
+    </>
+  );
 };

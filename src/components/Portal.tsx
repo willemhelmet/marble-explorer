@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Sphere, Text } from "@react-three/drei";
+import { Billboard, Sphere, Text } from "@react-three/drei";
 import { useMyStore } from "../store/store";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { characterStatus } from "bvhecctrl";
 import { type Portal as PortalType } from "../store/worldSlice";
@@ -21,7 +21,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     (state) => state.setWorldAnchorPosition,
   );
   const updatePortal = useMyStore((state) => state.updatePortal);
-  const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
 
   const [isHovered, setIsHovered] = useState(false);
   const isTransitioning = useRef(false);
@@ -40,7 +39,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
     try {
       if (portal.url === "hub") {
-        console.log("[Portal] Navigating to Hub. Resetting anchor to (0,0,0)");
         // Returning to the initial lobby
         setWorldAnchorPosition(new THREE.Vector3(0, 0, 0));
         setAssets(null);
@@ -56,14 +54,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           // We anchor the new world to the player's EXACT absolute position
           // so that the player is at (0,0,0) local in the next world.
           const newAnchor = characterStatus.position.clone();
-          
-          console.log("[Portal] Navigating to dynamic world.", {
-            portalId: portal.id,
-            targetWorldId,
-            playerWorldPos: characterStatus.position.toArray(),
-            currentWorldAnchor: worldAnchorPosition.toArray(),
-            calculatedNewAnchor: newAnchor.toArray()
-          });
 
           setWorldAnchorPosition(newAnchor);
           setAssets(assets);
@@ -142,7 +132,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     };
   }, [isHovered]);
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation(); // Prevent click from passing through
     setEditingPortal(currentWorldId, portal.id);
     openPortalUI();
@@ -151,17 +141,19 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   return (
     <group position={portal.position} ref={groupRef}>
       {/* Floating Status Text */}
-      <Text
-        position={[0, 1.5, 0]}
-        fontSize={0.3}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.02}
-        outlineColor="black"
-      >
-        {getStatusText()}
-      </Text>
+      <Billboard>
+        <Text
+          position={[0, 1.5, 0]}
+          fontSize={0.3}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.02}
+          outlineColor="black"
+        >
+          {getStatusText()}
+        </Text>
+      </Billboard>
 
       {/* The Portal Sphere */}
       <Sphere

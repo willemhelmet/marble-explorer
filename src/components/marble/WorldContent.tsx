@@ -2,12 +2,12 @@ import { useMemo, memo } from "react";
 import { useThree } from "@react-three/fiber";
 import { Grid } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer";
-import { World } from "./components/marble/World";
-import { WorldCollider } from "./components/marble/WorldCollider";
-import { Portal } from "./components/Portal";
+import { Splat } from "./Splat";
+//import { WorldCollider } from "./WorldCollider";
+import { Portal } from "../Portal";
 import { Vector3 } from "three";
-import type { WorldAssets } from "./store/portalSlice";
-import type { World as WorldData } from "./store/worldSlice";
+import type { WorldAssets } from "../../store/portalSlice";
+import type { World as WorldData } from "../../store/worldSlice";
 
 interface WorldContentProps {
   currentWorldId: string;
@@ -33,25 +33,18 @@ export const WorldContent = memo(
     const renderer = useThree((state) => state.gl);
     const isHub = currentWorldId === "hub";
 
-    console.log("[WorldContent] Rendering world.", {
-      currentWorldId,
-      worldAnchorPos: worldAnchorPos.toArray(),
-      isHub,
-      portalCount: currentWorld?.portals.length || 0
-    });
-
     const sparkRendererArgs = useMemo(() => {
       return { renderer, maxStdDev: Math.sqrt(5) };
     }, [renderer]);
 
     return (
       <group position={worldAnchorPos}>
-        {/* 1. Portals */}
+        {/* Portals */}
         {currentWorld?.portals.map((portal) => (
           <Portal key={portal.id} portal={portal} />
         ))}
 
-        {/* 2. Geometry & Physics */}
+        {/* Geometry & Physics */}
         {isHub ? (
           <>
             <Grid
@@ -63,12 +56,10 @@ export const WorldContent = memo(
           </>
         ) : (
           assets && (
-            <group rotation={[Math.PI, 0, 0]} scale={[2, 2, 2]}>
-              <SparkRenderer args={[sparkRendererArgs]}>
-                <World />
-              </SparkRenderer>
-              {/* <WorldCollider /> */}
-            </group>
+            <SparkRenderer args={[sparkRendererArgs]}>
+              <Splat rotation={[Math.PI, 0, 0]} scale={[2, 2, 2]} />
+            </SparkRenderer>
+            /* <WorldCollider /> */
           )
         )}
       </group>

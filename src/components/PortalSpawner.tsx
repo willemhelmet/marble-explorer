@@ -3,7 +3,7 @@ import { useKeyboardControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useMyStore } from "../store/store";
 import { characterStatus } from "bvhecctrl";
-import * as THREE from "three";
+import { Vector3 } from "three";
 
 export const PortalSpawner = () => {
   const status = useMyStore((state) => state.status);
@@ -22,19 +22,20 @@ export const PortalSpawner = () => {
       (pressed) => {
         if (pressed && status === "playing") {
           // Get direction camera is facing
-          const direction = new THREE.Vector3();
+          const direction = new Vector3();
           camera.getWorldDirection(direction);
-          
+
           // Flatten to XZ plane and normalize
           direction.y = 0;
           direction.normalize();
-          
+
           // Scale by 1.5m
           direction.multiplyScalar(1.5);
 
           // Calculate spawn position:
           // Player Pos + Direction Offset - World Anchor Offset
-          const spawnPos = characterStatus.position.clone()
+          const spawnPos = characterStatus.position
+            .clone()
             .add(direction)
             .sub(worldAnchorPosition);
 
