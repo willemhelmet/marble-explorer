@@ -7,7 +7,7 @@
 
 ## Phase 2: Room State & Portal Fetching
 - [x] Task: Implement unit tests for fetching portals from DB during `join_scene` 5f83b3a
-- [~] Task: Update `join_scene` handler to query DB and include portal data in the response
+- [x] Task: Update `join_scene` handler to query DB and include portal data in the response 207a2bd
 - [ ] Task: Conductor - User Manual Verification 'Room State & Portal Fetching' (Protocol in workflow.md)
 
 ## Phase 3: Portal Creation & Broadcasting
