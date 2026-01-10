@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { initDB, getPortalsForRoom, createPortal } from "./db.js";
+import { initDB, getPortalsForRoom, createPortal, removePortal } from "./db.js";
 
 // Initialize database
 initDB();
@@ -130,6 +130,19 @@ io.on("connection", (socket) => {
       io.to(portalData.from_scene).emit("portal_added", newPortal);
     } catch (error) {
       console.error("Error creating portal:", error.message);
+      socket.emit("portal_error", error.message);
+    }
+  });
+
+  socket.on("remove_portal", ({ id, room_name }) => {
+    try {
+      const removed = removePortal(id);
+      if (removed) {
+        // Broadcast to all clients in the scene
+        io.to(room_name).emit("portal_removed", id);
+      }
+    } catch (error) {
+      console.error("Error removing portal:", error.message);
       socket.emit("portal_error", error.message);
     }
   });
