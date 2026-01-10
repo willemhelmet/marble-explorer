@@ -11,13 +11,15 @@ export const FloorCollider = () => {
         position={[worldAnchorPosition.x, -0.01, worldAnchorPosition.z]}
       />
 
-      <StaticCollider>
+      <StaticCollider
+        key={`${worldAnchorPosition.x}-${worldAnchorPosition.y}-${worldAnchorPosition.z}`}
+      >
         <Bvh firstHitOnly>
           <mesh
             rotation-x={-Math.PI / 2}
             position={[worldAnchorPosition.x, -0.01, worldAnchorPosition.z]}
           >
-            <planeGeometry args={[100, 100]} />
+            <planeGeometry args={[100, 100, 100, 100]} />
             {/* <meshBasicMaterial transparent opacity={0} depthWrite={false} /> */}
             <meshBasicMaterial color="red" wireframe />
           </mesh>
