@@ -6,8 +6,8 @@
 - [x] Task: Conductor - User Manual Verification 'Environment & Database Setup' (Protocol in workflow.md) 1fda1c4
 
 ## Phase 2: Room State & Portal Fetching
-- [ ] Task: Implement unit tests for fetching portals from DB during `join_scene`
-- [ ] Task: Update `join_scene` handler to query DB and include portal data in the response
+- [x] Task: Implement unit tests for fetching portals from DB during `join_scene` 5f83b3a
+- [~] Task: Update `join_scene` handler to query DB and include portal data in the response
 - [ ] Task: Conductor - User Manual Verification 'Room State & Portal Fetching' (Protocol in workflow.md)
 
 ## Phase 3: Portal Creation & Broadcasting
