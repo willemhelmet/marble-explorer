@@ -17,18 +17,18 @@ test('Portal Creation', async (t) => {
       x: 5.0,
       y: 0.0,
       z: 5.0,
-      from_scene: 'hub',
-      target_url: 'https://marble.worldlabs.ai/world/56ae0deb-0c85-4180-9b8f-b45c9c41460e'
+      from_scene: 'https://marble.worldlabs.ai/world/decf14fd-b0ea-4ce2-9ec1-c50ee2b677cd',
+      target_url: 'https://marble.worldlabs.ai/world/ff851922-c49f-41f7-b1e1-f3b0b8e65b7b'
     };
 
     const id = createPortal(portalData);
     assert.ok(id, 'Should return a valid ID');
     assert.strictEqual(typeof id, 'number');
 
-    const portals = getPortalsForRoom('hub');
+    const portals = getPortalsForRoom('https://marble.worldlabs.ai/world/decf14fd-b0ea-4ce2-9ec1-c50ee2b677cd');
     assert.strictEqual(portals.length, 1);
     assert.strictEqual(portals[0].id, id);
-    assert.strictEqual(portals[0].target_url, 'https://marble.worldlabs.ai/world/56ae0deb-0c85-4180-9b8f-b45c9c41460e');
+    assert.strictEqual(portals[0].target_url, 'https://marble.worldlabs.ai/world/ff851922-c49f-41f7-b1e1-f3b0b8e65b7b');
   });
 
   await t.test('should throw error for missing fields', () => {
