@@ -12,8 +12,8 @@ _Confirm the "ghost floor" behavior where the visual floor moves but physics rem
 
 _Implement the key-based remounting strategy to ensure the physics engine sees the new coordinates._
 
-- [~] Task: Update `src/components/FloorCollider.tsx` to include a `key` prop on the `StaticCollider` or `Bvh` component derived from `worldAnchorPosition`.
-- [ ] Task: Refactor `FloorCollider` to ensure it only renders the mesh when a valid anchor is present.
+- [x] Task: Update `src/components/FloorCollider.tsx` to include a `key` prop on the `StaticCollider` or `Bvh` component derived from `worldAnchorPosition`. 7100d85
+- [~] Task: Refactor `FloorCollider` to use `KinematicCollider` instead of `StaticCollider`, ensuring the physics engine handles position updates dynamically.
 - [ ] Task: Verify that the physics debug helper now follows the visual floor correctly after portal traversal.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Remounting Fix' (Protocol in workflow.md)
 

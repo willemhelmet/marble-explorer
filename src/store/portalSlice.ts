@@ -44,7 +44,7 @@ export const createPortalSlice: StateCreator<
   assets: null,
   error: null,
   isHovered: false,
-  worldAnchorPosition: new Vector3(0, 1, -3),
+  worldAnchorPosition: new Vector3(0, 1, 0),
 
   // Actions
   setAssets: (assets) => set({ assets }),

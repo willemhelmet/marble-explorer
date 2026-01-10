@@ -17,6 +17,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const switchWorld = useMyStore((state) => state.switchWorld);
   const setAssets = useMyStore((state) => state.setAssets);
+  //const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
   );

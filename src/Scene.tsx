@@ -4,6 +4,7 @@ import { useMyStore } from "./store/store.ts";
 import { Crosshair } from "./components/ui/Crosshair.tsx";
 import { WorldContent } from "./components/marble/WorldContent.tsx";
 import { PortalSpawner } from "./components/PortalSpawner.tsx";
+//import { AxesHelper } from "./components/AxesHelper.tsx";
 
 export const Scene = () => {
   // Only subscribe to world-changing state
@@ -32,7 +33,7 @@ export const Scene = () => {
       <Player />
       <Crosshair />
 
-      <axesHelper />
+      {/* <AxesHelper scale={[5, 5, 5]} label="world origin" /> */}
 
       <PortalSpawner />
     </>

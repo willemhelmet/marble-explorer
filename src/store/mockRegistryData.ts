@@ -17,6 +17,12 @@ export const mockRegistry: Registry = {
         url: "https://marble.worldlabs.ai/world/1e5bd02f-ab11-4aad-b975-b3f2e3961d24", // Mock World B
         status: "ready",
       },
+      {
+        id: "portal-3",
+        position: new Vector3(0, 0.5, -48),
+        url: "https://marble.worldlabs.ai/world/2d11d885-4737-42e8-bcf2-dce92f5421f6", // Mock World B
+        status: "ready",
+      },
     ],
   },
   "world-a": {
