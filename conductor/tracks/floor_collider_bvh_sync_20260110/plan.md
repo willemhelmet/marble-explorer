@@ -4,7 +4,7 @@
 
 _Confirm the "ghost floor" behavior where the visual floor moves but physics remains behind._
 
-- [~] Task: Add a temporary debug helper (e.g., a visible red wireframe mesh) that tracks the physics collider's actual position as reported by `bvhecctrl`.
+- [x] Task: Add a temporary debug helper (e.g., a visible red wireframe mesh) that tracks the physics collider's actual position as reported by `bvhecctrl`. 4b75e56
 - [ ] Task: Perform a "Distance Test": Enter a portal, move 100m away, and verify if the player falls at a specific threshold.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Diagnosis' (Protocol in workflow.md)
 
