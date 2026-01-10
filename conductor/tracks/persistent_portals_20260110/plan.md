@@ -5,10 +5,10 @@
 - [x] Task: Initialize SQLite database (`disco.db`) and create `portals` table on server startup f82eb21
 - [x] Task: Conductor - User Manual Verification 'Environment & Database Setup' (Protocol in workflow.md) 1fda1c4
 
-## Phase 2: Room State & Portal Fetching
+## Phase 2: Room State & Portal Fetching [checkpoint: 37725f6]
 - [x] Task: Implement unit tests for fetching portals from DB during `join_scene` 5f83b3a
 - [x] Task: Update `join_scene` handler to query DB and include portal data in the response 207a2bd
-- [ ] Task: Conductor - User Manual Verification 'Room State & Portal Fetching' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Room State & Portal Fetching' (Protocol in workflow.md) 37725f6
 
 ## Phase 3: Portal Creation & Broadcasting
 - [ ] Task: Implement unit tests for `create_portal` event (validation, persistence, and broadcast)
