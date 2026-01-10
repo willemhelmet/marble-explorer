@@ -45,6 +45,15 @@ export function createPortal({ x, y, z, from_scene, target_url }) {
   return info.lastInsertRowid;
 }
 
+export function removePortal(id) {
+  if (!db) {
+    throw new Error('Database not initialized. Call initDB() first.');
+  }
+  
+  const info = db.prepare('DELETE FROM portals WHERE id = ?').run(id);
+  return info.changes > 0;
+}
+
 export function getDB() {
   if (!db) {
     throw new Error('Database not initialized. Call initDB() first.');
