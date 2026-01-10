@@ -11,9 +11,9 @@
 - [x] Task: Conductor - User Manual Verification 'Room State & Portal Fetching' (Protocol in workflow.md) 37725f6
 
 ## Phase 3: Portal Creation & Broadcasting
-- [ ] Task: Implement unit tests for `create_portal` event (validation, persistence, and broadcast)
-- [ ] Task: Implement `create_portal` handler with input validation and DB insertion
-- [ ] Task: Implement broadcasting of `portal_added` to relevant clients
+- [x] Task: Implement unit tests for `create_portal` event (validation, persistence, and broadcast) b9d2309
+- [~] Task: Implement `create_portal` handler with input validation and DB insertion
+- [~] Task: Implement broadcasting of `portal_added` to relevant clients
 - [ ] Task: Conductor - User Manual Verification 'Portal Creation & Broadcasting' (Protocol in workflow.md)
 
 ## Phase 4: Error Handling & Persistence Check
