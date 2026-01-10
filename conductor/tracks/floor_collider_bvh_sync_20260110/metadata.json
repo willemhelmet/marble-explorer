@@ -1,0 +1,8 @@
+{
+  "track_id": "floor_collider_bvh_sync_20260110",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-10T16:00:00Z",
+  "updated_at": "2026-01-10T16:00:00Z",
+  "description": "Fix floor collider BVH sync issue where players fall through the floor after portal traversal."
+}
