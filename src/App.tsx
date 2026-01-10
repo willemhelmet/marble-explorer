@@ -13,13 +13,27 @@ import { PortalUI } from "./components/ui/PortalUI.tsx";
 import { useMyStore } from "./store/store.ts";
 import { MobileControls } from "./components/ui/MobileControls.tsx";
 import { ControlsManager } from "./components/ControlsManager.tsx";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
+import { socketManager } from "./services/socketManager";
 
 function App() {
   const isMobile = useMyStore((state) => state.isMobile);
   const status = useMyStore((state) => state.status);
+  const currentWorldId = useMyStore((state) => state.currentWorldId);
   const pause = useMyStore((state) => state.pause);
   const resume = useMyStore((state) => state.resume);
+
+  useEffect(() => {
+    socketManager.connect();
+    
+    return () => {
+      socketManager.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    socketManager.joinRoom(currentWorldId);
+  }, [currentWorldId]);
 
   const handleUnlock = () => {
     if (status === "playing") {

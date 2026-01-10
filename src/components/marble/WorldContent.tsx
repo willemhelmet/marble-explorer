@@ -6,8 +6,7 @@ import { Splat } from "./Splat";
 //import { WorldCollider } from "./WorldCollider";
 import { Portal } from "../Portal";
 import { Vector3, Euler } from "three";
-import type { WorldAssets } from "../../store/portalSlice";
-import type { World as WorldData } from "../../store/worldSlice";
+import type { WorldAssets, World as WorldData } from "../../store/worldSlice";
 // import { AxesHelper } from "../AxesHelper";
 
 interface WorldContentProps {

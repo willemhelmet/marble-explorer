@@ -1,4 +1,4 @@
-import { type WorldAssets } from "../store/portalSlice";
+import { type WorldAssets } from "../store/worldSlice";
 
 const API_BASE_URL = "https://api.worldlabs.ai/marble/v1";
 

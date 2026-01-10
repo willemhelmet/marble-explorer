@@ -4,6 +4,8 @@ import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/re
 import { PortalUI } from "./PortalUI";
 import { useMyStore } from "../../store/store";
 import * as apiService from "../../services/apiService";
+import { socketManager } from "../../services/socketManager";
+import { Vector3 } from "three";
 
 // Mock the API service
 vi.mock("../../services/apiService", () => ({
@@ -14,12 +16,20 @@ vi.mock("../../services/apiService", () => ({
   }),
 }));
 
+// Mock socketManager
+vi.mock("../../services/socketManager", () => ({
+    socketManager: {
+        createPortal: vi.fn(),
+    }
+}));
+
 // Mock the store
 const mockSetAssets = vi.fn();
 const mockUpdatePortal = vi.fn();
 const mockClosePortalUI = vi.fn();
 const mockSetError = vi.fn();
 const mockSetEditingPortal = vi.fn();
+const mockRemovePortal = vi.fn();
 
 vi.mock("../../store/store", () => ({
   useMyStore: vi.fn(),
@@ -41,12 +51,20 @@ describe("PortalUI", () => {
             editingPortal: { worldId: "hub", portalId: "portal-1" },
             updatePortal: mockUpdatePortal,
             setEditingPortal: mockSetEditingPortal,
+            removePortal: mockRemovePortal,
+            worldRegistry: {
+                "hub": {
+                    portals: [
+                        { id: "portal-1", position: new Vector3(10, 0, 10), status: "idle" }
+                    ]
+                }
+            }
         };
         return selector(state);
     });
   });
 
-  it("should update portal registry but NOT set global assets upon submission", async () => {
+  it("should create server portal and remove local portal upon submission", async () => {
     // Setup API mock to resolve successfully
     (apiService.fetchWorldAssets as any).mockResolvedValue({
         splatUrl: "http://example.com/splat.spz",
@@ -66,30 +84,14 @@ describe("PortalUI", () => {
 
     // Wait for async operations
     await waitFor(() => {
-        // Validation 1: Portal registry should be updated
-        expect(mockUpdatePortal).toHaveBeenCalledWith("hub", "portal-1", expect.objectContaining({
-            status: "ready"
-        }));
-    });
-
-    // Validation 2: Global assets should NOT be set (This is the key fix)
-    expect(mockSetAssets).not.toHaveBeenCalled(); 
-  });
-
-  it("should update the portal with the correct URL", async () => {
-    render(<PortalUI />);
-
-    const testUrl = "https://marble.worldlabs.ai/world/uuid-123";
-    const input = screen.getByPlaceholderText(/https:\/\/marble.worldlabs.ai\/world\/.*/i);
-    fireEvent.change(input, { target: { value: testUrl } });
-
-    const button = screen.getByText("Engage");
-    fireEvent.click(button);
-
-    await waitFor(() => {
-        expect(mockUpdatePortal).toHaveBeenCalledWith("hub", "portal-1", expect.objectContaining({
-            url: testUrl
-        }));
+        // Validation 1: Socket request sent
+        expect(socketManager.createPortal).toHaveBeenCalledWith(
+            expect.objectContaining({ x: 10, y: 0, z: 10 }),
+            "https://marble.worldlabs.ai/world/uuid"
+        );
+        
+        // Validation 2: Local portal removed
+        expect(mockRemovePortal).toHaveBeenCalledWith("hub", "portal-1");
     });
   });
 });
