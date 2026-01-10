@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { initDB } from "./db.js";
+import { initDB, getPortalsForRoom } from "./db.js";
 
 // Initialize database
 initDB();
@@ -36,6 +36,10 @@ io.on("connection", (socket) => {
   // Send only players in the same room to the new player
   const roomPlayers = Array.from(rooms.get("hub"));
   socket.emit("players", roomPlayers);
+
+  // Send portals in the hub to the new player
+  const portals = getPortalsForRoom("hub");
+  socket.emit("portals", portals);
 
   socket.on("move", (position, rotation) => {
     // Find the player in their current room
@@ -102,12 +106,19 @@ io.on("connection", (socket) => {
       const newRoomPlayers = Array.from(rooms.get(sceneName));
       io.to(sceneName).emit("players", newRoomPlayers);
 
+      // Send portals in the new room to the player
+      const portals = getPortalsForRoom(sceneName);
+      socket.emit("portals", portals);
+
       // Move socket to new room
       socket.leave(currentRoom);
       socket.join(sceneName);
     } else if (currentPlayer) {
       // Player is already in the correct room, just make sure they're in the socket room
       socket.join(sceneName);
+      // Still send portals just in case
+      const portals = getPortalsForRoom(sceneName);
+      socket.emit("portals", portals);
     }
   });
 
