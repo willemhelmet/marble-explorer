@@ -1,7 +1,7 @@
 # Plan: Persistent Multiplayer Portal System (Server)
 
 ## Phase 1: Environment & Database Setup
-- [~] Task: Install `better-sqlite3` dependency in the server directory
+- [x] Task: Install `better-sqlite3` dependency in the server directory f352a98
 - [ ] Task: Initialize SQLite database (`disco.db`) and create `portals` table on server startup
 - [ ] Task: Conductor - User Manual Verification 'Environment & Database Setup' (Protocol in workflow.md)
 
