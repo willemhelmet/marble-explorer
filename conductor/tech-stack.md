@@ -5,6 +5,11 @@
 - **Frontend Framework:** [React 19](https://react.dev/) - UI library for building the interface and managing component state.
 - **Build Tool:** [Vite](https://vitejs.dev/) - Fast development server and build pipeline.
 
+## Backend & Real-time
+- **Server:** [Node.js](https://nodejs.org/) - JavaScript runtime for the multiplayer backend.
+- **Real-time Communication:** [Socket.IO](https://socket.io/) - For bi-directional, event-based communication.
+- **Database:** [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) - High-performance, synchronous SQLite library for persistent storage.
+
 ## 3D Rendering & Physics
 - **3D Engine:** [Three.js](https://threejs.org/) - The underlying WebGL engine.
 - **React Integration:** [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber) & [@react-three/drei](https://github.com/pmndrs/drei) - React reconciler for Three.js and useful helpers.
