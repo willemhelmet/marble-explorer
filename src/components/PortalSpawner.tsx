@@ -3,12 +3,15 @@ import { useKeyboardControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useMyStore } from "../store/store";
 import { characterStatus } from "bvhecctrl";
-import { Vector3 } from "three";
+import { Vector3, Quaternion } from "three";
 
 export const PortalSpawner = () => {
   const status = useMyStore((state) => state.status);
   const currentWorldId = useMyStore((state) => state.currentWorldId);
   const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
+  const worldAnchorOrientation = useMyStore(
+    (state) => state.worldAnchorOrientation,
+  );
   const addPortal = useMyStore((state) => state.addPortal);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const openPortalUI = useMyStore((state) => state.openPortalUI);
@@ -32,16 +35,26 @@ export const PortalSpawner = () => {
           // Scale by 1.5m
           direction.multiplyScalar(1.5);
 
-          // Calculate spawn position:
-          // Player Pos + Direction Offset - World Anchor Offset
-          const spawnPos = characterStatus.position
+          // Calculate global spawn position:
+          // Player Pos + Direction Offset
+          const globalSpawnPos = characterStatus.position
             .clone()
-            .add(direction)
-            .sub(worldAnchorPosition);
+            .add(direction);
+
+          // Transform to Local Coordinate System (relative to World Anchor)
+          // 1. Translate
+          const localPos = globalSpawnPos.sub(worldAnchorPosition);
+
+          // 2. Rotate (Inverse of World Rotation)
+          const worldQuat = new Quaternion().setFromEuler(
+            worldAnchorOrientation,
+          );
+          worldQuat.invert();
+          localPos.applyQuaternion(worldQuat);
 
           const newPortal = {
             id: `portal-${Date.now()}`,
-            position: spawnPos,
+            position: localPos,
             url: null,
             status: "idle" as const,
           };
@@ -56,6 +69,7 @@ export const PortalSpawner = () => {
     status,
     currentWorldId,
     worldAnchorPosition,
+    worldAnchorOrientation,
     addPortal,
     setEditingPortal,
     openPortalUI,

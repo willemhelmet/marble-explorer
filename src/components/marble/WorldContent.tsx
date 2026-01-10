@@ -5,7 +5,7 @@ import { SparkRenderer } from "./SparkRenderer";
 import { Splat } from "./Splat";
 //import { WorldCollider } from "./WorldCollider";
 import { Portal } from "../Portal";
-import { Vector3 } from "three";
+import { Vector3, Euler } from "three";
 import type { WorldAssets } from "../../store/portalSlice";
 import type { World as WorldData } from "../../store/worldSlice";
 // import { AxesHelper } from "../AxesHelper";
@@ -14,6 +14,7 @@ interface WorldContentProps {
   currentWorldId: string;
   assets: WorldAssets | null;
   worldAnchorPos: Vector3;
+  worldAnchorRot: Euler;
   currentWorld: WorldData | undefined;
 }
 
@@ -29,6 +30,7 @@ export const WorldContent = memo(
     currentWorldId,
     assets,
     worldAnchorPos,
+    worldAnchorRot,
     currentWorld,
   }: WorldContentProps) => {
     const renderer = useThree((state) => state.gl);
@@ -39,7 +41,7 @@ export const WorldContent = memo(
     }, [renderer]);
 
     return (
-      <group position={worldAnchorPos}>
+      <group position={worldAnchorPos} rotation={worldAnchorRot}>
         {/* <AxesHelper label="splat" scale={[2.5, 2.5, 2.5]} /> */}
         {/* Portals */}
         {currentWorld?.portals.map((portal) => (

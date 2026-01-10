@@ -8,7 +8,10 @@ import { PortalSpawner } from "./components/PortalSpawner.tsx";
 
 export const Scene = () => {
   // Only subscribe to world-changing state
-  const worldAnchorPos = useMyStore((state) => state.worldAnchorPosition);
+  const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
+  const worldAnchorRotation = useMyStore(
+    (state) => state.worldAnchorOrientation,
+  );
   const assets = useMyStore((state) => state.assets);
   const currentWorldId = useMyStore((state) => state.currentWorldId);
   const currentWorld = useMyStore(
@@ -24,7 +27,8 @@ export const Scene = () => {
       <WorldContent
         currentWorldId={currentWorldId}
         assets={assets}
-        worldAnchorPos={worldAnchorPos}
+        worldAnchorPos={worldAnchorPosition}
+        worldAnchorRot={worldAnchorRotation}
         currentWorld={currentWorld}
       />
 

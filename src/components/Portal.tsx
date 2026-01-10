@@ -21,6 +21,9 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
   );
+  const setWorldAnchorOrientation = useMyStore(
+    (state) => state.setWorldAnchorOrientation,
+  );
   const updatePortal = useMyStore((state) => state.updatePortal);
 
   const [isHovered, setIsHovered] = useState(false);
@@ -42,6 +45,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       if (portal.url === "hub") {
         // Returning to the initial lobby
         setWorldAnchorPosition(new THREE.Vector3(0, 0, 0));
+        setWorldAnchorOrientation(new THREE.Euler(0, 0, 0));
         setAssets(null);
         switchWorld("hub");
       } else {
@@ -57,6 +61,15 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           const newAnchor = characterStatus.position.clone();
 
           setWorldAnchorPosition(newAnchor);
+          // TODO: set the world anchor orientation to the Y component of the camera's direction vector.
+          //       this will allow for the new world to be orientated the way it was generated, as
+          //       opposed to facing the wrong way (i.e. directly at a wall)
+          const newOrientation = new THREE.Euler(0, 0, 0, "YXZ");
+          newOrientation.setFromQuaternion(characterStatus.quaternion);
+          newOrientation.x = 0;
+          newOrientation.z = 0;
+          newOrientation.y += Math.PI; // Offset by 180 degrees to align forward vectors
+          setWorldAnchorOrientation(newOrientation);
           setAssets(assets);
           switchWorld(targetWorldId);
         }

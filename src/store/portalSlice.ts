@@ -1,5 +1,5 @@
 import { type StateCreator } from "zustand";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 
 export type PortalStatus =
   | "idle"
@@ -24,12 +24,14 @@ export interface PortalSlice {
   isHovered: boolean;
   /** The position of the portal that was entered, used to anchor world assets */
   worldAnchorPosition: Vector3;
+  worldAnchorOrientation: Euler;
 
   // --- Actions ---
   setAssets: (assets: WorldAssets | null) => void;
   setError: (error: string | null) => void;
   setIsHovered: (isHovered: boolean) => void;
   setWorldAnchorPosition: (position: Vector3) => void;
+  setWorldAnchorOrientation: (orientation: Euler) => void;
   /** Resets the portal to its initial idle state and clears assets */
   resetPortal: () => void;
 }
@@ -45,12 +47,15 @@ export const createPortalSlice: StateCreator<
   error: null,
   isHovered: false,
   worldAnchorPosition: new Vector3(0, 1, 0),
+  worldAnchorOrientation: new Euler(0, 0, 0),
 
   // Actions
   setAssets: (assets) => set({ assets }),
   setError: (error) => set({ error }),
   setIsHovered: (isHovered) => set({ isHovered }),
   setWorldAnchorPosition: (position) => set({ worldAnchorPosition: position }),
+  setWorldAnchorOrientation: (orientation) =>
+    set({ worldAnchorOrientation: orientation }),
   resetPortal: () =>
     set({
       assets: null,

@@ -1,0 +1,8 @@
+{
+  "track_id": "splat_orientation_sync_20260110",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-10T11:45:00Z",
+  "updated_at": "2026-01-10T11:45:00Z",
+  "description": "Adjust splat orientation so the negative z-axis aligns with the player's forward vector upon portal entry, ensuring the floor remains flat."
+}
