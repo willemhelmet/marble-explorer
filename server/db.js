@@ -28,6 +28,23 @@ export function getPortalsForRoom(roomName) {
   return db.prepare('SELECT * FROM portals WHERE from_scene = ?').all(roomName);
 }
 
+export function createPortal({ x, y, z, from_scene, target_url }) {
+  if (!db) {
+    throw new Error('Database not initialized. Call initDB() first.');
+  }
+  
+  if (x === undefined || y === undefined || z === undefined || !from_scene || !target_url) {
+    throw new Error('Missing required fields for portal creation');
+  }
+
+  const info = db.prepare(`
+    INSERT INTO portals (x, y, z, from_scene, target_url)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(x, y, z, from_scene, target_url);
+  
+  return info.lastInsertRowid;
+}
+
 export function getDB() {
   if (!db) {
     throw new Error('Database not initialized. Call initDB() first.');
