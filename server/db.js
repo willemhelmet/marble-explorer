@@ -21,6 +21,13 @@ export function initDB(dbPath = 'disco.db') {
   return db;
 }
 
+export function getPortalsForRoom(roomName) {
+  if (!db) {
+    throw new Error('Database not initialized. Call initDB() first.');
+  }
+  return db.prepare('SELECT * FROM portals WHERE from_scene = ?').all(roomName);
+}
+
 export function getDB() {
   if (!db) {
     throw new Error('Database not initialized. Call initDB() first.');
