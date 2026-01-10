@@ -12,8 +12,8 @@
 
 ## Phase 3: Portal Creation & Broadcasting
 - [x] Task: Implement unit tests for `create_portal` event (validation, persistence, and broadcast) b9d2309
-- [~] Task: Implement `create_portal` handler with input validation and DB insertion
-- [~] Task: Implement broadcasting of `portal_added` to relevant clients
+- [x] Task: Implement `create_portal` handler with input validation and DB insertion 05517f1
+- [x] Task: Implement broadcasting of `portal_added` to relevant clients 05517f1
 - [ ] Task: Conductor - User Manual Verification 'Portal Creation & Broadcasting' (Protocol in workflow.md)
 
 ## Phase 4: Error Handling & Persistence Check
