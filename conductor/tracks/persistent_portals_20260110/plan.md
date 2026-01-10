@@ -17,7 +17,7 @@
 - [x] Task: Conductor - User Manual Verification 'Portal Creation & Broadcasting' (Protocol in workflow.md) 5627319
 
 ## Phase 4: Error Handling & Persistence Check
-- [ ] Task: Implement unit tests for `portal_error` event on invalid inputs
-- [ ] Task: Implement error catch blocks for DB operations to emit `portal_error`
-- [ ] Task: Verify end-to-end persistence (Portals survive server restart)
+- [x] Task: Implement unit tests for `portal_error` event on invalid inputs 43587ee
+- [x] Task: Implement error catch blocks for DB operations to emit `portal_error` 05517f1
+- [x] Task: Verify end-to-end persistence (Portals survive server restart) 43587ee
 - [ ] Task: Conductor - User Manual Verification 'Error Handling & Persistence Check' (Protocol in workflow.md)
