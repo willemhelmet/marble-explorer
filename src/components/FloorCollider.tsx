@@ -19,8 +19,7 @@ export const FloorCollider = () => {
         <Bvh firstHitOnly>
           <mesh rotation-x={-Math.PI / 2}>
             <planeGeometry args={[1000, 1000, 100, 100]} />
-            {/* <meshBasicMaterial transparent opacity={0} depthWrite={false} /> */}
-            <meshBasicMaterial color="red" wireframe />
+            <meshBasicMaterial transparent opacity={0} depthWrite={false} />
           </mesh>
         </Bvh>
       </StaticCollider>
