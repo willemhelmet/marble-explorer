@@ -1,9 +1,9 @@
 # Plan: Persistent Multiplayer Portal System (Server)
 
-## Phase 1: Environment & Database Setup
+## Phase 1: Environment & Database Setup [checkpoint: 1fda1c4]
 - [x] Task: Install `better-sqlite3` dependency in the server directory f352a98
 - [x] Task: Initialize SQLite database (`disco.db`) and create `portals` table on server startup f82eb21
-- [ ] Task: Conductor - User Manual Verification 'Environment & Database Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Environment & Database Setup' (Protocol in workflow.md) 1fda1c4
 
 ## Phase 2: Room State & Portal Fetching
 - [ ] Task: Implement unit tests for fetching portals from DB during `join_scene`
