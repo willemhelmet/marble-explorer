@@ -12,6 +12,7 @@ export function initDB(dbPath = 'disco.db') {
       x REAL NOT NULL,
       y REAL NOT NULL,
       z REAL NOT NULL,
+      rotation_y REAL NOT NULL DEFAULT 0,
       from_scene TEXT NOT NULL,
       target_url TEXT NOT NULL
     )
@@ -28,7 +29,7 @@ export function getPortalsForRoom(roomName) {
   return db.prepare('SELECT * FROM portals WHERE from_scene = ?').all(roomName);
 }
 
-export function createPortal({ x, y, z, from_scene, target_url }) {
+export function createPortal({ x, y, z, rotation_y = 0, from_scene, target_url }) {
   if (!db) {
     throw new Error('Database not initialized. Call initDB() first.');
   }
@@ -38,9 +39,9 @@ export function createPortal({ x, y, z, from_scene, target_url }) {
   }
 
   const info = db.prepare(`
-    INSERT INTO portals (x, y, z, from_scene, target_url)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(x, y, z, from_scene, target_url);
+    INSERT INTO portals (x, y, z, rotation_y, from_scene, target_url)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(x, y, z, rotation_y, from_scene, target_url);
   
   return info.lastInsertRowid;
 }

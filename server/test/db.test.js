@@ -17,13 +17,14 @@ test('Database Initialization', async (t) => {
     
     const tableInfo = db.prepare("PRAGMA table_info(portals)").all();
     
-    assert.strictEqual(tableInfo.length, 6, 'Table should have 6 columns');
+    assert.strictEqual(tableInfo.length, 7, 'Table should have 7 columns');
     
     const columns = tableInfo.map(c => c.name);
     assert.ok(columns.includes('id'), 'Should have id column');
     assert.ok(columns.includes('x'), 'Should have x column');
     assert.ok(columns.includes('y'), 'Should have y column');
     assert.ok(columns.includes('z'), 'Should have z column');
+    assert.ok(columns.includes('rotation_y'), 'Should have rotation_y column');
     assert.ok(columns.includes('from_scene'), 'Should have from_scene column');
     assert.ok(columns.includes('target_url'), 'Should have target_url column');
   });
