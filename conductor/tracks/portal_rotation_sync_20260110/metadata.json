@@ -1,0 +1,8 @@
+{
+  "track_id": "portal_rotation_sync_20260110",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-10T14:45:00Z",
+  "updated_at": "2026-01-10T14:45:00Z",
+  "description": "Add a y-rotation parameter for portals in the server to ensure a shared frame of reference for everyone entering a world."
+}
