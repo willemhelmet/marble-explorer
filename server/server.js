@@ -123,9 +123,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("create_portal", (portalData) => {
+    console.log(`[${socket.id}] create_portal request:`, portalData);
     try {
       const id = createPortal(portalData);
       const newPortal = { ...portalData, id };
+      console.log("Portal created, broadcasting to:", portalData.from_scene);
       // Broadcast to all clients in the scene
       io.to(portalData.from_scene).emit("portal_added", newPortal);
     } catch (error) {

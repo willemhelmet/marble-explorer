@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMyStore } from "../../store/store";
 import { fetchWorldAssets } from "../../services/apiService";
+import { socketManager } from "../../services/socketManager";
 
 export const PortalUI = () => {
   const [urlInput, setUrlInput] = useState("");
@@ -8,7 +9,8 @@ export const PortalUI = () => {
   const setError = useMyStore((state) => state.setError);
   const pause = useMyStore((state) => state.pause);
   const editingPortal = useMyStore((state) => state.editingPortal);
-  const updatePortal = useMyStore((state) => state.updatePortal);
+  const worldRegistry = useMyStore((state) => state.worldRegistry);
+  const removePortal = useMyStore((state) => state.removePortal);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
 
   useEffect(() => {
@@ -30,28 +32,28 @@ export const PortalUI = () => {
     if (!urlInput.trim() || !editingPortal) return;
 
     const { worldId, portalId } = editingPortal;
+    const localPortal = worldRegistry[worldId]?.portals.find((p) => p.id === portalId);
 
-    // Start the fetching process for this specific portal
-    updatePortal(worldId, portalId, {
-      url: urlInput,
-      status: "fetching",
-    });
+    if (!localPortal) return;
+
+    // 1. Request Server to create a global, persistent portal
+    socketManager.createPortal(localPortal.position, urlInput);
+
+    // 2. Remove the temporary local portal we created for the UI placement
+    removePortal(worldId, portalId);
 
     closePortalUI(); // Hide UI immediately
     setError(null); // Clear previous errors
 
     try {
+      // Still fetch assets locally so the creator sees the world loading immediately
       await fetchWorldAssets(urlInput);
-      // Update the specific portal in the registry
-      updatePortal(worldId, portalId, { status: "ready" });
-      // Clear editing state
       setEditingPortal(null, null);
     } catch (err: unknown) {
       console.error("Portal Error:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to fetch world assets";
       setError(errorMessage);
-      updatePortal(worldId, portalId, { status: "error" });
     }
   };
 

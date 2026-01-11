@@ -80,20 +80,24 @@ class SocketManager {
         id: String(p.id),
         position: new Vector3(p.x, p.y, p.z),
         url: p.target_url,
-        status: "idle",
+        status: "ready",
       }));
       useMyStore.getState().setPortalsForWorld(currentWorld, portals);
     });
 
     this.socket.on("portal_added", (p) => {
+      console.log("Socket received portal_added:", p);
       const currentWorld = useMyStore.getState().currentWorldId;
-      if (p.from_scene !== currentWorld) return;
+      if (p.from_scene !== currentWorld) {
+        console.warn(`Ignoring portal for world ${p.from_scene} (current: ${currentWorld})`);
+        return;
+      }
 
       const newPortal: Portal = {
         id: String(p.id),
         position: new Vector3(p.x, p.y, p.z),
         url: p.target_url,
-        status: "idle",
+        status: "ready",
       };
       useMyStore.getState().addPortal(currentWorld, newPortal);
     });
