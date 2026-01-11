@@ -2,7 +2,8 @@ import { Server } from "socket.io";
 import { initDB, getPortalsForRoom, createPortal, removePortal } from "./db.js";
 
 // Initialize database
-initDB();
+const dbPath = process.env.DB_PATH || 'disco.db';
+initDB(dbPath);
 
 const io = new Server({
   cors: {
@@ -11,7 +12,9 @@ const io = new Server({
   },
 });
 
-io.listen(3000);
+const PORT = process.env.PORT || 3000;
+io.listen(PORT);
+console.log(`Server listening on port ${PORT}`);
 const rooms = new Map(); // roomName -> Set of player objects
 
 io.on("connection", (socket) => {
