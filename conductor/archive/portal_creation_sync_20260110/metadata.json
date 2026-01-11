@@ -1,0 +1,8 @@
+{
+  "id": "portal_creation_sync_20260110",
+  "name": "Portal Creation Sync",
+  "description": "Debug and implement server-side portal creation broadcasting to ensure persistent portals across clients.",
+  "status": "active",
+  "created_at": "2026-01-10",
+  "priority": "high"
+}
