@@ -5,7 +5,7 @@ Synchronize the world orientation (Yaw) for all players who enter a portal, usin
 
 ## Phase 1: Database & Server Implementation
 - [x] Task: Update `server/db.js` to include `rotation_y` in schema and `createPortal` logic [cb222a8]
-- [ ] Task: Update `server/server.js` to handle `rotation_y` in socket events
+- [x] Task: Update `server/server.js` to handle `rotation_y` in socket events [9001b01]
 - [ ] Task: Reset server database to apply schema changes
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Database & Server Implementation' (Protocol in workflow.md)
 
