@@ -17,6 +17,7 @@ interface ServerPortal {
   x: number;
   y: number;
   z: number;
+  rotation_y: number;
   from_scene: string;
   target_url: string;
 }
@@ -39,6 +40,7 @@ interface ClientToServerEvents {
     x: number;
     y: number;
     z: number;
+    rotation_y: number;
     from_scene: string;
     target_url: string;
   }) => void;
@@ -79,6 +81,7 @@ class SocketManager {
       const portals: Portal[] = serverPortals.map((p) => ({
         id: String(p.id),
         position: new Vector3(p.x, p.y, p.z),
+        rotationY: p.rotation_y,
         url: p.target_url,
         status: "ready",
       }));
@@ -96,6 +99,7 @@ class SocketManager {
       const newPortal: Portal = {
         id: String(p.id),
         position: new Vector3(p.x, p.y, p.z),
+        rotationY: p.rotation_y,
         url: p.target_url,
         status: "ready",
       };
@@ -133,7 +137,7 @@ class SocketManager {
     ]);
   }
 
-  public createPortal(position: Vector3, targetUrl: string) {
+  public createPortal(position: Vector3, rotationY: number, targetUrl: string) {
     if (!this.socket) return;
     const currentWorld = useMyStore.getState().currentWorldId;
 
@@ -141,6 +145,7 @@ class SocketManager {
       x: position.x,
       y: position.y,
       z: position.z,
+      rotation_y: rotationY,
       from_scene: currentWorld,
       target_url: targetUrl,
     });
