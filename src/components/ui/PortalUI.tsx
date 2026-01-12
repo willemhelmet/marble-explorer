@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useMyStore } from "../../store/store";
 import { fetchWorldAssets } from "../../services/apiService";
 import { socketManager } from "../../services/socketManager";
+import { characterStatus } from "bvhecctrl";
+import { Euler, Quaternion } from "three";
 
 export const PortalUI = () => {
   const [urlInput, setUrlInput] = useState("");
@@ -36,8 +38,19 @@ export const PortalUI = () => {
 
     if (!localPortal) return;
 
+    // Capture current player rotation (Yaw)
+    const userQuat = new Quaternion(
+      characterStatus.quaternion.x,
+      characterStatus.quaternion.y,
+      characterStatus.quaternion.z,
+      characterStatus.quaternion.w,
+    );
+    const userEuler = new Euler(0, 0, 0, "YXZ");
+    userEuler.setFromQuaternion(userQuat);
+    const rotationY = userEuler.y;
+
     // 1. Request Server to create a global, persistent portal
-    socketManager.createPortal(localPortal.position, urlInput);
+    socketManager.createPortal(localPortal.position, rotationY, urlInput);
 
     // 2. Remove the temporary local portal we created for the UI placement
     removePortal(worldId, portalId);

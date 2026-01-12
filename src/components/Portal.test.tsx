@@ -26,7 +26,7 @@ let mockCameraPosition = new THREE.Vector3(10, 10, 10);
 vi.mock("@react-three/fiber", () => ({
   useFrame: vi.fn((cb) => {
       // Trigger it manually in tests
-      (global as any).triggerUseFrame = cb;
+      (globalThis as any).triggerUseFrame = cb;
   }),
   useThree: vi.fn((selector) => {
     const state = {
@@ -126,7 +126,7 @@ describe("Portal", () => {
     // Mock camera being close to the portal
     mockCameraPosition.set(3, 0.5, -5);
 
-    const triggerUseFrame = (global as any).triggerUseFrame;
+    const triggerUseFrame = (globalThis as any).triggerUseFrame;
     if (triggerUseFrame) {
         triggerUseFrame();
     }
@@ -149,7 +149,7 @@ describe("Portal", () => {
 
     mockCameraPosition.set(3, 0.5, -5);
 
-    const triggerUseFrame = (global as any).triggerUseFrame;
+    const triggerUseFrame = (globalThis as any).triggerUseFrame;
     if (triggerUseFrame) {
         triggerUseFrame();
     }
@@ -192,7 +192,7 @@ describe("Portal", () => {
     
     // We need to ensure getWorldPosition returns the portal position (100, 0, 100)
     
-    const triggerUseFrame = (global as any).triggerUseFrame;
+    const triggerUseFrame = (globalThis as any).triggerUseFrame;
     if (triggerUseFrame) {
         triggerUseFrame();
     }

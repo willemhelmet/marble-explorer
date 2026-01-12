@@ -24,6 +24,7 @@ describe("worldSlice", () => {
     const portal: Portal = {
       id: "new-portal",
       position: new Vector3(10, 0, 0),
+      rotationY: 0,
       url: null,
       status: "idle",
     };

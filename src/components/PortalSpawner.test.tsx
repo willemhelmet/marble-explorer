@@ -52,7 +52,8 @@ vi.mock("@react-three/fiber", () => ({
 
 vi.mock("@react-three/drei", () => ({
   useKeyboardControls: vi.fn(() => [
-    (selector: any, cb: any) => {
+    (_selector: any, cb: any) => {
+      // Mock implementation
       mocks.triggerKey = cb;
       return () => {};
     },

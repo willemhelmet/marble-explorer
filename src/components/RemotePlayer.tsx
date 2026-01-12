@@ -6,7 +6,7 @@ import { type RemotePlayer as RemotePlayerType } from "../store/playerSlice";
 export const RemotePlayer = ({ player }: { player: RemotePlayerType }) => {
   const meshRef = useRef<Mesh>(null);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (meshRef.current) {
       // Smoothly interpolate towards the latest network position
       const smoothing = 15; // Higher = snappier, Lower = smoother/laggier
