@@ -150,6 +150,14 @@ class SocketManager {
       target_url: targetUrl,
     });
   }
+
+  public removePortal(worldId: string, portalId: string) {
+    if (!this.socket) return;
+    this.socket.emit("remove_portal", {
+      id: Number(portalId),
+      room_name: worldId,
+    });
+  }
 }
 
 export const socketManager = new SocketManager();

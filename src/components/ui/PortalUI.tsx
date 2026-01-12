@@ -3,16 +3,21 @@ import { useMyStore } from "../../store/store";
 import { fetchWorldAssets } from "../../services/apiService";
 import { socketManager } from "../../services/socketManager";
 import { characterStatus } from "bvhecctrl";
-import { Euler, Quaternion } from "three";
+import { Euler, Quaternion, Vector3 } from "three";
 
 export const PortalUI = () => {
   const [urlInput, setUrlInput] = useState("");
   const closePortalUI = useMyStore((state) => state.closePortalUI);
   const setError = useMyStore((state) => state.setError);
   const pause = useMyStore((state) => state.pause);
+  const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
+  const worldAnchorOrientation = useMyStore(
+    (state) => state.worldAnchorOrientation,
+  );
+  
+  // Restore selectors for Edit Mode
   const editingPortal = useMyStore((state) => state.editingPortal);
   const worldRegistry = useMyStore((state) => state.worldRegistry);
-  const removePortal = useMyStore((state) => state.removePortal);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
 
   useEffect(() => {
@@ -28,40 +33,88 @@ export const PortalUI = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [pause]);
 
+  // Pre-fill URL if editing
+  useEffect(() => {
+    if (editingPortal) {
+      const { worldId, portalId } = editingPortal;
+      const existing = worldRegistry[worldId]?.portals.find((p) => p.id === portalId);
+      if (existing && existing.url) {
+        setUrlInput(existing.url);
+      }
+    }
+  }, [editingPortal, worldRegistry]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!urlInput.trim() || !editingPortal) return;
+    if (!urlInput.trim()) return;
 
-    const { worldId, portalId } = editingPortal;
-    const localPortal = worldRegistry[worldId]?.portals.find((p) => p.id === portalId);
+    let targetPos: Vector3;
+    let targetRot: number;
 
-    if (!localPortal) return;
+    if (editingPortal) {
+      // --- EDIT MODE ---
+      const { worldId, portalId } = editingPortal;
+      const existing = worldRegistry[worldId]?.portals.find((p) => p.id === portalId);
+      
+      if (!existing) {
+        // Fallback or error? Close UI
+        closePortalUI();
+        return;
+      }
+      
+      targetPos = existing.position;
+      targetRot = existing.rotationY;
 
-    // Capture current player rotation (Yaw)
-    const userQuat = new Quaternion(
-      characterStatus.quaternion.x,
-      characterStatus.quaternion.y,
-      characterStatus.quaternion.z,
-      characterStatus.quaternion.w,
-    );
-    const userEuler = new Euler(0, 0, 0, "YXZ");
-    userEuler.setFromQuaternion(userQuat);
-    const rotationY = userEuler.y;
+      // "Update" by removing old and creating new (Server limitation work-around)
+      // Note: This changes the Portal ID.
+      socketManager.removePortal(worldId, portalId);
+    } else {
+      // --- CREATE MODE ---
+      // Capture current player rotation
+      const userQuat = new Quaternion(
+        characterStatus.quaternion.x,
+        characterStatus.quaternion.y,
+        characterStatus.quaternion.z,
+        characterStatus.quaternion.w,
+      );
+
+      // Calculate Yaw
+      const userEuler = new Euler(0, 0, 0, "YXZ");
+      userEuler.setFromQuaternion(userQuat);
+      targetRot = userEuler.y;
+
+      // Calculate Position (1.5m in front)
+      const direction = new Vector3(0, 0, -1); // Camera faces -Z
+      direction.applyQuaternion(userQuat);
+      direction.y = 0; // Flatten to XZ
+      direction.normalize();
+      direction.multiplyScalar(1.5);
+
+      const globalSpawnPos = new Vector3(
+        characterStatus.position.x,
+        characterStatus.position.y,
+        characterStatus.position.z,
+      ).add(direction);
+
+      // Transform to Local Coordinate System (relative to World Anchor)
+      targetPos = globalSpawnPos.clone().sub(worldAnchorPosition);
+      const worldQuat = new Quaternion().setFromEuler(worldAnchorOrientation);
+      worldQuat.invert();
+      targetPos.applyQuaternion(worldQuat);
+    }
 
     // 1. Request Server to create a global, persistent portal
-    socketManager.createPortal(localPortal.position, rotationY, urlInput);
+    socketManager.createPortal(targetPos, targetRot, urlInput);
 
-    // 2. Remove the temporary local portal we created for the UI placement
-    removePortal(worldId, portalId);
-
+    // Cleanup
+    setEditingPortal(null, null);
     closePortalUI(); // Hide UI immediately
     setError(null); // Clear previous errors
 
     try {
       // Still fetch assets locally so the creator sees the world loading immediately
       await fetchWorldAssets(urlInput);
-      setEditingPortal(null, null);
     } catch (err: unknown) {
       console.error("Portal Error:", err);
       const errorMessage =

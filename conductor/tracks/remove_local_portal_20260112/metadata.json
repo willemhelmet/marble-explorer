@@ -1,0 +1,8 @@
+{
+  "track_id": "remove_local_portal_20260112",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-12T00:55:00Z",
+  "updated_at": "2026-01-12T00:55:00Z",
+  "description": "Remove the local-only 'empty portal' that clutters the environment before Engage."
+}
