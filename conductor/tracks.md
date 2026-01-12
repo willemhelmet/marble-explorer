@@ -4,6 +4,6 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Portal Y-Rotation Sync
+## [~] Track: Portal Y-Rotation Sync
 *Link: [./conductor/tracks/portal_rotation_sync_20260110/](./conductor/tracks/portal_rotation_sync_20260110/)*
 
