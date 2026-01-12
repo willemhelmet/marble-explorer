@@ -11,7 +11,7 @@
     - [ ] Sub-task: Apply Pitch to the Head mesh.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Avatar Component Implementation' (Protocol in workflow.md)
 
-## Phase 2: Integration & Verification
-- [~] Task: Integrate new avatar into `RemotePlayerManager.tsx` (if separate component) or finalize updates in `RemotePlayer.tsx`.
-- [ ] Task: Verify positioning alignment (feet on ground vs center point).
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Integration & Verification' (Protocol in workflow.md)
+## Phase 2: Integration & Verification [checkpoint: 4ee3c89]
+- [x] Task: Integrate new avatar into `RemotePlayerManager.tsx` (if separate component) or finalize updates in `RemotePlayer.tsx`.
+- [x] Task: Verify positioning alignment (feet on ground vs center point).
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Integration & Verification' (Protocol in workflow.md)- [ ] Task: Conductor - User Manual Verification 'Phase 2: Integration & Verification' (Protocol in workflow.md)
