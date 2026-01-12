@@ -55,6 +55,7 @@ export const PortalSpawner = () => {
           const newPortal = {
             id: `portal-${Date.now()}`,
             position: localPos,
+            rotationY: 0,
             url: null,
             status: "idle" as const,
           };

@@ -18,6 +18,7 @@ export interface WorldAssets {
 export interface Portal {
   id: string;
   position: Vector3;
+  rotationY: number;
   url: string | null;
   status: PortalStatus;
 }
