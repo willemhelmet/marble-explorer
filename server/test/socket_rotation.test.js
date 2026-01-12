@@ -9,15 +9,20 @@ const DB_PATH = 'test_socket.db';
 const PORT = 3001;
 
 test('Socket Rotation Sync', async (t) => {
-  const dbFullPath = path.join(process.cwd(), 'server', DB_PATH);
+  // Determine paths relative to this test file
+  const testDir = path.dirname(new URL(import.meta.url).pathname);
+  const serverDir = path.resolve(testDir, '..');
+  const serverScript = path.join(serverDir, 'server.js');
+  const dbFullPath = path.join(serverDir, DB_PATH);
+
   if (fs.existsSync(dbFullPath)) fs.unlinkSync(dbFullPath);
 
   console.log('Starting server process...');
   // Start server with custom env
-  const serverProcess = spawn('node', ['server.js'], {
+  const serverProcess = spawn(process.execPath, [serverScript], {
     env: { ...process.env, DB_PATH, PORT },
-    cwd: './server',
-    stdio: 'inherit' // Pipe output so we can see what's happening
+    cwd: serverDir,
+    stdio: 'inherit' 
   });
 
   // Give it time to start
