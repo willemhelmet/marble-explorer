@@ -54,7 +54,7 @@ class SocketManager {
   public connect() {
     if (this.socket?.connected) return;
 
-    this.socket = io("marble-explorer.rcdis.co");
+    this.socket = io("https://marble-explorer.rcdis.co");
 
     this.socket.on("connect", () => {
       console.log("Socket connected:", this.socket?.id);
