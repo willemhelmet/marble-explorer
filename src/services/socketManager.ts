@@ -54,7 +54,7 @@ class SocketManager {
   public connect() {
     if (this.socket?.connected) return;
 
-    this.socket = io("http://localhost:3000");
+    this.socket = io("marble-explorer.rcdis.co");
 
     this.socket.on("connect", () => {
       console.log("Socket connected:", this.socket?.id);
@@ -92,7 +92,9 @@ class SocketManager {
       console.log("Socket received portal_added:", p);
       const currentWorld = useMyStore.getState().currentWorldId;
       if (p.from_scene !== currentWorld) {
-        console.warn(`Ignoring portal for world ${p.from_scene} (current: ${currentWorld})`);
+        console.warn(
+          `Ignoring portal for world ${p.from_scene} (current: ${currentWorld})`,
+        );
         return;
       }
 
@@ -161,4 +163,3 @@ class SocketManager {
 }
 
 export const socketManager = new SocketManager();
-

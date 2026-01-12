@@ -7,8 +7,9 @@ initDB(dbPath);
 
 const io = new Server({
   cors: {
-    origin: "*",
+    origin: ["http://localhost:5173", "http://marble-explorer.rcdis.co"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
