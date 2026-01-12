@@ -2,7 +2,7 @@ import BVHEcctrl, { characterStatus } from "bvhecctrl";
 import { useThree, useFrame } from "@react-three/fiber";
 import { useMyStore } from "../store/store.ts";
 import { socketManager } from "../services/socketManager";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export const Player = () => {
   const camera = useThree((state) => state.camera);
@@ -10,13 +10,13 @@ export const Player = () => {
   const paused = status !== "playing";
   const lastSendTime = useRef(0);
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    camera.rotation.order = "YXZ";
+  }, [camera]);
+
   useFrame((state) => {
     if (!paused) {
-      // Ensure YXZ order to avoid gimbal lock when extracting Yaw/Pitch
-      if (camera.rotation.order !== "YXZ") {
-        camera.rotation.order = "YXZ";
-      }
-
       // Update camera position to follow the player
       camera.position.copy(characterStatus.position);
       camera.position.set(

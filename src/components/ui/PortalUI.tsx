@@ -6,7 +6,6 @@ import { characterStatus } from "bvhecctrl";
 import { Euler, Quaternion, Vector3 } from "three";
 
 export const PortalUI = () => {
-  const [urlInput, setUrlInput] = useState("");
   const closePortalUI = useMyStore((state) => state.closePortalUI);
   const setError = useMyStore((state) => state.setError);
   const pause = useMyStore((state) => state.pause);
@@ -14,11 +13,24 @@ export const PortalUI = () => {
   const worldAnchorOrientation = useMyStore(
     (state) => state.worldAnchorOrientation,
   );
-  
+
   // Restore selectors for Edit Mode
   const editingPortal = useMyStore((state) => state.editingPortal);
   const worldRegistry = useMyStore((state) => state.worldRegistry);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
+
+  const [urlInput, setUrlInput] = useState(() => {
+    if (editingPortal) {
+      const { worldId, portalId } = editingPortal;
+      const existing = worldRegistry[worldId]?.portals.find(
+        (p) => p.id === portalId,
+      );
+      if (existing && existing.url) {
+        return existing.url;
+      }
+    }
+    return "";
+  });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -33,17 +45,6 @@ export const PortalUI = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [pause]);
 
-  // Pre-fill URL if editing
-  useEffect(() => {
-    if (editingPortal) {
-      const { worldId, portalId } = editingPortal;
-      const existing = worldRegistry[worldId]?.portals.find((p) => p.id === portalId);
-      if (existing && existing.url) {
-        setUrlInput(existing.url);
-      }
-    }
-  }, [editingPortal, worldRegistry]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -55,14 +56,16 @@ export const PortalUI = () => {
     if (editingPortal) {
       // --- EDIT MODE ---
       const { worldId, portalId } = editingPortal;
-      const existing = worldRegistry[worldId]?.portals.find((p) => p.id === portalId);
-      
+      const existing = worldRegistry[worldId]?.portals.find(
+        (p) => p.id === portalId,
+      );
+
       if (!existing) {
         // Fallback or error? Close UI
         closePortalUI();
         return;
       }
-      
+
       targetPos = existing.position;
       targetRot = existing.rotationY;
 
@@ -84,15 +87,14 @@ export const PortalUI = () => {
       userEuler.setFromQuaternion(userQuat);
       targetRot = userEuler.y;
 
-          // Calculate Position (1.5m in front)
+      // Calculate Position (1.5m in front)
 
-          const direction = new Vector3(0, 0, 1); // Camera/Character forward in bvhecctrl is +Z
+      const direction = new Vector3(0, 0, 1); // Camera/Character forward in bvhecctrl is +Z
 
-          direction.applyQuaternion(userQuat);
+      direction.applyQuaternion(userQuat);
 
-          direction.y = 0; // Flatten to XZ
+      direction.y = 0; // Flatten to XZ
 
-      
       direction.normalize();
       direction.multiplyScalar(1.5);
 
@@ -179,4 +181,3 @@ export const PortalUI = () => {
     </div>
   );
 };
-

@@ -22,6 +22,7 @@ function App() {
   const currentWorldId = useMyStore((state) => state.currentWorldId);
   const pause = useMyStore((state) => state.pause);
   const resume = useMyStore((state) => state.resume);
+  const editingPortal = useMyStore((state) => state.editingPortal);
 
   useEffect(() => {
     socketManager.connect();
@@ -73,7 +74,7 @@ function App() {
     <>
       {status === "intro" && <MainMenu />}
       {status === "paused" && <PauseMenu />}
-      {status === "portal_open" && <PortalUI />}
+      {status === "portal_open" && <PortalUI key={editingPortal?.portalId} />}
 
       <div className="flex h-screen w-screen">
         <KeyboardControls map={keyboardMap}>
