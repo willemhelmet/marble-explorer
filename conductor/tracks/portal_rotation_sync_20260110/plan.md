@@ -18,7 +18,7 @@ Synchronize the world orientation (Yaw) for all players who enter a portal, usin
 - [~] Task: Update `src/components/ui/PortalUI.tsx` to capture and send yaw rotation
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Portal Creation Logic' (Protocol in workflow.md)
 
-## Phase 4: Portal Navigation & Verification
-- [~] Task: Update `src/components/Portal.tsx` to apply stored `rotationY` upon entry
-- [ ] Task: Verify multiplayer orientation synchronization
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Portal Navigation & Verification' (Protocol in workflow.md)
+## Phase 4: Portal Navigation & Verification [checkpoint: 8046e9a]
+- [x] Task: Update `src/components/Portal.tsx` to apply stored `rotationY` upon entry
+- [x] Task: Verify multiplayer orientation synchronization
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Portal Navigation & Verification' (Protocol in workflow.md)
