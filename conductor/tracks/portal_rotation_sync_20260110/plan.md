@@ -9,7 +9,7 @@ Synchronize the world orientation (Yaw) for all players who enter a portal, usin
 - [x] Task: Reset server database to apply schema changes [5d9093e]
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Database & Server Implementation' (Protocol in workflow.md)
 
-## Phase 2: Client State & API Implementation
+## Phase 2: Client State & API Implementation [checkpoint: 9a9ef9d]
 - [x] Task: Update `src/store/worldSlice.ts` to include `rotationY` in `Portal` type and registry actions [ca6edb9]
 - [x] Task: Update `src/services/socketManager.ts` to sync `rotationY` with server [3fe340f]
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Client State & API Implementation' (Protocol in workflow.md)
