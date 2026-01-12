@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, cleanup } from "@testing-library/react";
 import { Portal } from "./Portal";
 import { useMyStore } from "../store/store";
-import * as apiService from "../services/apiService";
 import * as THREE from "three";
 
 // Mock characterStatus (Yaw ~90 degrees)

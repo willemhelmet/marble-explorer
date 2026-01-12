@@ -4,7 +4,6 @@ import { render, cleanup } from "@testing-library/react";
 import { RemotePlayer } from "./RemotePlayer";
 import { Vector3, Euler } from "three";
 import { type RemotePlayer as RemotePlayerType } from "../store/playerSlice";
-import * as THREE from "three";
 
 // Mock three.js
 vi.mock("@react-three/fiber", () => ({
