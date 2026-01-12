@@ -61,14 +61,13 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           const newAnchor = characterStatus.position.clone();
 
           setWorldAnchorPosition(newAnchor);
-          // TODO: set the world anchor orientation to the Y component of the camera's direction vector.
-          //       this will allow for the new world to be orientated the way it was generated, as
-          //       opposed to facing the wrong way (i.e. directly at a wall)
+          
+          // Set the world anchor orientation to the stored rotationY from the server.
+          // This ensures a consistent "North" for everyone entering this world.
+          // We add Math.PI to align forward vectors (legacy correction).
           const newOrientation = new THREE.Euler(0, 0, 0, "YXZ");
-          newOrientation.setFromQuaternion(characterStatus.quaternion);
-          newOrientation.x = 0;
-          newOrientation.z = 0;
-          newOrientation.y += Math.PI; // Offset by 180 degrees to align forward vectors
+          newOrientation.y = (portal.rotationY || 0) + Math.PI;
+          
           setWorldAnchorOrientation(newOrientation);
           setAssets(assets);
           switchWorld(targetWorldId);
