@@ -12,6 +12,11 @@ export const Player = () => {
 
   useFrame((state) => {
     if (!paused) {
+      // Ensure YXZ order to avoid gimbal lock when extracting Yaw/Pitch
+      if (camera.rotation.order !== "YXZ") {
+        camera.rotation.order = "YXZ";
+      }
+
       // Update camera position to follow the player
       camera.position.copy(characterStatus.position);
       camera.position.set(
