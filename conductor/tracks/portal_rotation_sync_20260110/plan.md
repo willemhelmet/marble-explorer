@@ -3,7 +3,7 @@
 ## Goal
 Synchronize the world orientation (Yaw) for all players who enter a portal, using the portal creator's orientation as the central authority.
 
-## Phase 1: Database & Server Implementation
+## Phase 1: Database & Server Implementation [checkpoint: 35b540c]
 - [x] Task: Update `server/db.js` to include `rotation_y` in schema and `createPortal` logic [cb222a8]
 - [x] Task: Update `server/server.js` to handle `rotation_y` in socket events [9001b01]
 - [x] Task: Reset server database to apply schema changes [5d9093e]
