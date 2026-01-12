@@ -84,10 +84,15 @@ export const PortalUI = () => {
       userEuler.setFromQuaternion(userQuat);
       targetRot = userEuler.y;
 
-      // Calculate Position (1.5m in front)
-      const direction = new Vector3(0, 0, -1); // Camera faces -Z
-      direction.applyQuaternion(userQuat);
-      direction.y = 0; // Flatten to XZ
+          // Calculate Position (1.5m in front)
+
+          const direction = new Vector3(0, 0, 1); // Camera/Character forward in bvhecctrl is +Z
+
+          direction.applyQuaternion(userQuat);
+
+          direction.y = 0; // Flatten to XZ
+
+      
       direction.normalize();
       direction.multiplyScalar(1.5);
 
