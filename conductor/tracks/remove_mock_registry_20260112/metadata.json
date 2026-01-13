@@ -1,0 +1,8 @@
+{
+  "track_id": "remove_mock_registry_20260112",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-01-12T10:00:00Z",
+  "updated_at": "2026-01-12T10:00:00Z",
+  "description": "lets remove the @src/store/mockRegistryData.ts loading. we only want to load from the server"
+}
