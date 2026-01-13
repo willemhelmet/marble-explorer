@@ -9,7 +9,7 @@ This plan outlines the steps to remove hardcoded mock registry data and transiti
   - Update the `createWorldSlice` initial state to set `worldRegistry` to `{}`.
   - Remove any other references to `mockRegistry` in this file.
 
-- [ ] Task 2: Remove `mockRegistryData.ts` File
+- [x] Task 2: Remove `mockRegistryData.ts` File 3b13661
   - Delete `src/store/mockRegistryData.ts`.
 
 - [ ] Task 3: Verify Compilation
