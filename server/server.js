@@ -2,12 +2,16 @@ import { Server } from "socket.io";
 import { initDB, getPortalsForRoom, createPortal, removePortal } from "./db.js";
 
 // Initialize database
-const dbPath = process.env.DB_PATH || 'disco.db';
+const dbPath = process.env.DB_PATH || "disco.db";
 initDB(dbPath);
 
 const io = new Server({
   cors: {
-    origin: ["http://localhost:5173", "https://willemhelmet.github.io"],
+    origin: [
+      "http://localhost:5173",
+      "https://willemhelmet.github.io",
+      "https://marble-explorer.vercel.app/",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
