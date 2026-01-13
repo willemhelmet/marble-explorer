@@ -8,7 +8,7 @@ This plan implements dynamic base path configuration in Vite to support Vercel d
   - Modify `vite.config.ts` to load environment variables using `loadEnv`.
   - Set the `base` property to use `process.env.VITE_BASE_PATH` or default to `'/'`.
 
-- [ ] Task 2: Verification
+- [x] Task 2: Verification 1ce2329
   - Run `npm run build` locally to verify the build succeeds with the default base path.
   - (Optional) Run `VITE_BASE_PATH=/test/ npm run build` to verify the override works (checking dist output).
 
