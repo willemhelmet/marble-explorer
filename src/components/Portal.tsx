@@ -45,7 +45,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     try {
       if (portal.url === "hub") {
         // Returning to the initial lobby
-        setWorldAnchorPosition(new THREE.Vector3(0, 0, 0));
+        setWorldAnchorPosition(new THREE.Vector3(0, 1, 0));
         setWorldAnchorOrientation(new THREE.Euler(0, 0, 0));
         setAssets(null);
         switchWorld("hub");
@@ -62,13 +62,13 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           const newAnchor = characterStatus.position.clone();
 
           setWorldAnchorPosition(newAnchor);
-          
+
           // Set the world anchor orientation to the stored rotationY from the server.
           // This ensures a consistent "North" for everyone entering this world.
           // We add Math.PI to align forward vectors (legacy correction).
           const newOrientation = new THREE.Euler(0, 0, 0, "YXZ");
           newOrientation.y = (portal.rotationY || 0) + Math.PI;
-          
+
           setWorldAnchorOrientation(newOrientation);
           setAssets(assets);
           switchWorld(targetWorldId);
