@@ -32,17 +32,6 @@ export const ApiInput = ({ value, onChange, isValid }: ApiInputProps) => {
           </span>
         )}
       </div>
-      {/* <p className="text-xs text-neutral-500"> */}
-      {/*   Don't have a key? Get one at{" "} */}
-      {/*   <a */}
-      {/*     href="https://marble.worldlabs.ai/settings" */}
-      {/*     target="_blank" */}
-      {/*     rel="noopener noreferrer" */}
-      {/*     className="text-blue-400 hover:underline" */}
-      {/*   > */}
-      {/*     marble.worldlabs.ai/settings */}
-      {/*   </a> */}
-      {/* </p> */}
     </div>
   );
 };
