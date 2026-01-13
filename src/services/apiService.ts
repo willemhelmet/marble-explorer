@@ -21,7 +21,7 @@ export const extractWorldIdFromUrl = (url: string): string | null => {
 
 const proxyUrl = (url: string): string => {
   if (url.includes("cdn.marble.worldlabs.ai")) {
-    return url.replace("https://cdn.marble.worldlabs.ai", "/cdn-proxy");
+    return url.replace(/^https?:\/\/cdn\.marble\.worldlabs\.ai/, "/cdn-proxy");
   }
   return url;
 };
@@ -63,7 +63,7 @@ export const fetchWorldAssets = async (
     }
 
     // Prefer full_res, fallback to 500k, then 100k
-    let splatUrl =
+    const splatUrl =
       data.assets.splats.spz_urls.full_res ||
       data.assets.splats.spz_urls["500k"] ||
       data.assets.splats.spz_urls["100k"];
