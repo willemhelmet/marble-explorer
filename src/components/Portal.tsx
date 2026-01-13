@@ -17,6 +17,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const switchWorld = useMyStore((state) => state.switchWorld);
   const setAssets = useMyStore((state) => state.setAssets);
+  const apiKey = useMyStore((state) => state.apiKey);
   //const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
@@ -53,7 +54,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         const targetWorldId = extractWorldIdFromUrl(portal.url);
         if (targetWorldId) {
           // 1. Fetch assets FIRST before switching worlds
-          const assets = await fetchWorldAssets(portal.url);
+          const assets = await fetchWorldAssets(portal.url, apiKey);
 
           // 2. Atomic update of world state
           // We anchor the new world to the player's EXACT absolute position

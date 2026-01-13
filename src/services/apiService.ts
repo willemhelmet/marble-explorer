@@ -21,10 +21,11 @@ export const extractWorldIdFromUrl = (url: string): string | null => {
 
 export const fetchWorldAssets = async (
   urlOrId: string,
+  providedApiKey?: string | null,
 ): Promise<WorldAssets> => {
-  const apiKey = import.meta.env.VITE_MARBLE_API_KEY;
+  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
   if (!apiKey) {
-    throw new Error("Missing VITE_MARBLE_API_KEY environment variable.");
+    throw new Error("Missing Marble API Key.");
   }
 
   const worldId = extractWorldIdFromUrl(urlOrId);

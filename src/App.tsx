@@ -4,7 +4,7 @@ import {
   KeyboardControls,
   Loader,
   PointerLockControls,
-  Stats,
+  // Stats,
 } from "@react-three/drei";
 import { Scene } from "./Scene.tsx";
 import { MainMenu } from "./components/ui/MainMenu.tsx";
@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     socketManager.connect();
-    
+
     return () => {
       socketManager.disconnect();
     };
@@ -94,7 +94,7 @@ function App() {
           </Canvas>
         </KeyboardControls>
         <Loader />
-        <Stats />
+        {/* <Stats /> */}
       </div>
     </>
   );

@@ -13,6 +13,7 @@ export const PortalUI = () => {
   const worldAnchorOrientation = useMyStore(
     (state) => state.worldAnchorOrientation,
   );
+  const apiKey = useMyStore((state) => state.apiKey);
 
   // Restore selectors for Edit Mode
   const editingPortal = useMyStore((state) => state.editingPortal);
@@ -121,7 +122,7 @@ export const PortalUI = () => {
 
     try {
       // Still fetch assets locally so the creator sees the world loading immediately
-      await fetchWorldAssets(urlInput);
+      await fetchWorldAssets(urlInput, apiKey);
     } catch (err: unknown) {
       console.error("Portal Error:", err);
       const errorMessage =
