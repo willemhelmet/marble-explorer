@@ -19,6 +19,13 @@ export const extractWorldIdFromUrl = (url: string): string | null => {
   return match ? match[1] : null;
 };
 
+const proxyUrl = (url: string): string => {
+  if (url.includes("cdn.marble.worldlabs.ai")) {
+    return url.replace("https://cdn.marble.worldlabs.ai", "/cdn-proxy");
+  }
+  return url;
+};
+
 export const fetchWorldAssets = async (
   urlOrId: string,
   providedApiKey?: string | null,
@@ -56,7 +63,7 @@ export const fetchWorldAssets = async (
     }
 
     // Prefer full_res, fallback to 500k, then 100k
-    const splatUrl =
+    let splatUrl =
       data.assets.splats.spz_urls.full_res ||
       data.assets.splats.spz_urls["500k"] ||
       data.assets.splats.spz_urls["100k"];
@@ -66,9 +73,9 @@ export const fetchWorldAssets = async (
     }
 
     return {
-      splatUrl,
-      meshUrl: data.assets.mesh?.collider_mesh_url || "",
-      panoUrl: data.assets.imagery?.pano_url || "",
+      splatUrl: proxyUrl(splatUrl),
+      meshUrl: proxyUrl(data.assets.mesh?.collider_mesh_url || ""),
+      panoUrl: proxyUrl(data.assets.imagery?.pano_url || ""),
     };
   } catch (err) {
     console.error("Fetch World Assets Error:", err);

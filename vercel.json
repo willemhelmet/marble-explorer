@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/cdn-proxy/:path*",
+      "destination": "https://cdn.marble.worldlabs.ai/:path*"
+    }
+  ]
+}
