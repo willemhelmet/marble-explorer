@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
-    base: "/marble-explorer/",
+    base: "/",
   };
 });
 
