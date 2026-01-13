@@ -19,7 +19,7 @@ This plan outlines the steps to remove hardcoded mock registry data and transiti
 
 ## Phase 2: Runtime Verification
 
-- [ ] Task 4: Confirm Socket Data Population
+- [x] Task 4: Confirm Socket Data Population 1f843ef
   - Manually verify that `socketManager` still correctly populates the `worldRegistry` via the `portals` and `portal_added` socket events.
   - Since the client now starts with an empty registry, ensure that joining a room (like "hub") results in the correct portal state being reflected in the UI.
 
