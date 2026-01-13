@@ -1,17 +1,11 @@
 import { StaticCollider } from "bvhecctrl";
 import { Bvh } from "@react-three/drei";
 import { useMyStore } from "../store/store";
-// import { AxesHelper } from "./AxesHelper";
 
 export const FloorCollider = () => {
   const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
   return (
     <>
-      {/* <AxesHelper */}
-      {/*   label="floor origin" */}
-      {/*   position={worldAnchorPosition} */}
-      {/* ></AxesHelper> */}
-
       <StaticCollider
         position={[worldAnchorPosition.x, -0.01, worldAnchorPosition.z]}
         key={worldAnchorPosition.toString()}

@@ -7,7 +7,6 @@ import { Splat } from "./Splat";
 import { Portal } from "../Portal";
 import { Vector3, Euler } from "three";
 import type { WorldAssets, World as WorldData } from "../../store/worldSlice";
-// import { AxesHelper } from "../AxesHelper";
 
 interface WorldContentProps {
   currentWorldId: string;
@@ -41,7 +40,6 @@ export const WorldContent = memo(
 
     return (
       <group position={worldAnchorPos} rotation={worldAnchorRot}>
-        {/* <AxesHelper label="splat" scale={[2.5, 2.5, 2.5]} /> */}
         {/* Portals */}
         {currentWorld?.portals.map((portal) => (
           <Portal key={portal.id} portal={portal} />
