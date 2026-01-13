@@ -12,4 +12,4 @@ This plan implements dynamic base path configuration in Vite to support Vercel d
   - Run `npm run build` locally to verify the build succeeds with the default base path.
   - (Optional) Run `VITE_BASE_PATH=/test/ npm run build` to verify the override works (checking dist output).
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Configuration Update' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Configuration Update' (Protocol in workflow.md) b766b03
