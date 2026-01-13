@@ -23,4 +23,4 @@ This plan outlines the steps to remove hardcoded mock registry data and transiti
   - Manually verify that `socketManager` still correctly populates the `worldRegistry` via the `portals` and `portal_added` socket events.
   - Since the client now starts with an empty registry, ensure that joining a room (like "hub") results in the correct portal state being reflected in the UI.
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Runtime Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Runtime Verification' (Protocol in workflow.md) 2828fa6
