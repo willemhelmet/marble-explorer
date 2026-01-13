@@ -1,6 +1,5 @@
 import { type StateCreator } from "zustand";
 import { Vector3, Euler } from "three";
-import { mockRegistry } from "./mockRegistryData";
 
 export type PortalStatus =
   | "idle"
@@ -68,7 +67,7 @@ export const createWorldSlice: StateCreator<WorldSlice, [], [], WorldSlice> = (
   set,
 ) => ({
   // Registry State
-  worldRegistry: mockRegistry,
+  worldRegistry: {},
   currentWorldId: "hub",
   editingPortal: null,
 
