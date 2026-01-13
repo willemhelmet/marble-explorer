@@ -2,7 +2,7 @@
 
 This plan outlines the steps to remove hardcoded mock registry data and transition the application to purely server-driven world data.
 
-## Phase 1: Store Cleanup & Initialization
+## Phase 1: Store Cleanup & Initialization [checkpoint: a920a48]
 
 - [x] Task 1: Update `worldSlice.ts` Initialization dfe70d8
   - Remove the import of `mockRegistry` from `./mockRegistryData`.
