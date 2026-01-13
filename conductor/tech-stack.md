@@ -25,4 +25,4 @@
 - **UI Tweaks:** [Leva](https://github.com/pmndrs/leva) - For rapid prototyping of 3D parameters (if needed).
 
 ## Deployment
-- **Hosting:** [GitHub Pages](https://pages.github.com/) - Using `gh-pages` for automated deployment.
+- **Hosting:** [GitHub Pages](https://pages.github.com/) and [Vercel](https://vercel.com/) - Configured for flexible deployment using `VITE_BASE_PATH`.
