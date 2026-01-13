@@ -5,8 +5,6 @@ export const PauseMenu = () => {
   const isMobile = useMyStore((state) => state.isMobile);
   const resume = useMyStore((state) => state.resume);
   const setApiKey = useMyStore((state) => state.setApiKey);
-  const setStatus = useMyStore.getState().setApiKey ? (status: any) => useMyStore.setState({ status }) : () => {}; 
-  // Actually I should use the proper store setters
   
   const handleResetKey = () => {
     setApiKey(null);
