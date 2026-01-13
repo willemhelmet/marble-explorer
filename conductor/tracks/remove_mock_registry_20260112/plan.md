@@ -17,7 +17,7 @@ This plan outlines the steps to remove hardcoded mock registry data and transiti
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Store Cleanup & Initialization' (Protocol in workflow.md) 22ad7a5
 
-## Phase 2: Runtime Verification
+## Phase 2: Runtime Verification [checkpoint: beb7f5c]
 
 - [x] Task 4: Confirm Socket Data Population 1f843ef
   - Manually verify that `socketManager` still correctly populates the `worldRegistry` via the `portals` and `portal_added` socket events.
