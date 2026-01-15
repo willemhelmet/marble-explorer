@@ -58,15 +58,19 @@ export const fetchWorldAssets = async (
 
     const data = await response.json();
 
-    if (!data.assets || !data.assets.splats || !data.assets.splats.spz_urls) {
+    if (
+      !data.world.assets ||
+      !data.world.assets.splats ||
+      !data.world.assets.splats.spz_urls
+    ) {
       throw new Error("Invalid API Response: Missing assets");
     }
 
     // Prefer full_res, fallback to 500k, then 100k
     const splatUrl =
-      data.assets.splats.spz_urls.full_res ||
-      data.assets.splats.spz_urls["500k"] ||
-      data.assets.splats.spz_urls["100k"];
+      data.world.assets.splats.spz_urls.full_res ||
+      data.world.assets.splats.spz_urls["500k"] ||
+      data.world.assets.splats.spz_urls["100k"];
 
     if (!splatUrl) {
       throw new Error("No Gaussian Splat URL found in response");
@@ -74,8 +78,8 @@ export const fetchWorldAssets = async (
 
     return {
       splatUrl: proxyUrl(splatUrl),
-      meshUrl: proxyUrl(data.assets.mesh?.collider_mesh_url || ""),
-      panoUrl: proxyUrl(data.assets.imagery?.pano_url || ""),
+      meshUrl: proxyUrl(data.world.assets.mesh?.collider_mesh_url || ""),
+      panoUrl: proxyUrl(data.world.assets.imagery?.pano_url || ""),
     };
   } catch (err) {
     console.error("Fetch World Assets Error:", err);
