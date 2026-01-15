@@ -7,8 +7,7 @@ import { Euler, Quaternion, Vector3 } from "three";
 import { ConnectTab } from "./portal/ConnectTab";
 import { GenerateTab } from "./portal/GenerateTab";
 import { ManageTab } from "./portal/ManageTab";
-
-type Tab = "connect" | "generate" | "manage";
+import { PortalTabs, type Tab } from "./portal/PortalTabs";
 
 export const PortalUI = () => {
   const closePortalUI = useMyStore((state) => state.closePortalUI);
@@ -141,41 +140,11 @@ export const PortalUI = () => {
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="w-full max-w-md border-2 border-white bg-black shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-        {/* Tab Header */}
-        <div className="flex border-b border-neutral-800">
-          <button
-            onClick={() => setActiveTab("connect")}
-            className={`flex-1 py-3 font-mono text-sm font-bold uppercase transition-colors ${
-              activeTab === "connect"
-                ? "bg-white text-black"
-                : "bg-black text-neutral-500 hover:bg-neutral-900 hover:text-white"
-            }`}
-          >
-            Connect
-          </button>
-          <button
-            onClick={() => setActiveTab("generate")}
-            className={`flex-1 py-3 font-mono text-sm font-bold uppercase transition-colors ${
-              activeTab === "generate"
-                ? "bg-white text-black"
-                : "bg-black text-neutral-500 hover:bg-neutral-900 hover:text-white"
-            }`}
-          >
-            Generate
-          </button>
-          {editingPortal && (
-            <button
-              onClick={() => setActiveTab("manage")}
-              className={`flex-1 py-3 font-mono text-sm font-bold uppercase transition-colors ${
-                activeTab === "manage"
-                  ? "bg-white text-black"
-                  : "bg-black text-neutral-500 hover:bg-neutral-900 hover:text-white"
-              }`}
-            >
-              Manage
-            </button>
-          )}
-        </div>
+        <PortalTabs
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          showManage={!!editingPortal}
+        />
 
         {/* Content */}
         <div className="p-8">
