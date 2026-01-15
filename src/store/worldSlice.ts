@@ -6,7 +6,8 @@ export type PortalStatus =
   | "fetching"
   | "initializing"
   | "ready"
-  | "error";
+  | "error"
+  | "generating";
 
 export interface WorldAssets {
   splatUrl: string;
@@ -20,6 +21,7 @@ export interface Portal {
   rotationY: number;
   url: string | null;
   status: PortalStatus;
+  pendingOperationId?: string;
 }
 
 export interface World {

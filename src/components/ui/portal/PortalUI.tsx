@@ -119,8 +119,56 @@ export const PortalUI = () => {
     }
   };
 
-  const handleGenerate = (url: string) => {
-    handleConnect(url);
+  const handleEngaged = (operationId: string) => {
+    if (editingPortal) {
+      // --- EDIT MODE: Update existing portal to generating state ---
+      socketManager.updatePortal(editingPortal.worldId, editingPortal.portalId, {
+        status: "generating",
+        pendingOperationId: operationId,
+        url: "", // Clear URL while generating
+      });
+    } else {
+      // --- CREATE MODE: Spawn a new portal in generating state ---
+      const userQuat = new Quaternion(
+        characterStatus.quaternion.x,
+        characterStatus.quaternion.y,
+        characterStatus.quaternion.z,
+        characterStatus.quaternion.w,
+      );
+
+      const userEuler = new Euler(0, 0, 0, "YXZ");
+      userEuler.setFromQuaternion(userQuat);
+      const targetRot = userEuler.y;
+
+      const direction = new Vector3(0, 0, 1);
+      direction.applyQuaternion(userQuat);
+      direction.y = 0;
+      direction.normalize();
+      direction.multiplyScalar(1.5);
+
+      const globalSpawnPos = new Vector3(
+        characterStatus.position.x,
+        characterStatus.position.y,
+        characterStatus.position.z,
+      ).add(direction);
+
+      const targetPos = globalSpawnPos.clone().sub(worldAnchorPosition);
+      const worldQuat = new Quaternion().setFromEuler(worldAnchorOrientation);
+      worldQuat.invert();
+      targetPos.applyQuaternion(worldQuat);
+
+      socketManager.createPortal(
+        targetPos,
+        targetRot,
+        "", // targetUrl
+        "generating",
+        operationId,
+      );
+    }
+
+    setEditingPortal(null, null);
+    closePortalUI();
+    setError(null);
   };
 
   const handleDelete = () => {
@@ -162,7 +210,7 @@ export const PortalUI = () => {
           )}
 
           {activeTab === "generate" && (
-            <GenerateTab onGenerate={handleGenerate} onCancel={handleCancel} />
+            <GenerateTab onEngaged={handleEngaged} onCancel={handleCancel} />
           )}
 
           {activeTab === "manage" && (

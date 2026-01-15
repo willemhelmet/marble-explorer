@@ -168,6 +168,14 @@ export async function uploadMediaAsset(
 }
 
 // --- World Generation Interfaces ---
+export interface World {
+  id: string;
+  display_name: string;
+  world_marble_url: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
 interface ImagePrompt {
   source: "media_asset";
   media_asset_id: string;
@@ -186,19 +194,6 @@ interface GenerateWorldRequest {
   world_prompt: WorldPrompt;
 }
 
-interface GenerateWorldResponseAssets {
-  url: string;
-  // ... other asset properties if known
-}
-
-export interface GenerateWorldResponse {
-  id: string;
-  display_name: string;
-  state: string; // e.g., "pending", "ready"
-  assets: GenerateWorldResponseAssets;
-  // ... other world properties if known
-}
-
 export interface GenerateWorldOptions {
   prompt?: string;
   image?: File;
@@ -207,7 +202,7 @@ export interface GenerateWorldOptions {
 
 export const generateWorld = async (
   options: GenerateWorldOptions,
-): Promise<GenerateWorldResponse> => {
+): Promise<GetOperationResponse<World>> => {
   const apiKey = import.meta.env.VITE_MARBLE_API_KEY;
   let mediaAssetId: string | undefined;
 

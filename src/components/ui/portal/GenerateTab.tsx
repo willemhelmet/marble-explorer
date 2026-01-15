@@ -1,47 +1,36 @@
 import { useState } from "react";
-import {
-  generateWorld,
-  type GenerateWorldResponse,
-} from "../../../services/apiService";
+import { generateWorld } from "../../../services/apiService";
 
 interface GenerateTabProps {
-  onGenerate: (url: string) => void;
+  onEngaged: (operationId: string) => void;
   onCancel: () => void;
 }
 
-export const GenerateTab = ({ onGenerate, onCancel }: GenerateTabProps) => {
+export const GenerateTab = ({ onEngaged, onCancel }: GenerateTabProps) => {
   const [prompt, setPrompt] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<string>("");
-  const [response, setResponse] = useState<GenerateWorldResponse | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setResponse(null);
     setStatus("Initiating generation...");
 
     try {
-      const data = await generateWorld({
+      const op = await generateWorld({
         prompt,
         image: image || undefined,
       });
 
-      console.log("Generate World Response:", data);
-      setResponse(data);
-      setStatus("World generation started!");
-
-      if (data.assets?.url) {
-        onGenerate(data.assets.url);
-      }
+      console.log("Generate World Operation started:", op.operation_id);
+      onEngaged(op.operation_id);
     } catch (error: unknown) {
       console.error("Error generating world:", error);
+      setIsLoading(false);
       setStatus(
         `Error: ${error instanceof Error ? error.message : String(error)}`,
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -79,17 +68,6 @@ export const GenerateTab = ({ onGenerate, onCancel }: GenerateTabProps) => {
       {status && (
         <div className="font-mono text-xs uppercase text-neutral-400">
           {status}
-        </div>
-      )}
-
-      {response?.assets?.url && (
-        <div className="flex flex-col gap-1">
-          <label className="font-mono text-[10px] font-bold uppercase text-neutral-500">
-            Generated URL
-          </label>
-          <div className="break-all border border-neutral-800 bg-neutral-950 p-2 font-mono text-[10px] text-emerald-400">
-            {response.assets.url}
-          </div>
         </div>
       )}
 

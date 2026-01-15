@@ -20,12 +20,15 @@ interface ServerPortal {
   rotation_y: number;
   from_scene: string;
   target_url: string;
+  status: string;
+  pending_operation_id: string | null;
 }
 
 interface ServerToClientEvents {
   players: (players: RawPlayer[]) => void;
   portals: (portals: ServerPortal[]) => void;
   portal_added: (portal: ServerPortal) => void;
+  portal_updated: (data: { id: number; updates: Partial<ServerPortal> }) => void;
   portal_removed: (id: number) => void;
   portal_error: (msg: string) => void;
 }
@@ -43,6 +46,13 @@ interface ClientToServerEvents {
     rotation_y: number;
     from_scene: string;
     target_url: string;
+    status: string;
+    pending_operation_id?: string | null;
+  }) => void;
+  update_portal: (data: {
+    id: number;
+    updates: Partial<ServerPortal>;
+    room_name: string;
   }) => void;
   remove_portal: (data: { id: number; room_name: string }) => void;
 }
@@ -83,7 +93,8 @@ class SocketManager {
         position: new Vector3(p.x, p.y, p.z),
         rotationY: p.rotation_y,
         url: p.target_url,
-        status: "ready",
+        status: p.status as any,
+        pendingOperationId: p.pending_operation_id || undefined,
       }));
       useMyStore.getState().setPortalsForWorld(currentWorld, portals);
     });
@@ -103,9 +114,24 @@ class SocketManager {
         position: new Vector3(p.x, p.y, p.z),
         rotationY: p.rotation_y,
         url: p.target_url,
-        status: "ready",
+        status: p.status as any,
+        pendingOperationId: p.pending_operation_id || undefined,
       };
       useMyStore.getState().addPortal(currentWorld, newPortal);
+    });
+
+    this.socket.on("portal_updated", ({ id, updates }) => {
+      console.log("Socket received portal_updated:", id, updates);
+      const currentWorld = useMyStore.getState().currentWorldId;
+
+      // Map snake_case server fields to camelCase client fields
+      const clientUpdates: Partial<Portal> = {};
+      if (updates.status) clientUpdates.status = updates.status as any;
+      if (updates.target_url !== undefined) clientUpdates.url = updates.target_url;
+      if (updates.pending_operation_id !== undefined)
+        clientUpdates.pendingOperationId = updates.pending_operation_id || undefined;
+
+      useMyStore.getState().updatePortal(currentWorld, String(id), clientUpdates);
     });
 
     this.socket.on("portal_removed", (id) => {
@@ -130,6 +156,10 @@ class SocketManager {
     this.socket.emit("join_scene", sceneName);
   }
 
+  public getSocketId(): string | null {
+    return this.socket?.id || null;
+  }
+
   public sendMovement(position: Vector3, rotation: Euler) {
     if (!this.socket) return;
     this.socket.emit("move", position.toArray(), [
@@ -139,7 +169,13 @@ class SocketManager {
     ]);
   }
 
-  public createPortal(position: Vector3, rotationY: number, targetUrl: string) {
+  public createPortal(
+    position: Vector3,
+    rotationY: number,
+    targetUrl: string,
+    status: string = "ready",
+    pendingOperationId?: string,
+  ) {
     if (!this.socket) return;
     const currentWorld = useMyStore.getState().currentWorldId;
 
@@ -150,6 +186,29 @@ class SocketManager {
       rotation_y: rotationY,
       from_scene: currentWorld,
       target_url: targetUrl,
+      status: status,
+      pending_operation_id: pendingOperationId,
+    });
+  }
+
+  public updatePortal(
+    worldId: string,
+    portalId: string,
+    updates: Partial<Portal>,
+  ) {
+    if (!this.socket) return;
+
+    // Map camelCase client fields to snake_case server fields
+    const serverUpdates: any = {};
+    if (updates.status) serverUpdates.status = updates.status;
+    if (updates.url !== undefined) serverUpdates.target_url = updates.url;
+    if (updates.pendingOperationId !== undefined)
+      serverUpdates.pending_operation_id = updates.pendingOperationId;
+
+    this.socket.emit("update_portal", {
+      id: Number(portalId),
+      updates: serverUpdates,
+      room_name: worldId,
     });
   }
 

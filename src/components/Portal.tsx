@@ -8,7 +8,20 @@ import { type Portal as PortalType } from "../store/worldSlice";
 import {
   fetchWorldAssets,
   extractWorldIdFromUrl,
+  getOperation,
+  type World,
 } from "../services/apiService";
+import { socketManager } from "../services/socketManager";
+
+const hashString = (str: string): number => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+};
 
 export const Portal = ({ portal }: { portal: PortalType }) => {
   const openPortalUI = useMyStore((state) => state.openPortalUI);
@@ -18,7 +31,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const switchWorld = useMyStore((state) => state.switchWorld);
   const setAssets = useMyStore((state) => state.setAssets);
   const apiKey = useMyStore((state) => state.apiKey);
-  //const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
+  const remotePlayers = useMyStore((state) => state.remotePlayers);
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
   );
@@ -31,6 +44,60 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const isTransitioning = useRef(false);
   const groupRef = useRef<THREE.Group>(null);
   const camera = useThree((state) => state.camera);
+
+  // --- Distributed Polling Logic ---
+  useEffect(() => {
+    if (portal.status !== "generating" || !portal.pendingOperationId) return;
+
+    const intervalId = setInterval(async () => {
+      // 1. Determine if I am the Designated Poller
+      const myId = socketManager.getSocketId();
+      if (!myId) return;
+
+      const allPlayerIds = [myId, ...Array.from(remotePlayers.keys())].sort();
+      const pollerIndex = hashString(portal.id) % allPlayerIds.length;
+
+      if (allPlayerIds[pollerIndex] !== myId) {
+        // I am not the poller for this specific portal
+        return;
+      }
+
+      console.log(`[Poller] Checking operation ${portal.pendingOperationId} for portal ${portal.id}`);
+
+      try {
+        const op = await getOperation<World>(portal.pendingOperationId!);
+        if (op.done) {
+          if (op.error) {
+            socketManager.updatePortal(currentWorldId, portal.id, {
+              status: "error",
+            });
+          } else if (op.response?.world_marble_url) {
+            // Fix URL: worlds -> world
+            let correctedUrl = op.response.world_marble_url;
+            if (correctedUrl.includes("/worlds/")) {
+              correctedUrl = correctedUrl.replace("/worlds/", "/world/");
+            }
+
+            socketManager.updatePortal(currentWorldId, portal.id, {
+              status: "ready",
+              url: correctedUrl,
+              pendingOperationId: undefined, // Clear operation ID
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Polling error for portal", portal.id, err);
+      }
+    }, 15000); // 15 seconds frequency
+
+    return () => clearInterval(intervalId);
+  }, [
+    portal.status,
+    portal.id,
+    portal.pendingOperationId,
+    remotePlayers,
+    currentWorldId,
+  ]);
 
   // Sync global hover for crosshair
   useEffect(() => {
@@ -111,6 +178,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     switch (portal.status) {
       case "fetching":
       case "initializing":
+      case "generating":
         return "#3b82f6"; // Blue-500
       case "ready":
         return "#22c55e"; // Green-500
@@ -124,6 +192,8 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
   const getStatusText = () => {
     switch (portal.status) {
+      case "generating":
+        return "GENERATING WORLD...";
       case "fetching":
         return "FETCHING...";
       case "initializing":
@@ -182,7 +252,11 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           emissiveIntensity={isHovered ? 0.8 : 0.5}
           roughness={0.2}
           metalness={0.8}
-          wireframe={portal.url === null || portal.status === "fetching"}
+          wireframe={
+            portal.url === null ||
+            portal.status === "fetching" ||
+            portal.status === "generating"
+          }
         />
       </Sphere>
 
