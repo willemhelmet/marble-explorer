@@ -1,0 +1,8 @@
+{
+  "track_id": "portal_ui_revamp_20260114",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-01-14T20:53:00Z",
+  "updated_at": "2026-01-14T22:54:00Z",
+  "description": "let's revamp the @PortalUI.tsx file, so that we can start adding more features to it. The \"portal UI\" will now contain more than just a URL field, but buttons (i.e. \"delete portal\"), and world generation options (text field for prompting, image input, etc.)"
+}

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useMyStore } from "../../store/store";
-import { fetchWorldAssets } from "../../services/apiService";
-import { socketManager } from "../../services/socketManager";
+import { useMyStore } from "../../../store/store";
+import { fetchWorldAssets } from "../../../services/apiService";
+import { socketManager } from "../../../services/socketManager";
 import { characterStatus } from "bvhecctrl";
 import { Euler, Quaternion, Vector3 } from "three";
-import { ConnectTab } from "./portal/ConnectTab";
-import { GenerateTab } from "./portal/GenerateTab";
-import { ManageTab } from "./portal/ManageTab";
-import { PortalTabs, type Tab } from "./portal/PortalTabs";
+import { ConnectTab } from "./ConnectTab";
+import { GenerateTab } from "./GenerateTab";
+import { ManageTab } from "./ManageTab";
+import { PortalTabs, type Tab } from "./PortalTabs";
 
 export const PortalUI = () => {
   const closePortalUI = useMyStore((state) => state.closePortalUI);
@@ -119,9 +119,8 @@ export const PortalUI = () => {
     }
   };
 
-  const handleGenerate = (prompt: string, image: File | null) => {
-    console.log("Generate:", prompt, image);
-    // TODO: Implement generation logic
+  const handleGenerate = (url: string) => {
+    handleConnect(url);
   };
 
   const handleDelete = () => {
@@ -163,7 +162,7 @@ export const PortalUI = () => {
           )}
 
           {activeTab === "generate" && (
-            <GenerateTab onGenerate={handleGenerate} />
+            <GenerateTab onGenerate={handleGenerate} onCancel={handleCancel} />
           )}
 
           {activeTab === "manage" && (

@@ -30,4 +30,4 @@
 - [x] Task: Visual Polish
     - [x] Apply Tailwind classes to match the project's brutalist aesthetic (Monospace, B&W).
     - [x] Add simple animations (e.g., fade/slide) between tab switches if feasible.
-- [x] Task: Conductor - User Manual Verification 'Integration & Styling' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Integration & Styling' (Protocol in workflow.md) [checkpoint: 048566a]

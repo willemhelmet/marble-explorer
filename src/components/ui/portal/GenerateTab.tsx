@@ -1,16 +1,48 @@
 import { useState } from "react";
+import {
+  generateWorld,
+  type GenerateWorldResponse,
+} from "../../../services/apiService";
 
 interface GenerateTabProps {
-  onGenerate: (prompt: string, image: File | null) => void;
+  onGenerate: (url: string) => void;
+  onCancel: () => void;
 }
 
-export const GenerateTab = ({ onGenerate }: GenerateTabProps) => {
+export const GenerateTab = ({ onGenerate, onCancel }: GenerateTabProps) => {
   const [prompt, setPrompt] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<string>("");
+  const [response, setResponse] = useState<GenerateWorldResponse | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onGenerate(prompt, image);
+    setIsLoading(true);
+    setResponse(null);
+    setStatus("Initiating generation...");
+
+    try {
+      const data = await generateWorld({
+        prompt,
+        image: image || undefined,
+      });
+
+      console.log("Generate World Response:", data);
+      setResponse(data);
+      setStatus("World generation started!");
+
+      if (data.assets?.url) {
+        onGenerate(data.assets.url);
+      }
+    } catch (error: unknown) {
+      console.error("Error generating world:", error);
+      setStatus(
+        `Error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,12 +76,37 @@ export const GenerateTab = ({ onGenerate }: GenerateTabProps) => {
         />
       </div>
 
-      <div className="mt-4">
+      {status && (
+        <div className="font-mono text-xs uppercase text-neutral-400">
+          {status}
+        </div>
+      )}
+
+      {response?.assets?.url && (
+        <div className="flex flex-col gap-1">
+          <label className="font-mono text-[10px] font-bold uppercase text-neutral-500">
+            Generated URL
+          </label>
+          <div className="break-all border border-neutral-800 bg-neutral-950 p-2 font-mono text-[10px] text-emerald-400">
+            {response.assets.url}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-4 flex gap-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 border border-neutral-600 bg-black px-6 py-3 font-mono text-sm font-bold uppercase text-white transition-colors hover:bg-neutral-900"
+        >
+          Abort
+        </button>
         <button
           type="submit"
-          className="w-full border border-white bg-white px-6 py-3 font-mono text-sm font-bold uppercase text-black transition-colors hover:bg-neutral-200"
+          disabled={isLoading}
+          className="flex-1 border border-white bg-white px-6 py-3 font-mono text-sm font-bold uppercase text-black transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:bg-neutral-600 disabled:border-neutral-600"
         >
-          Engage
+          {isLoading ? "Engaging..." : "Engage"}
         </button>
       </div>
     </form>

@@ -6,7 +6,11 @@ interface ConnectTabProps {
   initialUrl?: string;
 }
 
-export const ConnectTab = ({ onCancel, onSubmit, initialUrl = "" }: ConnectTabProps) => {
+export const ConnectTab = ({
+  onCancel,
+  onSubmit,
+  initialUrl = "",
+}: ConnectTabProps) => {
   const [urlInput, setUrlInput] = useState(initialUrl);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,7 +27,7 @@ export const ConnectTab = ({ onCancel, onSubmit, initialUrl = "" }: ConnectTabPr
           htmlFor="marble-url"
           className="font-mono text-sm font-bold uppercase text-neutral-400"
         >
-          Marble API URL
+          Marble URL
         </label>
         <input
           id="marble-url"
