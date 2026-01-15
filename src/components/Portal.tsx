@@ -31,7 +31,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const switchWorld = useMyStore((state) => state.switchWorld);
   const setAssets = useMyStore((state) => state.setAssets);
   const apiKey = useMyStore((state) => state.apiKey);
-  const remotePlayers = useMyStore((state) => state.remotePlayers);
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
   );
@@ -54,7 +53,9 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       const myId = socketManager.getSocketId();
       if (!myId) return;
 
-      const allPlayerIds = [myId, ...Array.from(remotePlayers.keys())].sort();
+      // Access fresh player list directly to avoid resetting the timer on joins/leaves
+      const currentRemotePlayers = useMyStore.getState().remotePlayers;
+      const allPlayerIds = [myId, ...Array.from(currentRemotePlayers.keys())].sort();
       const pollerIndex = hashString(portal.id) % allPlayerIds.length;
 
       if (allPlayerIds[pollerIndex] !== myId) {
@@ -95,7 +96,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     portal.status,
     portal.id,
     portal.pendingOperationId,
-    remotePlayers,
+    // remotePlayers is intentionally omitted to prevent interval reset
     currentWorldId,
   ]);
 
