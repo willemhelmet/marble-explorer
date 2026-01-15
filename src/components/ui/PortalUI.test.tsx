@@ -110,4 +110,31 @@ describe("PortalUI", () => {
     expect(socketManager.createPortal).toHaveBeenCalled();
     expect(mockClosePortalUI).toHaveBeenCalled();
   });
+
+  it("deletes portal in Manage tab", () => {
+    (useMyStore as unknown as Mock).mockImplementation((selector) => {
+      const state = {
+        closePortalUI: mockClosePortalUI,
+        setError: mockSetError,
+        pause: vi.fn(),
+        worldAnchorPosition: { x: 0, y: 0, z: 0 },
+        worldAnchorOrientation: { x: 0, y: 0, z: 0 },
+        apiKey: "test-key",
+        editingPortal: { worldId: "hub", portalId: "1" },
+        worldRegistry: {
+            hub: { portals: [{ id: "1", url: "http://example.com" }] }
+        },
+        setEditingPortal: mockSetEditingPortal,
+      };
+      return selector(state);
+    });
+
+    render(<PortalUI />);
+    fireEvent.click(screen.getByRole("button", { name: /manage/i }));
+    fireEvent.click(screen.getByText(/delete portal/i));
+    fireEvent.click(screen.getByText(/yes/i));
+
+    expect(socketManager.removePortal).toHaveBeenCalledWith("hub", "1");
+    expect(mockClosePortalUI).toHaveBeenCalled();
+  });
 });
