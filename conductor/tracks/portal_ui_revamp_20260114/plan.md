@@ -21,13 +21,13 @@
     - [x] Add "Delete Portal" button with destructive styling (e.g., red border/text).
     - [x] Implement Confirmation State/Modal (e.g., "Are you sure? [Yes] [No]").
     - [x] Connect "Yes" action to `socketManager.removePortal`.
-- [ ] Task: Conductor - User Manual Verification 'Feature Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Feature Implementation' (Protocol in workflow.md) [checkpoint: 43ad76d]
 
 ## Phase 3: Integration & Styling
-- [ ] Task: Mobile Responsiveness
-    - [ ] Ensure tabs and inputs are touch-friendly.
-    - [ ] verify layout on smaller screens.
-- [ ] Task: Visual Polish
-    - [ ] Apply Tailwind classes to match the project's brutalist aesthetic (Monospace, B&W).
-    - [ ] Add simple animations (e.g., fade/slide) between tab switches if feasible.
-- [ ] Task: Conductor - User Manual Verification 'Integration & Styling' (Protocol in workflow.md)
+- [x] Task: Mobile Responsiveness
+    - [x] Ensure tabs and inputs are touch-friendly.
+    - [x] verify layout on smaller screens.
+- [x] Task: Visual Polish
+    - [x] Apply Tailwind classes to match the project's brutalist aesthetic (Monospace, B&W).
+    - [x] Add simple animations (e.g., fade/slide) between tab switches if feasible.
+- [x] Task: Conductor - User Manual Verification 'Integration & Styling' (Protocol in workflow.md)
