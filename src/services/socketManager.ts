@@ -93,7 +93,7 @@ class SocketManager {
         position: new Vector3(p.x, p.y, p.z),
         rotationY: p.rotation_y,
         url: p.target_url,
-        status: p.status as any,
+        status: (p.status as any) || "ready", // Default to "ready" if missing
         pendingOperationId: p.pending_operation_id || undefined,
       }));
       useMyStore.getState().setPortalsForWorld(currentWorld, portals);
@@ -114,7 +114,7 @@ class SocketManager {
         position: new Vector3(p.x, p.y, p.z),
         rotationY: p.rotation_y,
         url: p.target_url,
-        status: p.status as any,
+        status: (p.status as any) || "ready", // Default to "ready" if missing
         pendingOperationId: p.pending_operation_id || undefined,
       };
       useMyStore.getState().addPortal(currentWorld, newPortal);
