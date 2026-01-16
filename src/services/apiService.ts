@@ -121,8 +121,9 @@ export async function uploadMediaAsset(
   file: File | Blob,
   fileName: string,
   kind: MediaAssetKind,
+  providedApiKey?: string | null,
 ): Promise<string> {
-  const apiKey = import.meta.env.VITE_MARBLE_API_KEY;
+  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
   const extension = fileName.split(".").pop() || "jpg";
 
   // 1. Prepare Upload
@@ -202,8 +203,9 @@ export interface GenerateWorldOptions {
 
 export const generateWorld = async (
   options: GenerateWorldOptions,
+  providedApiKey?: string | null,
 ): Promise<GetOperationResponse<World>> => {
-  const apiKey = import.meta.env.VITE_MARBLE_API_KEY;
+  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
   let mediaAssetId: string | undefined;
 
   if (!apiKey) {
@@ -215,6 +217,7 @@ export const generateWorld = async (
       options.image,
       options.image.name,
       "image",
+      apiKey,
     );
   }
 
@@ -288,8 +291,9 @@ export interface GetOperationResponse<T = any> {
  */
 export const getOperation = async <T = any>(
   operationId: string,
+  providedApiKey?: string | null,
 ): Promise<GetOperationResponse<T>> => {
-  const apiKey = import.meta.env.VITE_MARBLE_API_KEY;
+  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
 
   if (!apiKey) {
     throw new Error("Missing Marble API Key.");

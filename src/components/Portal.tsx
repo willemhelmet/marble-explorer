@@ -55,7 +55,10 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
       // Access fresh player list directly to avoid resetting the timer on joins/leaves
       const currentRemotePlayers = useMyStore.getState().remotePlayers;
-      const allPlayerIds = [myId, ...Array.from(currentRemotePlayers.keys())].sort();
+      const allPlayerIds = [
+        myId,
+        ...Array.from(currentRemotePlayers.keys()),
+      ].sort();
       const pollerIndex = hashString(portal.id) % allPlayerIds.length;
 
       if (allPlayerIds[pollerIndex] !== myId) {
@@ -63,10 +66,15 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         return;
       }
 
-      console.log(`[Poller] Checking operation ${portal.pendingOperationId} for portal ${portal.id}`);
+      console.log(
+        `[Poller] Checking operation ${portal.pendingOperationId} for portal ${portal.id}`,
+      );
 
       try {
-        const op = await getOperation<World>(portal.pendingOperationId!);
+        const op = await getOperation<World>(
+          portal.pendingOperationId!,
+          apiKey,
+        );
         if (op.done) {
           if (op.error) {
             socketManager.updatePortal(currentWorldId, portal.id, {
@@ -98,6 +106,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     portal.pendingOperationId,
     // remotePlayers is intentionally omitted to prevent interval reset
     currentWorldId,
+    apiKey,
   ]);
 
   // Sync global hover for crosshair
