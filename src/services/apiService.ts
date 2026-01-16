@@ -66,9 +66,9 @@ export const fetchWorldAssets = async (
       throw new Error("Invalid API Response: Missing assets");
     }
 
-    // Prefer full_res, fallback to 500k, then 100k
+    // Removed full_res, default to 500k, then 100k
     const splatUrl =
-      data.world.assets.splats.spz_urls.full_res ||
+      // data.world.assets.splats.spz_urls.full_res ||
       data.world.assets.splats.spz_urls["500k"] ||
       data.world.assets.splats.spz_urls["100k"];
 
