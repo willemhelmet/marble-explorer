@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Sphere } from "@react-three/drei";
 import { useMyStore } from "../store/store";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
@@ -45,6 +45,48 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const isTransitioning = useRef(false);
   const groupRef = useRef<THREE.Group>(null);
   const camera = useThree((state) => state.camera);
+
+  // --- Visual state based on portal.status ---
+  const getStatusColor = () => {
+    switch (portal.status) {
+      case "fetching":
+      case "initializing":
+      case "generating":
+        return "#3b82f6"; // Blue-500
+      case "ready":
+        return "#22c55e"; // Green-500
+      case "error":
+        return "#ef4444"; // Red-500
+      case "idle":
+      default:
+        return "#ffffff"; // White
+    }
+  };
+
+  // --- Procedural Splat Setup ---
+  const statusColor = useMemo(() => dyno.dynoColor("#ffffff"), []);
+
+  useEffect(() => {
+    statusColor.value.set(getStatusColor());
+    if (isHovered) {
+      // Lighten/Highlight on hover
+      statusColor.value.multiplyScalar(1.2);
+    }
+  }, [portal.status, isHovered, statusColor]);
+
+  const splatMesh = useMemo(() => {
+    const mesh = new SplatMesh({
+      constructSplats: (splats) =>
+        constructSpherePoints({
+          splats,
+          maxDepth: 4,
+          pointRadius: 0.03,
+          pointThickness: 0.01,
+        }),
+      objectModifier: createPortalDyno(statusColor),
+    });
+    return mesh;
+  }, [statusColor]);
 
   // --- Distributed Polling Logic ---
   useEffect(() => {
@@ -185,41 +227,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     }
   });
 
-  // Visual state based on portal.status
-  const getStatusColor = () => {
-    switch (portal.status) {
-      case "fetching":
-      case "initializing":
-      case "generating":
-        return "#3b82f6"; // Blue-500
-      case "ready":
-        return "#22c55e"; // Green-500
-      case "error":
-        return "#ef4444"; // Red-500
-      case "idle":
-      default:
-        return "#ffffff"; // White
-    }
-  };
-
-  const getStatusText = () => {
-    switch (portal.status) {
-      case "generating":
-        return "GENERATING WORLD...";
-      case "fetching":
-        return "FETCHING...";
-      case "initializing":
-        return "INITIALIZING...";
-      case "ready":
-        return "ENTER WORLD";
-      case "error":
-        return "ERROR";
-      case "idle":
-      default:
-        return portal.url ? "OPEN PORTAL" : "EMPTY PORTAL";
-    }
-  };
-
   // Cursor handling
   useEffect(() => {
     document.body.style.cursor = isHovered ? "pointer" : "auto";
@@ -236,33 +243,16 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
   return (
     <group position={portal.position} ref={groupRef}>
-      {/* The Portal Sphere */}
+      {/* The Procedural Splat */}
+      <primitive object={splatMesh} />
+
+      {/* The Interaction Proxy Sphere */}
       <Sphere
         args={[1, 8, 8]}
+        visible={false}
         onClick={handleClick}
         onPointerOver={() => setIsHovered(true)}
         onPointerOut={() => setIsHovered(false)}
-      >
-        <meshStandardMaterial
-          color={getStatusColor()}
-          emissive={getStatusColor()}
-          emissiveIntensity={isHovered ? 0.8 : 0.5}
-          roughness={0.2}
-          metalness={0.8}
-          wireframe={
-            portal.url === null ||
-            portal.status === "fetching" ||
-            portal.status === "generating"
-          }
-        />
-      </Sphere>
-
-      {/* Optional: Add a subtle point light to make it glow */}
-      <pointLight
-        color={getStatusColor()}
-        intensity={2}
-        distance={5}
-        decay={2}
       />
     </group>
   );
