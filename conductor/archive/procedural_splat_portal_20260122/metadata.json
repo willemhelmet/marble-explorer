@@ -1,0 +1,8 @@
+{
+  "track_id": "procedural_splat_portal_20260122",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-22T10:00:00Z",
+  "updated_at": "2026-01-22T10:00:00Z",
+  "description": "Replace the Portal mesh with a procedural Gaussian Splat generated using a Dyno (Spark.js)."
+}
