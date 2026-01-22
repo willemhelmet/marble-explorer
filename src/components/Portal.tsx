@@ -5,7 +5,7 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { characterStatus } from "bvhecctrl";
 import { SplatMesh, constructSpherePoints, dyno } from "@sparkjsdev/spark";
-import { createPortalDyno } from "../dynos/portalDyno";
+import { PortalDyno } from "../dynos/portalDyno";
 import { type Portal as PortalType } from "../store/worldSlice";
 import {
   fetchWorldAssets,
@@ -83,7 +83,13 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           pointRadius: 0.03,
           pointThickness: 0.01,
         }),
-      objectModifier: createPortalDyno(statusColor),
+      objectModifier: dyno.dynoBlock(
+        { gsplat: dyno.Gsplat }, // input
+        { gsplat: dyno.Gsplat }, // output
+        ({ gsplat }) => ({
+          gsplat: PortalDyno.apply({ gsplat, color: statusColor }).gsplat,
+        }),
+      ),
     });
     return mesh;
   }, [statusColor]);
