@@ -47,30 +47,36 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const camera = useThree((state) => state.camera);
 
   // --- Visual state based on portal.status ---
-  const getStatusColor = () => {
+  const getStatusColor = (): [number, number, number] => {
     switch (portal.status) {
       case "fetching":
       case "initializing":
       case "generating":
-        return "#3b82f6"; // Blue-500
+        return [0.23, 0.51, 0.96]; // Blue-500
       case "ready":
-        return "#22c55e"; // Green-500
+        return [0.13, 0.77, 0.37]; // Green-500
       case "error":
-        return "#ef4444"; // Red-500
+        return [0.94, 0.27, 0.27]; // Red-500
       case "idle":
       default:
-        return "#ffffff"; // White
+        return [1, 1, 1]; // White
     }
   };
 
   // --- Procedural Splat Setup ---
-  const statusColor = useMemo(() => dyno.dynoColor("#ffffff"), []);
+  const statusColor = useMemo(() => dyno.dynoVec3([1, 1, 1]), []);
 
   useEffect(() => {
-    statusColor.value.set(getStatusColor());
+    const [r, g, b] = getStatusColor();
+    statusColor.value[0] = r;
+    statusColor.value[1] = g;
+    statusColor.value[2] = b;
+
     if (isHovered) {
       // Lighten/Highlight on hover
-      statusColor.value.multiplyScalar(1.2);
+      statusColor.value[0] *= 1.2;
+      statusColor.value[1] *= 1.2;
+      statusColor.value[2] *= 1.2;
     }
   }, [portal.status, isHovered, statusColor]);
 
