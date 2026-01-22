@@ -6,8 +6,8 @@
 
 ## User Interface (2D & 3D)
 - **Diegetic Portal (3D):**
-    - The portal sphere acts as the primary interactive element in 3D space.
-    - **Feedback:** Use minimalist floating text overlays directly above or on the sphere to communicate API states (`IDLE`, `FETCHING...`, `INITIALIZING...`, `READY`, `ERROR`).
+    - The procedural splat sphere acts as the primary interactive element in 3D space.
+    - **Feedback:** Use dynamic color shifts on the procedural splat to communicate API states (Blue for generating, Green for ready, Red for error, White for idle).
 - **Input System (2D):**
     - **Style:** Flat, high-contrast UI components. Sharp edges, solid backgrounds, and clear borders.
     - **Interaction:** Triggered by clicking the 3D portal. The input field should autofocus and provide a clear "Confirm" action.
