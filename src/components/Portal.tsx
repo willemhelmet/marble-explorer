@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Billboard, Sphere, Text } from "@react-three/drei";
+import { Sphere } from "@react-three/drei";
 import { useMyStore } from "../store/store";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
@@ -234,21 +234,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
   return (
     <group position={portal.position} ref={groupRef}>
-      {/* Floating Status Text */}
-      <Billboard>
-        <Text
-          position={[0, 1.5, 0]}
-          fontSize={0.3}
-          color="white"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.02}
-          outlineColor="black"
-        >
-          {getStatusText()}
-        </Text>
-      </Billboard>
-
       {/* The Portal Sphere */}
       <Sphere
         args={[1, 8, 8]}
