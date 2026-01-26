@@ -12,7 +12,9 @@ export const PortalNoiseDyno = new dyno.Dyno({
     gsplat: dyno.Gsplat, 
     color: "vec3",
     uTime: "float",
-    uHover: "float" 
+    uHover: "float",
+    uCameraPos: "vec3",
+    uPortalPos: "vec3"
   },
   outTypes: { gsplat: dyno.Gsplat },
   globals: () => [
@@ -90,27 +92,33 @@ export const PortalNoiseDyno = new dyno.Dyno({
     dyno.unindentLines(`
       ${outputs.gsplat} = ${inputs.gsplat};
       
-      // 1. Calculate Normal (assuming sphere at origin)
-      vec3 normal = normalize(${inputs.gsplat}.center);
+      // 1. Calculate Local Position and Normal
+      vec3 localPos = ${inputs.gsplat}.center - ${inputs.uPortalPos};
+      vec3 normal = normalize(localPos);
 
       // 2. Base Noise for displacement and veins
-      // Frequency increases with hover
+      // Using localPos ensures noise remains stable if the portal moves
       float freq = 2.5 + ${inputs.uHover} * 2.5;
-      float noiseVal = snoise(${inputs.gsplat}.center * freq + ${inputs.uTime} * 0.5);
+      float noiseVal = snoise(localPos * freq + ${inputs.uTime} * 0.5);
 
       // 3. Rhythmic Pulse (Breathing)
       float pulse = 1.0 + sin(${inputs.uTime} * 2.0) * 0.05;
-      ${outputs.gsplat}.center *= pulse;
+      // We apply pulse to local offset, then add back to world center
+      vec3 offset = localPos * (pulse - 1.0);
+      ${outputs.gsplat}.center += offset;
 
       // 4. Surface Ripples (Displacement along normal)
       float displacement = noiseVal * (0.05 + ${inputs.uHover} * 0.05);
       ${outputs.gsplat}.center += normal * displacement;
 
-      // 5. Apply Status Color
-      ${outputs.gsplat}.rgba.rgb *= ${inputs.color};
+      // 5. Fresnel Effect (Invis center, visible edges)
+      vec3 viewDir = normalize(${inputs.uCameraPos} - ${inputs.gsplat}.center);
+      float fresnel = pow(1.0 - abs(dot(viewDir, normal)), 3.0);
+      ${outputs.gsplat}.rgba.a *= fresnel;
 
-      // 6. Energy Veins (Noise Peaks)
+      // 6. Apply Status Color & Energy Veins
+      ${outputs.gsplat}.rgba.rgb *= ${inputs.color};
       float vein = smoothstep(0.2, 0.5, noiseVal);
-      ${outputs.gsplat}.rgba.rgb += ${inputs.color} * vein * (0.5 + ${inputs.uHover} * 0.5);
+      ${outputs.gsplat}.rgba.rgb += ${inputs.color} * vein * (0.5 + ${inputs.uHover} * 0.5 + fresnel * 0.5);
     `),
 });

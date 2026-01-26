@@ -69,6 +69,8 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const statusColor = useMemo(() => dyno.dynoVec3([1, 1, 1]), []);
   const uTime = useMemo(() => dyno.dynoFloat(0), []);
   const uHover = useMemo(() => dyno.dynoFloat(0), []);
+  const uCameraPos = useMemo(() => dyno.dynoVec3([0, 0, 0]), []);
+  const uPortalPos = useMemo(() => dyno.dynoVec3([0, 0, 0]), []);
 
   useEffect(() => {
     const [r, g, b] = getStatusColor();
@@ -88,6 +90,12 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   }, [getStatusColor, isHovered, statusColor]);
 
   useEffect(() => {
+    uPortalPos.value[0] = portal.position.x;
+    uPortalPos.value[1] = portal.position.y;
+    uPortalPos.value[2] = portal.position.z;
+  }, [portal.position, uPortalPos]);
+
+  useEffect(() => {
     gsap.to(uHover, {
       value: isHovered ? 1.0 : 0.0,
       duration: 0.5,
@@ -104,7 +112,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           pointRadius: 0.03,
           pointThickness: 0.01,
         }),
-      objectModifier: dyno.dynoBlock(
+      worldModifier: dyno.dynoBlock(
         { gsplat: dyno.Gsplat }, // input
         { gsplat: dyno.Gsplat }, // output
         ({ gsplat }) => ({
@@ -113,17 +121,22 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
             color: statusColor,
             uTime: uTime,
             uHover: uHover,
+            uCameraPos: uCameraPos,
+            uPortalPos: uPortalPos,
           }).gsplat,
         }),
       ),
       onFrame: ({ mesh, time }) => {
         // eslint-disable-next-line react-hooks/immutability
         uTime.value = time;
+        uCameraPos.value[0] = camera.position.x;
+        uCameraPos.value[1] = camera.position.y;
+        uCameraPos.value[2] = camera.position.z;
         mesh.updateVersion();
       },
     });
     return mesh;
-  }, [statusColor, uTime, uHover]);
+  }, [statusColor, uTime, uHover, uCameraPos, uPortalPos, camera]);
 
   // --- Distributed Polling Logic ---
   useEffect(() => {
