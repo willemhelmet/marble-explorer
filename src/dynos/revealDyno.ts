@@ -23,7 +23,7 @@ export const RevealDyno = new dyno.Dyno({
           vec3 pos,
           vec3 origin,
           float revealProgress,
-          float maxRadius
+          float radius
         ) {
           // If fully revealed, just return the original color
           if (revealProgress >= 1.0) {
@@ -31,7 +31,6 @@ export const RevealDyno = new dyno.Dyno({
           }
 
           float dist = distance(pos, origin);
-          float radius = revealProgress * maxRadius * 2.5;
           float glowThickness = 0.5;
           float glow = getSphericalGlow(dist, radius, glowThickness);
           vec3 glowColor = vec3(0.0, 1.0, 1.0); // Cyan
@@ -50,14 +49,12 @@ export const RevealDyno = new dyno.Dyno({
       vec3 calculateTranslation(
         vec3 pos,
         vec3 origin,
-        float revealProgress,
-        float maxRadius
+        float radius
       ) {
         float displacementStrength = 0.2;
         vec3 displacementDirection = normalize(pos - origin);
         float dist = distance(pos, origin);
         float glowThickness = 0.4;
-        float radius = revealProgress * maxRadius * 2.5;
         float glow = getSphericalGlow(dist, radius, glowThickness);
         return pos + (displacementDirection * glow * displacementStrength);
       }
@@ -66,14 +63,12 @@ export const RevealDyno = new dyno.Dyno({
         vec3 pos,
         vec3 scale,
         vec3 origin,
-        float revealProgress,
-        float maxRadius
+        float radius
       ) {
         float scaleStrength = 0.02;
         vec3 displacementDirection = normalize(pos - origin);
         float dist = distance(pos, origin);
         float glowThickness = 0.4;
-        float radius = revealProgress * maxRadius * 2.5;
         float glow = getSphericalGlow(dist, radius, glowThickness);
         return scale + (displacementDirection * glow * scaleStrength);
       }
@@ -84,27 +79,27 @@ export const RevealDyno = new dyno.Dyno({
 
       ${outputs.gsplat} = ${inputs.gsplat};
 
+      float radius = ${inputs.revealProgress} * ${inputs.maxRadius} * 2.5;
+
       ${outputs.gsplat}.rgba = calculateColor(
         ${inputs.gsplat}.rgba,
         ${inputs.gsplat}.center,
         ${inputs.origin},
         ${inputs.revealProgress},
-        ${inputs.maxRadius}
+        radius
        );
 
       ${outputs.gsplat}.center = calculateTranslation(
         ${inputs.gsplat}.center,
         ${inputs.origin},
-        ${inputs.revealProgress},
-        ${inputs.maxRadius}
+        radius
       );
 
       ${outputs.gsplat}.scales = calculateScale(
         ${inputs.gsplat}.center,
         ${inputs.gsplat}.scales,
         ${inputs.origin},
-        ${inputs.revealProgress},
-        ${inputs.maxRadius}
+        radius
       );
 
     `),
