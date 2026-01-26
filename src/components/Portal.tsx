@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Sphere } from "@react-three/drei";
 import { useMyStore } from "../store/store";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
+import gsap from "gsap";
 import { characterStatus } from "bvhecctrl";
 import { SplatMesh, constructSpherePoints, dyno } from "@sparkjsdev/spark";
 import { PortalNoiseDyno } from "../dynos/portalNoiseDyno";
@@ -47,7 +48,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const camera = useThree((state) => state.camera);
 
   // --- Visual state based on portal.status ---
-  const getStatusColor = (): [number, number, number] => {
+  const getStatusColor = useCallback((): [number, number, number] => {
     switch (portal.status) {
       case "fetching":
       case "initializing":
@@ -61,17 +62,21 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       default:
         return [1, 1, 1]; // White
     }
-  };
+  }, [portal.status]);
 
   // --- Procedural Splat Setup ---
+  // Using useMemo for stable dyno objects
   const statusColor = useMemo(() => dyno.dynoVec3([1, 1, 1]), []);
   const uTime = useMemo(() => dyno.dynoFloat(0), []);
   const uHover = useMemo(() => dyno.dynoFloat(0), []);
 
   useEffect(() => {
     const [r, g, b] = getStatusColor();
+    // eslint-disable-next-line react-hooks/immutability
     statusColor.value[0] = r;
+
     statusColor.value[1] = g;
+
     statusColor.value[2] = b;
 
     if (isHovered) {
@@ -80,7 +85,15 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       statusColor.value[1] *= 1.2;
       statusColor.value[2] *= 1.2;
     }
-  }, [portal.status, isHovered, statusColor]);
+  }, [getStatusColor, isHovered, statusColor]);
+
+  useEffect(() => {
+    gsap.to(uHover, {
+      value: isHovered ? 1.0 : 0.0,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+  }, [isHovered, uHover]);
 
   const splatMesh = useMemo(() => {
     const mesh = new SplatMesh({
@@ -95,23 +108,22 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         { gsplat: dyno.Gsplat }, // input
         { gsplat: dyno.Gsplat }, // output
         ({ gsplat }) => ({
-          gsplat: PortalNoiseDyno.apply({ 
-            gsplat, 
+          gsplat: PortalNoiseDyno.apply({
+            gsplat,
             color: statusColor,
             uTime: uTime,
-            uHover: uHover
+            uHover: uHover,
           }).gsplat,
         }),
       ),
       onFrame: ({ mesh, time }) => {
+        // eslint-disable-next-line react-hooks/immutability
         uTime.value = time;
-        // Simple instant hover for now, will lerp later in Phase 3
-        uHover.value = isHovered ? 1.0 : 0.0;
         mesh.updateVersion();
-      }
+      },
     });
     return mesh;
-  }, [statusColor, uTime, uHover, isHovered]);
+  }, [statusColor, uTime, uHover]);
 
   // --- Distributed Polling Logic ---
   useEffect(() => {

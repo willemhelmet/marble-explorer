@@ -93,7 +93,7 @@ class SocketManager {
         position: new Vector3(p.x, p.y, p.z),
         rotationY: p.rotation_y,
         url: p.target_url,
-        status: (p.status as any) || "ready", // Default to "ready" if missing
+        status: (p.status as Portal["status"]) || "ready",
         pendingOperationId: p.pending_operation_id || undefined,
       }));
       useMyStore.getState().setPortalsForWorld(currentWorld, portals);
@@ -114,7 +114,7 @@ class SocketManager {
         position: new Vector3(p.x, p.y, p.z),
         rotationY: p.rotation_y,
         url: p.target_url,
-        status: (p.status as any) || "ready", // Default to "ready" if missing
+        status: (p.status as Portal["status"]) || "ready",
         pendingOperationId: p.pending_operation_id || undefined,
       };
       useMyStore.getState().addPortal(currentWorld, newPortal);
@@ -126,7 +126,7 @@ class SocketManager {
 
       // Map snake_case server fields to camelCase client fields
       const clientUpdates: Partial<Portal> = {};
-      if (updates.status) clientUpdates.status = updates.status as any;
+      if (updates.status) clientUpdates.status = updates.status as Portal["status"];
       if (updates.target_url !== undefined) clientUpdates.url = updates.target_url;
       if (updates.pending_operation_id !== undefined)
         clientUpdates.pendingOperationId = updates.pending_operation_id || undefined;
@@ -199,7 +199,7 @@ class SocketManager {
     if (!this.socket) return;
 
     // Map camelCase client fields to snake_case server fields
-    const serverUpdates: any = {};
+    const serverUpdates: Record<string, unknown> = {};
     if (updates.status) serverUpdates.status = updates.status;
     if (updates.url !== undefined) serverUpdates.target_url = updates.url;
     if (updates.pendingOperationId !== undefined)
@@ -207,7 +207,7 @@ class SocketManager {
 
     this.socket.emit("update_portal", {
       id: Number(portalId),
-      updates: serverUpdates,
+      updates: serverUpdates as Partial<ServerPortal>,
       room_name: worldId,
     });
   }

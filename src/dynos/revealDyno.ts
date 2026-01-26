@@ -107,9 +107,9 @@ const revealDyno = new dyno.Dyno({
 });
 
 // Attach setUniform method for easy access from components
-(revealDyno as any).setUniform = (name: string, value: any) => {
-  if (name === "revealProgress") revealProgress.value = value;
-  if (name === "origin") origin.value = value;
+(revealDyno as unknown as { setUniform: (name: string, value: unknown) => void }).setUniform = (name: string, value: unknown) => {
+  if (name === "revealProgress") revealProgress.value = value as number;
+  if (name === "origin") origin.value = value as [number, number, number] | { x: number, y: number, z: number };
 };
 
 export const RevealDyno = revealDyno;

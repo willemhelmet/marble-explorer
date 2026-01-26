@@ -267,13 +267,13 @@ export interface OperationError {
   message?: string | null;
 }
 
-export interface GetOperationResponse<T = any> {
+export interface GetOperationResponse<T = unknown> {
   operation_id: string;
   done: boolean;
   created_at?: string | null;
   updated_at?: string | null;
   expires_at?: string | null;
-  metadata?: Record<string, any> | null;
+  metadata?: Record<string, unknown> | null;
   response?: T | null;
   error?: OperationError | null;
 }
@@ -286,7 +286,7 @@ export interface GetOperationResponse<T = any> {
  * @returns Operation object with status, result, or error
  * @throws Error if the operation is not found or API request fails
  */
-export const getOperation = async <T = any>(
+export const getOperation = async <T = unknown>(
   operationId: string,
   providedApiKey?: string | null,
 ): Promise<GetOperationResponse<T>> => {

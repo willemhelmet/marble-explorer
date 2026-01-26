@@ -1,11 +1,10 @@
 /**
  * @vitest-environment happy-dom
  */
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, type Mock } from 'vitest';
 import { render } from '@testing-library/react';
 import { Splat } from './Splat';
 import { useMyStore } from '../../store/store';
-import { RevealDyno } from '../../dynos/revealDyno';
 import { useFrame } from '@react-three/fiber';
 
 // Spy on constructor
@@ -15,7 +14,7 @@ const splatMeshConstructorSpy = vi.fn();
 const setUniformSpy = vi.fn();
 vi.mock('../../dynos/revealDyno', () => ({
   RevealDyno: {
-    setUniform: (name: string, val: any) => setUniformSpy(name, val)
+    setUniform: (name: string, val: unknown) => setUniformSpy(name, val)
   }
 }));
 
@@ -29,7 +28,7 @@ vi.mock('bvhecctrl', () => ({
 vi.mock('@sparkjsdev/spark', async () => {
   return {
     SplatMesh: class {
-      constructor(options: any) {
+      constructor(options: unknown) {
         splatMeshConstructorSpy(options);
       }
       dispose = vi.fn();
@@ -57,7 +56,7 @@ vi.mock('@react-three/fiber', () => ({
 vi.mock('react', async () => {
     const actual = await vi.importActual('react');
     return {
-        ...actual,
+        ...actual as Record<string, unknown>,
     };
 });
 
@@ -67,7 +66,7 @@ describe('Splat Component', () => {
   });
 
   it('should initialize SplatMesh with RevealDyno', () => {
-    (useMyStore as any).mockReturnValue({ splatUrl: 'test.splat' });
+    (useMyStore as Mock).mockReturnValue({ splatUrl: 'test.splat' });
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     render(<Splat />);
     expect(splatMeshConstructorSpy).toHaveBeenCalledWith(expect.objectContaining({
@@ -78,11 +77,11 @@ describe('Splat Component', () => {
   });
 
   it('should sync RevealDyno uniforms on frame update', () => {
-    (useMyStore as any).mockReturnValue({ splatUrl: 'test.splat' });
+    (useMyStore as Mock).mockReturnValue({ splatUrl: 'test.splat' });
     
     // Capture useFrame callback
-    let frameCallback: (state: any) => void = () => {};
-    (useFrame as any).mockImplementation((cb: any) => {
+    let frameCallback: (state: unknown) => void = () => {};
+    (useFrame as Mock).mockImplementation((cb: (state: unknown) => void) => {
         frameCallback = cb;
     });
 
@@ -97,7 +96,7 @@ describe('Splat Component', () => {
     
     const lastCall = setUniformSpy.mock.calls.find(c => c[0] === 'origin');
     expect(lastCall).toBeDefined();
-    const val = lastCall[1];
+    const val = lastCall[1] as { x: number; y: number; z: number } | number[];
     
     if (Array.isArray(val)) {
         expect(val).toEqual([10, 20, 30]);

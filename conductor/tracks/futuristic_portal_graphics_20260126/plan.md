@@ -20,11 +20,11 @@
 - [x] Task: Conductor - User Manual Verification 'Visual Refinement' (Protocol in workflow.md) [manual]
 
 ## Phase 3: Interactivity & Polish
-- [ ] Task: Implement Hover Turbulence
-    - [ ] Add a `hoverIntensity` float dyno.
-    - [ ] Use GSAP in `Portal.tsx` to lerp `hoverIntensity` between `0.0` and `1.0` based on `isHovered`.
-    - [ ] Update the shader to multiply noise frequency/amplitude by the `hoverIntensity`.
-- [ ] Task: Performance & Quality Gate Check
-    - [ ] Verify 60 FPS performance with multiple portals.
-    - [ ] Ensure visual consistency across all status colors (Blue, Green, Red, White).
-- [ ] Task: Conductor - User Manual Verification 'Interactivity & Polish' (Protocol in workflow.md)
+- [x] Task: Implement Hover Turbulence [2f4a5b6]
+    - [x] Add a `hoverIntensity` float dyno.
+    - [x] Use GSAP in `Portal.tsx` to lerp `hoverIntensity` between `0.0` and `1.0` based on `isHovered`.
+    - [x] Update the shader to multiply noise frequency/amplitude by the `hoverIntensity`.
+- [x] Task: Performance & Quality Gate Check [3a1f251]
+    - [x] Verify 60 FPS performance with multiple portals.
+    - [x] Ensure visual consistency across all status colors (Blue, Green, Red, White).
+- [x] Task: Conductor - User Manual Verification 'Interactivity & Polish' (Protocol in workflow.md) [manual]
