@@ -6,7 +6,7 @@
 - [x] Task: Implement `updatePortal` in Server [7fc867a]
     - [x] Create `updatePortal` function in `../marble-explorer-server/db.js`.
     - [x] Add `socket.on('update_portal', ...)` handler in `../marble-explorer-server/server.js` to broadcast changes.
-- [ ] Task: Conductor - User Manual Verification 'Server-Side Schema & Logic' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Server-Side Schema & Logic' (Protocol in workflow.md) [manual]
 
 ## Phase 2: Client-Side Refactor (UI)
 - [x] Task: Refactor `GenerateTab.tsx` [896c303]
