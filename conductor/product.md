@@ -15,7 +15,7 @@ This project is a personal technical demo designed to explore the integration of
 ## Key Features
 - **Diegetic Portal UI:** A floating 3D procedural Gaussian splat sphere that, when clicked, opens a 2D UI for URL input.
 - **Dynamic API Interaction:** Real-time fetching of world data (splat, mesh, pano) upon URL confirmation.
-- **Visual State Feedback:** The procedural portal sphere undergoes visual color transformations to reflect the API's current status (idle, loading, success, or failure).
+- **Visual State Feedback:** The procedural portal sphere undergoes visual color transformations and dynamic, noise-driven idle animations (pulsing, rippling) to reflect the API's current status and react to user interaction.
 - **World Registry & Persistent Multi-Portal Navigation:** A multiplayer system that manages portals across worlds, allowing users to create portals that persist in a central database and are shared across all connected clients.
 - **Seamless World Transition:** The portal displays the fetched panorama image once loading is complete.
 - **Immersive Exploration:** First-person (WASD + Mouse) movement allowing the user to walk into the portal to view the loaded world, with physics-based collisions against the downloaded mesh.
