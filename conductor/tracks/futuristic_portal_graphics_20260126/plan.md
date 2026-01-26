@@ -11,13 +11,13 @@
 - [x] Task: Conductor - User Manual Verification 'Technical Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Visual Refinement (Displacement & Veins)
-- [ ] Task: Implement Surface Ripples (Displacement)
-    - [ ] Update the GLSL `statements` to displace `gsplat.center` along its normal based on the noise function.
-    - [ ] Ensure displacement respects the spherical topology.
-- [ ] Task: Implement Energy Veins (Brightness Mapping)
-    - [ ] Add GLSL logic to calculate a brightness multiplier based on noise peaks.
-    - [ ] Apply this multiplier to `gsplat.rgba` to create the "vein" effect within the current status color.
-- [ ] Task: Conductor - User Manual Verification 'Visual Refinement' (Protocol in workflow.md)
+- [x] Task: Implement Surface Ripples (Displacement) [7fc867a]
+    - [x] Update the GLSL `statements` to displace `gsplat.center` along its normal based on the noise function.
+    - [x] Ensure displacement respects the spherical topology.
+- [x] Task: Implement Energy Veins (Brightness Mapping) [9e1a2b3]
+    - [x] Add GLSL logic to calculate a brightness multiplier based on noise peaks.
+    - [x] Apply this multiplier to `gsplat.rgba` to create the "vein" effect within the current status color.
+- [x] Task: Conductor - User Manual Verification 'Visual Refinement' (Protocol in workflow.md) [manual]
 
 ## Phase 3: Interactivity & Polish
 - [ ] Task: Implement Hover Turbulence

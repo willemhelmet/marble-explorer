@@ -90,19 +90,26 @@ export const PortalNoiseDyno = new dyno.Dyno({
     dyno.unindentLines(`
       ${outputs.gsplat} = ${inputs.gsplat};
       
-      // 1. Rhythmic Pulse (Breathing)
-      float pulse = 1.0 + sin(${inputs.uTime} * 2.0) * 0.05;
-      ${outputs.gsplat}.center *= pulse;
+      // 1. Calculate Normal (assuming sphere at origin)
+      vec3 normal = normalize(${inputs.gsplat}.center);
 
       // 2. Base Noise for displacement and veins
       // Frequency increases with hover
-      float freq = 2.0 + ${inputs.uHover} * 3.0;
-      float noiseVal = snoise(${inputs.gsplat}.center * freq + ${inputs.uTime});
+      float freq = 2.5 + ${inputs.uHover} * 2.5;
+      float noiseVal = snoise(${inputs.gsplat}.center * freq + ${inputs.uTime} * 0.5);
 
-      // 3. Apply Status Color
+      // 3. Rhythmic Pulse (Breathing)
+      float pulse = 1.0 + sin(${inputs.uTime} * 2.0) * 0.05;
+      ${outputs.gsplat}.center *= pulse;
+
+      // 4. Surface Ripples (Displacement along normal)
+      float displacement = noiseVal * (0.05 + ${inputs.uHover} * 0.05);
+      ${outputs.gsplat}.center += normal * displacement;
+
+      // 5. Apply Status Color
       ${outputs.gsplat}.rgba.rgb *= ${inputs.color};
 
-      // 4. Energy Veins (Noise Peaks)
+      // 6. Energy Veins (Noise Peaks)
       float vein = smoothstep(0.2, 0.5, noiseVal);
       ${outputs.gsplat}.rgba.rgb += ${inputs.color} * vein * (0.5 + ${inputs.uHover} * 0.5);
     `),
