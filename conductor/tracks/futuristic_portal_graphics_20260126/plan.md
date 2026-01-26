@@ -19,7 +19,7 @@
     - [x] Apply this multiplier to `gsplat.rgba` to create the "vein" effect within the current status color.
 - [x] Task: Conductor - User Manual Verification 'Visual Refinement' (Protocol in workflow.md) [manual]
 
-## Phase 3: Interactivity & Polish
+## Phase 3: Interactivity & Polish [checkpoint: 66ee49c]
 - [x] Task: Implement Hover Turbulence [2f4a5b6]
     - [x] Add a `hoverIntensity` float dyno.
     - [x] Use GSAP in `Portal.tsx` to lerp `hoverIntensity` between `0.0` and `1.0` based on `isHovered`.
