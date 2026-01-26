@@ -10,7 +10,7 @@
     - [x] Implement the `onFrame` handler to update a `uTime` float dyno and call `mesh.updateVersion()`.
 - [x] Task: Conductor - User Manual Verification 'Technical Foundation' (Protocol in workflow.md)
 
-## Phase 2: Visual Refinement (Displacement & Veins)
+## Phase 2: Visual Refinement (Displacement & Veins) [checkpoint: 1443134]
 - [x] Task: Implement Surface Ripples (Displacement) [7fc867a]
     - [x] Update the GLSL `statements` to displace `gsplat.center` along its normal based on the noise function.
     - [x] Ensure displacement respects the spherical topology.
