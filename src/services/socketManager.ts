@@ -67,7 +67,6 @@ class SocketManager {
     this.socket = io("https://marble-explorer.rcdis.co");
 
     this.socket.on("connect", () => {
-      console.log("Socket connected:", this.socket?.id);
       const currentWorld = useMyStore.getState().currentWorldId;
       this.joinRoom(currentWorld);
     });
@@ -100,7 +99,6 @@ class SocketManager {
     });
 
     this.socket.on("portal_added", (p) => {
-      console.log("Socket received portal_added:", p);
       const currentWorld = useMyStore.getState().currentWorldId;
       if (p.from_scene !== currentWorld) {
         console.warn(
@@ -121,7 +119,6 @@ class SocketManager {
     });
 
     this.socket.on("portal_updated", ({ id, updates }) => {
-      console.log("Socket received portal_updated:", id, updates);
       const currentWorld = useMyStore.getState().currentWorldId;
 
       // Map snake_case server fields to camelCase client fields
