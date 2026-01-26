@@ -1,0 +1,8 @@
+{
+  "track_id": "async_portal_generation_20260115",
+  "type": "refactor",
+  "status": "new",
+  "created_at": "2026-01-15T12:00:00Z",
+  "updated_at": "2026-01-15T12:00:00Z",
+  "description": "Refactor world generation to be asynchronous and persistent, moving state from the client UI to the shared world state."
+}
