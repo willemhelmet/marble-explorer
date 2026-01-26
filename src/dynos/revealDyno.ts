@@ -1,18 +1,11 @@
 import { dyno } from "@sparkjsdev/spark";
 
-// Create uniforms to be controlled externally
-const revealProgress = new dyno.DynoUniform("float", 0.0);
-const origin = new dyno.DynoUniform("vec3", [0, 0, 0]);
-
-const revealDyno = new dyno.Dyno({
+export const RevealDyno = new dyno.Dyno({
   inTypes: {
     gsplat: dyno.Gsplat,
     origin: "vec3",
     revealProgress: "float",
-  },
-  inputs: {
-    origin,
-    revealProgress,
+    maxRadius: "float",
   },
   outTypes: { gsplat: dyno.Gsplat },
   globals: () => [
@@ -29,10 +22,16 @@ const revealDyno = new dyno.Dyno({
           vec4 initialColor,
           vec3 pos,
           vec3 origin,
-          float revealProgress
+          float revealProgress,
+          float maxRadius
         ) {
+          // If fully revealed, just return the original color
+          if (revealProgress >= 1.0) {
+            return initialColor;
+          }
+
           float dist = distance(pos, origin);
-          float radius = revealProgress * 50.0; // Max radius of 50m
+          float radius = revealProgress * maxRadius * 2.5;
           float glowThickness = 0.5;
           float glow = getSphericalGlow(dist, radius, glowThickness);
           vec3 glowColor = vec3(0.0, 1.0, 1.0); // Cyan
@@ -51,13 +50,14 @@ const revealDyno = new dyno.Dyno({
       vec3 calculateTranslation(
         vec3 pos,
         vec3 origin,
-        float revealProgress
+        float revealProgress,
+        float maxRadius
       ) {
         float displacementStrength = 0.2;
         vec3 displacementDirection = normalize(pos - origin);
         float dist = distance(pos, origin);
         float glowThickness = 0.4;
-        float radius = revealProgress * 50.0;
+        float radius = revealProgress * maxRadius * 2.5;
         float glow = getSphericalGlow(dist, radius, glowThickness);
         return pos + (displacementDirection * glow * displacementStrength);
       }
@@ -66,13 +66,14 @@ const revealDyno = new dyno.Dyno({
         vec3 pos,
         vec3 scale,
         vec3 origin,
-        float revealProgress
+        float revealProgress,
+        float maxRadius
       ) {
         float scaleStrength = 0.02;
         vec3 displacementDirection = normalize(pos - origin);
         float dist = distance(pos, origin);
         float glowThickness = 0.4;
-        float radius = revealProgress * 50.0;
+        float radius = revealProgress * maxRadius * 2.5;
         float glow = getSphericalGlow(dist, radius, glowThickness);
         return scale + (displacementDirection * glow * scaleStrength);
       }
@@ -87,29 +88,24 @@ const revealDyno = new dyno.Dyno({
         ${inputs.gsplat}.rgba,
         ${inputs.gsplat}.center,
         ${inputs.origin},
-        ${inputs.revealProgress}
+        ${inputs.revealProgress},
+        ${inputs.maxRadius}
        );
 
       ${outputs.gsplat}.center = calculateTranslation(
         ${inputs.gsplat}.center,
         ${inputs.origin},
-        ${inputs.revealProgress}
+        ${inputs.revealProgress},
+        ${inputs.maxRadius}
       );
 
       ${outputs.gsplat}.scales = calculateScale(
         ${inputs.gsplat}.center,
         ${inputs.gsplat}.scales,
         ${inputs.origin},
-        ${inputs.revealProgress}
+        ${inputs.revealProgress},
+        ${inputs.maxRadius}
       );
 
     `),
 });
-
-// Attach setUniform method for easy access from components
-(revealDyno as unknown as { setUniform: (name: string, value: unknown) => void }).setUniform = (name: string, value: unknown) => {
-  if (name === "revealProgress") revealProgress.value = value as number;
-  if (name === "origin") origin.value = value as [number, number, number] | { x: number, y: number, z: number };
-};
-
-export const RevealDyno = revealDyno;

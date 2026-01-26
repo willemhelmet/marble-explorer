@@ -58,7 +58,11 @@ export const WorldContent = memo(
         ) : (
           assets && (
             <SparkRenderer args={[sparkRendererArgs]}>
-              <Splat rotation={[Math.PI, 0, 0]} scale={[2, 2, 2]} />
+              <Splat
+                key={assets.splatUrl}
+                rotation={[Math.PI, 0, 0]}
+                scale={[2, 2, 2]}
+              />
             </SparkRenderer>
             /* <WorldCollider /> */
           )

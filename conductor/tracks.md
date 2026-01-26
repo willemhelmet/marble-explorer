@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Create a procedural reveal effect for splats using a custom Spark Dyno, GSAP, and player-centric positioning.**
+- [x] **Track: Create a procedural reveal effect for splats using a custom Spark Dyno, GSAP, and player-centric positioning.**
 *Link: [./tracks/splat_reveal_dyno_20260126/](./tracks/splat_reveal_dyno_20260126/)*
