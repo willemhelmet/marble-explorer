@@ -57,7 +57,7 @@ export const fetchWorldAssets = async (
     }
 
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
 
     if (!data.assets || !data.assets.splats || !data.assets.splats.spz_urls) {
       throw new Error("Invalid API Response: Missing assets");
