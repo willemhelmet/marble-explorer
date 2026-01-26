@@ -1,6 +1,6 @@
 # Implementation Plan - Asynchronous Portal Generation
 
-## Phase 1: Server-Side Schema & Logic
+## Phase 1: Server-Side Schema & Logic [checkpoint: c4d0089]
 - [x] Task: Update Database Schema [5df5ead]
     - [x] Update `../marble-explorer-server/db.js` `initDB` to include `status` and `pending_operation_id` columns in the `CREATE TABLE` statement.
 - [x] Task: Implement `updatePortal` in Server [7fc867a]
