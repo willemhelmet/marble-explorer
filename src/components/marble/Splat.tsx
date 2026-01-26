@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { SplatMesh } from "@sparkjsdev/spark";
 import { useMyStore } from "../../store/store";
 import { type ThreeElements } from "@react-three/fiber";
+import { RevealDyno } from "../../dynos/revealDyno";
 
 export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
   const assets = useMyStore((state) => state.assets);
@@ -13,6 +14,7 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
     if (!splatUrl) return null;
     return new SplatMesh({
       url: splatUrl,
+      dynos: [RevealDyno],
     });
   }, [splatUrl]);
 
