@@ -13,10 +13,6 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
   const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
   const splatUrl = assets?.splatUrl;
 
-  console.log(
-    `[Splat] Render. url: ${splatUrl}, anchor: ${worldAnchorPosition?.x}, ${worldAnchorPosition?.y}, ${worldAnchorPosition?.z}`,
-  );
-
   const revealRef = useRef({ progress: 0 });
   const [animationStarted, setAnimationStarted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -62,51 +58,94 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
     return mesh;
   }, [splatUrl, originUniform, revealProgressUniform, maxRadiusUniform]);
 
+  useFrame(() => {
+    if (splat) {
+      // Sync origin uniform with player position
+      if (characterStatus?.position) {
+        // If we haven't started yet, we might want to stick closer to spawn
+        // to avoid jumping to a stale position from the previous world.
+        if (!animationStarted) {
+          const distToSpawn = worldAnchorPosition
+            ? characterStatus.position.distanceTo(worldAnchorPosition)
+            : 0;
+
+          if (distToSpawn < 20.0) {
+            originUniform.value.copy(characterStatus.position);
+          } else if (worldAnchorPosition) {
+            originUniform.value.copy(worldAnchorPosition);
+          }
+        } else {
+          // Once animation starts, we follow the player directly
+          originUniform.value.copy(characterStatus.position);
+        }
+      }
+
+      // Force update to ensure uniforms are applied if needed
+      if ((splat as any).updateVersion) {
+        (splat as any).updateVersion();
+      }
+    }
+  });
+
   // Handle animation lifecycle using useGSAP
   useGSAP(
     (_context, contextSafe) => {
       if (!splat || !isLoaded || animationStarted || !contextSafe) return;
 
       const startReveal = contextSafe(() => {
-        console.log("Splat initialized, starting reveal...");
+        // Ensure origin is as accurate as possible before calculating radius
+        if (characterStatus?.position) {
+          const distToSpawn = worldAnchorPosition
+            ? characterStatus.position.distanceTo(worldAnchorPosition)
+            : 0;
+          if (distToSpawn < 20.0) {
+            originUniform.value.copy(characterStatus.position);
+          } else if (worldAnchorPosition) {
+            originUniform.value.copy(worldAnchorPosition);
+          }
+        } else if (worldAnchorPosition) {
+          originUniform.value.copy(worldAnchorPosition);
+        }
 
-        // Calculate max radius from bounding box
+        // Calculate max radius from bounding box relative to current origin
         const box = splat.getBoundingBox();
-        console.log(
-          `[Splat] Bounding Box - Min: ${box.min.x},${box.min.y},${box.min.z}, Max: ${box.max.x},${box.max.y},${box.max.z}`,
-        );
+        
+        let radius = 0;
+        if (box.isEmpty()) {
+          radius = 100.0;
+        } else {
+          // Check distance to all 8 corners of the box from our origin
+          const corners = [
+            new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+            new THREE.Vector3(box.min.x, box.min.y, box.max.z),
+            new THREE.Vector3(box.min.x, box.max.y, box.min.z),
+            new THREE.Vector3(box.min.x, box.max.y, box.max.z),
+            new THREE.Vector3(box.max.x, box.min.y, box.min.z),
+            new THREE.Vector3(box.max.x, box.min.y, box.max.z),
+            new THREE.Vector3(box.max.x, box.max.y, box.min.z),
+            new THREE.Vector3(box.max.x, box.max.y, box.max.z),
+          ];
+          
+          for (const corner of corners) {
+            radius = Math.max(radius, originUniform.value.distanceTo(corner));
+          }
+        }
 
-        const sphere = new THREE.Sphere();
-        box.getBoundingSphere(sphere);
-
-        let radius = sphere.radius;
         if (radius <= 0) {
-          console.warn(
-            `[Splat] Calculated invalid radius (${radius}), falling back to 100.0`,
-          );
           radius = 100.0;
         }
 
-        // Add a bit of padding to ensure full coverage
-        const maxRadius = radius * 1.5;
-        console.log(`Calculated splat max radius: ${maxRadius}`);
+        // Add padding to ensure full coverage
+        const maxRadius = radius * 1.2;
         maxRadiusUniform.value = maxRadius;
-
-        console.log(
-          `Locking splat reveal origin at: x=${originUniform.value.x}, y=${originUniform.value.y}, z=${originUniform.value.z}`,
-        );
 
         setAnimationStarted(true);
         revealRef.current.progress = 0;
 
         // Calculate duration for constant speed reveal
-        const EXPANSION_SPEED = 3.0; // meters per second
+        const EXPANSION_SPEED = 30.0; // meters per second
         const calculatedDuration = maxRadius / EXPANSION_SPEED;
-        const duration = Math.max(calculatedDuration, 0.8); // At least 0.8s for visual feedback
-
-        console.log(
-          `Starting reveal animation with duration: ${duration.toFixed(2)}s (Speed: ${EXPANSION_SPEED}m/s)`,
-        );
+        const duration = Math.max(calculatedDuration, 0.8);
 
         gsap.to(revealRef.current, {
           progress: 1,
@@ -128,40 +167,10 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
         revealProgressUniform,
         originUniform,
         maxRadiusUniform,
+        worldAnchorPosition,
       ],
     },
   );
-
-  useFrame(() => {
-    if (splat) {
-      // Sync origin uniform until animation starts
-      if (!animationStarted && characterStatus?.position) {
-        // Only use character position if it is reasonably close to the spawn point
-        // This filters out frames where the physics engine hasn't teleported the player yet
-        const distToSpawn = worldAnchorPosition
-          ? characterStatus.position.distanceTo(worldAnchorPosition)
-          : 0;
-
-        if (distToSpawn < 10.0) {
-          originUniform.value.copy(characterStatus.position);
-        } else {
-          // Fallback to anchor position if player is too far (likely stale position)
-          if (worldAnchorPosition) {
-            console.log(
-              "Player too far from anchor, using anchor:",
-              worldAnchorPosition,
-            );
-            originUniform.value.copy(worldAnchorPosition);
-          }
-        }
-      }
-
-      // Force update to ensure uniforms are applied if needed
-      if ((splat as any).updateVersion) {
-        (splat as any).updateVersion();
-      }
-    }
-  });
 
   // 2. Important: Cleanup memory when the component unmounts or url changes
   useEffect(() => {

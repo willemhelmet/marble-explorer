@@ -79,7 +79,7 @@ export const RevealDyno = new dyno.Dyno({
 
       ${outputs.gsplat} = ${inputs.gsplat};
 
-      float radius = ${inputs.revealProgress} * ${inputs.maxRadius} * 2.5;
+      float radius = ${inputs.revealProgress} * ${inputs.maxRadius};
 
       ${outputs.gsplat}.rgba = calculateColor(
         ${inputs.gsplat}.rgba,

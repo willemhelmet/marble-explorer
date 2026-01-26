@@ -24,7 +24,12 @@ This plan outlines the steps to implement a procedural reveal effect for Gaussia
 - [ ] Task: Conductor - User Manual Verification 'Animation & Lifecycle' (Protocol in workflow.md)
 
 ## Phase 4: Polish & Performance
-- [ ] Task: Fine-tune the glow thickness and displacement strength for optimal visual impact.
-- [ ] Task: Verify that the animation runs smoothly at 60fps on mobile and desktop.
-- [ ] Task: Final code review and documentation update.
-- [ ] Task: Conductor - User Manual Verification 'Polish & Performance' (Protocol in workflow.md)
+- [x] Task: Fine-tune the glow thickness and displacement strength for optimal visual impact.
+- [x] Task: Verify that the animation runs smoothly at 60fps on mobile and desktop.
+- [x] Task: Final code review and documentation update.
+- [x] Task: Conductor - User Manual Verification 'Polish & Performance' (Protocol in workflow.md)
+
+## Phase 5: Bug Fix - Intermittent Reveal Failure
+- [x] Task: Recalculate `maxRadius` based on distance from `origin` to furthest bounding box corner.
+- [x] Task: Investigate and fix potential race conditions where `isLoaded` fires before `worldAnchorPosition` or player position is synchronized.
+- [x] Task: Conductor - User Manual Verification 'Bug Fix - Intermittent Reveal Failure' (Protocol in workflow.md)
