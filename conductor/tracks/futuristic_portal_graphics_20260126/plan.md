@@ -1,6 +1,6 @@
 # Implementation Plan - Futuristic Noise-Driven Portal Graphics
 
-## Phase 1: Technical Foundation & Base Animation
+## Phase 1: Technical Foundation & Base Animation [checkpoint: 66872cf]
 - [x] Task: Create `NoiseDyno` Utility [TDD] [e66250d]
     - [x] Write tests for a new `PortalNoiseDyno.ts` that verify it correctly wraps the `dyno.Dyno` logic.
     - [x] Implement the `Dyno` object with GLSL `globals` including a 3D noise function (e.g., Simplex Noise).
@@ -8,7 +8,7 @@
 - [x] Task: Integrate `NoiseDyno` into `Portal.tsx` [885c640]
     - [x] Replace or extend the current `PortalDyno` usage with the new `NoiseDyno`.
     - [x] Implement the `onFrame` handler to update a `uTime` float dyno and call `mesh.updateVersion()`.
-- [ ] Task: Conductor - User Manual Verification 'Technical Foundation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Technical Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Visual Refinement (Displacement & Veins)
 - [ ] Task: Implement Surface Ripples (Displacement)
