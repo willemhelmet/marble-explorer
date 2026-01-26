@@ -1,10 +1,18 @@
 import { dyno } from "@sparkjsdev/spark";
 
-export const RevealDyno = new dyno.Dyno({
+// Create uniforms to be controlled externally
+const revealProgress = new dyno.DynoUniform("float", 0.0);
+const origin = new dyno.DynoUniform("vec3", [0, 0, 0]);
+
+const revealDyno = new dyno.Dyno({
   inTypes: {
     gsplat: dyno.Gsplat,
     origin: "vec3",
     revealProgress: "float",
+  },
+  inputs: {
+    origin,
+    revealProgress,
   },
   outTypes: { gsplat: dyno.Gsplat },
   globals: () => [
@@ -97,3 +105,11 @@ export const RevealDyno = new dyno.Dyno({
 
     `),
 });
+
+// Attach setUniform method for easy access from components
+(revealDyno as any).setUniform = (name: string, value: any) => {
+  if (name === "revealProgress") revealProgress.value = value;
+  if (name === "origin") origin.value = value;
+};
+
+export const RevealDyno = revealDyno;

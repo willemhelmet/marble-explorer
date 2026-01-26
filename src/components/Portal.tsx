@@ -5,7 +5,7 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { characterStatus } from "bvhecctrl";
 import { SplatMesh, constructSpherePoints, dyno } from "@sparkjsdev/spark";
-import { PortalDyno } from "../dynos/portalDyno";
+import { PortalNoiseDyno } from "../dynos/portalNoiseDyno";
 import { type Portal as PortalType } from "../store/worldSlice";
 import {
   fetchWorldAssets,
@@ -65,6 +65,8 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
   // --- Procedural Splat Setup ---
   const statusColor = useMemo(() => dyno.dynoVec3([1, 1, 1]), []);
+  const uTime = useMemo(() => dyno.dynoFloat(0), []);
+  const uHover = useMemo(() => dyno.dynoFloat(0), []);
 
   useEffect(() => {
     const [r, g, b] = getStatusColor();
@@ -93,12 +95,23 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         { gsplat: dyno.Gsplat }, // input
         { gsplat: dyno.Gsplat }, // output
         ({ gsplat }) => ({
-          gsplat: PortalDyno.apply({ gsplat, color: statusColor }).gsplat,
+          gsplat: PortalNoiseDyno.apply({ 
+            gsplat, 
+            color: statusColor,
+            uTime: uTime,
+            uHover: uHover
+          }).gsplat,
         }),
       ),
+      onFrame: ({ mesh, time }) => {
+        uTime.value = time;
+        // Simple instant hover for now, will lerp later in Phase 3
+        uHover.value = isHovered ? 1.0 : 0.0;
+        mesh.updateVersion();
+      }
     });
     return mesh;
-  }, [statusColor]);
+  }, [statusColor, uTime, uHover, isHovered]);
 
   // --- Distributed Polling Logic ---
   useEffect(() => {

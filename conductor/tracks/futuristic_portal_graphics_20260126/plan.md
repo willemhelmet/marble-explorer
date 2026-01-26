@@ -1,13 +1,13 @@
 # Implementation Plan - Futuristic Noise-Driven Portal Graphics
 
 ## Phase 1: Technical Foundation & Base Animation
-- [ ] Task: Create `NoiseDyno` Utility [TDD]
-    - [ ] Write tests for a new `PortalNoiseDyno.ts` that verify it correctly wraps the `dyno.Dyno` logic.
-    - [ ] Implement the `Dyno` object with GLSL `globals` including a 3D noise function (e.g., Simplex Noise).
-    - [ ] Add `rhythmicPulse` logic (sin/cos based scaling) to the shader.
-- [ ] Task: Integrate `NoiseDyno` into `Portal.tsx`
-    - [ ] Replace or extend the current `PortalDyno` usage with the new `NoiseDyno`.
-    - [ ] Implement the `onFrame` handler to update a `uTime` float dyno and call `mesh.updateVersion()`.
+- [x] Task: Create `NoiseDyno` Utility [TDD] [e66250d]
+    - [x] Write tests for a new `PortalNoiseDyno.ts` that verify it correctly wraps the `dyno.Dyno` logic.
+    - [x] Implement the `Dyno` object with GLSL `globals` including a 3D noise function (e.g., Simplex Noise).
+    - [x] Add `rhythmicPulse` logic (sin/cos based scaling) to the shader.
+- [x] Task: Integrate `NoiseDyno` into `Portal.tsx` [885c640]
+    - [x] Replace or extend the current `PortalDyno` usage with the new `NoiseDyno`.
+    - [x] Implement the `onFrame` handler to update a `uTime` float dyno and call `mesh.updateVersion()`.
 - [ ] Task: Conductor - User Manual Verification 'Technical Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Visual Refinement (Displacement & Veins)

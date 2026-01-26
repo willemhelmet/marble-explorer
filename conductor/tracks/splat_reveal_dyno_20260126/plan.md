@@ -12,9 +12,9 @@ This plan outlines the steps to implement a procedural reveal effect for Gaussia
 
 ## Phase 2: Splat Component Integration
 - [x] Task: Modify `src/components/marble/Splat.tsx` to import and apply the `RevealDyno`.
-- [~] Task: Create a mechanism to track `revealProgress` state within the `Splat` component (using a ref for performance with GSAP).
-- [ ] Task: Update the `useFrame` loop or a dedicated effect in `Splat.tsx` to sync the `origin` uniform with `characterStatus.position`.
-- [ ] Task: Write a test to verify that the `Splat` component correctly initializes the Dyno when a splat URL is provided.
+- [x] Task: Create a mechanism to track `revealProgress` state within the `Splat` component (using a ref for performance with GSAP).
+- [x] Task: Update the `useFrame` loop or a dedicated effect in `Splat.tsx` to sync the `origin` uniform with `characterStatus.position`.
+- [x] Task: Write a test to verify that the `Splat` component correctly initializes the Dyno when a splat URL is provided.
 - [ ] Task: Conductor - User Manual Verification 'Splat Component Integration' (Protocol in workflow.md)
 
 ## Phase 3: Animation & Lifecycle

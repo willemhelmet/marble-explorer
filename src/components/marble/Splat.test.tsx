@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render } from '@testing-library/react';
 import { Splat } from './Splat';
 import { useMyStore } from '../../store/store';
 import { RevealDyno } from '../../dynos/revealDyno';
+import { useFrame } from '@react-three/fiber';
 
 // Spy on constructor
 const splatMeshConstructorSpy = vi.fn();
@@ -68,7 +72,6 @@ describe('Splat Component', () => {
     render(<Splat />);
     expect(splatMeshConstructorSpy).toHaveBeenCalledWith(expect.objectContaining({
       url: 'test.splat',
-      // We mocked RevealDyno so it's the mocked object
       dynos: expect.arrayContaining([expect.anything()]) 
     }));
     consoleErrorSpy.mockRestore();
@@ -79,8 +82,7 @@ describe('Splat Component', () => {
     
     // Capture useFrame callback
     let frameCallback: (state: any) => void = () => {};
-    const useFrameMock = (require('@react-three/fiber').useFrame as any);
-    useFrameMock.mockImplementation((cb: any) => {
+    (useFrame as any).mockImplementation((cb: any) => {
         frameCallback = cb;
     });
 
@@ -91,15 +93,12 @@ describe('Splat Component', () => {
     frameCallback({ clock: { getElapsedTime: () => 1 } });
 
     // Expect origin to be synced with characterStatus (10, 20, 30)
-    // The implementation might pass array or Vector3.
     expect(setUniformSpy).toHaveBeenCalledWith('origin', expect.any(Object)); 
     
-    // Check values if possible. 
-    // If we pass Vector3, it matches. If array [10,20,30], it matches.
     const lastCall = setUniformSpy.mock.calls.find(c => c[0] === 'origin');
     expect(lastCall).toBeDefined();
     const val = lastCall[1];
-    // Check if it looks like the position
+    
     if (Array.isArray(val)) {
         expect(val).toEqual([10, 20, 30]);
     } else {
@@ -111,4 +110,3 @@ describe('Splat Component', () => {
     consoleErrorSpy.mockRestore();
   });
 });
-
