@@ -40,33 +40,33 @@ export const WorldContent = memo(
 
     return (
       <group position={worldAnchorPos} rotation={worldAnchorRot}>
-        {/* Portals */}
-        {currentWorld?.portals.map((portal) => (
-          <Portal key={portal.id} portal={portal} />
-        ))}
+        <SparkRenderer args={[sparkRendererArgs]}>
+          {/* Portals */}
+          {currentWorld?.portals.map((portal) => (
+            <Portal key={portal.id} portal={portal} />
+          ))}
 
-        {/* Geometry & Physics */}
-        {isHub ? (
-          <>
-            <Grid
-              position={[0, -1, 0]}
-              infiniteGrid={true}
-              sectionColor={"#bbb"}
-              cellColor={"#444"}
-            />
-          </>
-        ) : (
-          assets && (
-            <SparkRenderer args={[sparkRendererArgs]}>
+          {/* Geometry & Physics */}
+          {isHub ? (
+            <>
+              <Grid
+                position={[0, -1, 0]}
+                infiniteGrid={true}
+                sectionColor={"#bbb"}
+                cellColor={"#444"}
+              />
+            </>
+          ) : (
+            assets && (
               <Splat
                 key={assets.splatUrl}
                 rotation={[Math.PI, 0, 0]}
                 scale={[2, 2, 2]}
               />
-            </SparkRenderer>
-            /* <WorldCollider /> */
-          )
-        )}
+              /* <WorldCollider /> */
+            )
+          )}
+        </SparkRenderer>
       </group>
     );
   },

@@ -113,8 +113,10 @@ export const PortalNoiseDyno = new dyno.Dyno({
 
       // 5. Fresnel Effect (Invis center, visible edges)
       vec3 viewDir = normalize(${inputs.uCameraPos} - ${inputs.gsplat}.center);
-      float fresnel = pow(1.0 - abs(dot(viewDir, normal)), 3.0);
-      ${outputs.gsplat}.rgba.a *= fresnel;
+      // Use a lower exponent (2.0 instead of 3.0) for a smoother falloff
+      float fresnel = pow(1.0 - abs(dot(viewDir, normal)), 2.0);
+      // Ensure at least 10% alpha in the center for visibility
+      ${outputs.gsplat}.rgba.a *= 0.1 + 0.9 * fresnel;
 
       // 6. Apply Status Color & Energy Veins
       ${outputs.gsplat}.rgba.rgb *= ${inputs.color};

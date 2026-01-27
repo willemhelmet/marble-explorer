@@ -90,12 +90,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   }, [getStatusColor, isHovered, statusColor]);
 
   useEffect(() => {
-    uPortalPos.value[0] = portal.position.x;
-    uPortalPos.value[1] = portal.position.y;
-    uPortalPos.value[2] = portal.position.z;
-  }, [portal.position, uPortalPos]);
-
-  useEffect(() => {
     gsap.to(uHover, {
       value: isHovered ? 1.0 : 0.0,
       duration: 0.5,
@@ -129,9 +123,22 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       onFrame: ({ mesh, time }) => {
         // eslint-disable-next-line react-hooks/immutability
         uTime.value = time;
-        uCameraPos.value[0] = camera.position.x;
-        uCameraPos.value[1] = camera.position.y;
-        uCameraPos.value[2] = camera.position.z;
+
+        // Use getWorldPosition to get absolute world coordinates
+        const tempVec = new THREE.Vector3();
+        
+        camera.getWorldPosition(tempVec);
+        uCameraPos.value[0] = tempVec.x;
+        uCameraPos.value[1] = tempVec.y;
+        uCameraPos.value[2] = tempVec.z;
+
+        if (groupRef.current) {
+          groupRef.current.getWorldPosition(tempVec);
+          uPortalPos.value[0] = tempVec.x;
+          uPortalPos.value[1] = tempVec.y;
+          uPortalPos.value[2] = tempVec.z;
+        }
+
         mesh.updateVersion();
       },
     });
@@ -159,10 +166,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         // I am not the poller for this specific portal
         return;
       }
-
-      console.log(
-        `[Poller] Checking operation ${portal.pendingOperationId} for portal ${portal.id}`,
-      );
 
       try {
         const op = await getOperation<World>(
@@ -267,7 +270,11 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     if (portal.status === "ready" && portal.url && groupRef.current) {
       const portalPos = new THREE.Vector3();
       groupRef.current.getWorldPosition(portalPos);
-      const distance = camera.position.distanceTo(portalPos);
+      
+      const camPos = new THREE.Vector3();
+      camera.getWorldPosition(camPos);
+      
+      const distance = camPos.distanceTo(portalPos);
 
       // If player is inside the sphere (radius 1 + buffer)
       if (distance < 1.2) {
