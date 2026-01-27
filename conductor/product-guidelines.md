@@ -16,7 +16,7 @@
 
 ## Experience & Interaction
 - **Transition Logic:**
-    - Entry into the world should be an **Instantaneous Snap**. Once the player crosses the threshold of the "Ready" portal, they are immediately transitioned into the full-scale environment.
+    - Entry into the world should trigger a **Procedural Reveal**. Upon crossing the threshold, the environment expands from the player's position via a dynamic, player-centric animation with a glowing edge, creating a smooth and immersive entry into the new scene.
 - **Navigation:** 
     - First-person controls should feel responsive and weighted.
     - Collision feedback should be clear but unobtrusive, preventing clipping through walls defined by the loaded mesh.
