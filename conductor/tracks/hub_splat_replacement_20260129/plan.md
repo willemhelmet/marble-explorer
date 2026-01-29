@@ -25,8 +25,8 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Logic & Transitions' (Protocol in workflow.md)
 
 ## Phase 4: Cleanup & Polish
-- [ ] Task: Remove obsolete grid/placeholder code
-    - [ ] Delete `src/components/Grid.tsx` (if it exists) or remove references to the placeholder floor.
-- [ ] Task: Final Quality Gate Check
-    - [ ] Run all tests, linting, and verify mobile responsiveness.
+- [x] Task: Remove obsolete grid/placeholder code
+    - [x] Delete `src/components/Grid.tsx` (if it exists) or remove references to the placeholder floor.
+- [x] Task: Final Quality Gate Check
+    - [x] Run all tests, linting, and verify mobile responsiveness.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Cleanup & Polish' (Protocol in workflow.md)
