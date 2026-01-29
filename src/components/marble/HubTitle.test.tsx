@@ -2,7 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { HubTitle } from './HubTitle';
 
 // Spy on textSplats
@@ -35,15 +35,29 @@ vi.mock('@react-three/fiber', () => ({
   extend: vi.fn(),
 }));
 
+// Mock document.fonts
+if (typeof (global as any).document !== 'undefined') {
+    (global as any).document.fonts = {
+        load: vi.fn().mockImplementation((fontStr: string) => {
+            if (fontStr.includes('Karrik')) return Promise.resolve([]);
+            return Promise.resolve([]);
+        }),
+    };
+}
+
 describe('HubTitle Component', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should call textSplats with "Marble Explorer"', () => {
+  it('should call textSplats with "Marble Explorer" after font loads', async () => {
     render(<HubTitle />);
-    expect(textSplatsSpy).toHaveBeenCalledWith(expect.objectContaining({
-      text: 'Marble Explorer',
-    }));
+    
+    await waitFor(() => {
+        expect(textSplatsSpy).toHaveBeenCalledWith(expect.objectContaining({
+          text: 'Marble Explorer',
+          font: expect.stringContaining('Karrik'),
+        }));
+    });
   });
 });

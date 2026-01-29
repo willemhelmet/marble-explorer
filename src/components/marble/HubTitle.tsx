@@ -1,36 +1,35 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { textSplats } from "@sparkjsdev/spark";
 import { type ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
-// import { useControls } from "leva";
 
 export const HubTitle = (props: Partial<ThreeElements["primitive"]>) => {
-  // const { position, rotation } = useControls({
-  //   position: {
-  //     x: 0,
-  //     y: 0,
-  //     z: 0,
-  //   },
-  //   rotation: {
-  //     x: 0,
-  //     y: 0,
-  //     z: 0,
-  //   },
-  // });
+  const [fontLoaded, setFontLoaded] = useState(false);
 
-  const splat = useMemo(() => {
-    return textSplats({
-      text: "Marble Explorer",
-      color: new THREE.Color(1, 1, 1),
-      rgb: new THREE.Color(1, 1, 1),
-      fontSize: 64,
-      textAlign: "center",
+  useEffect(() => {
+    // Wait for the custom font to load before rasterizing
+    document.fonts.load('64px "Karrik"').then(() => {
+      setFontLoaded(true);
     });
   }, []);
 
+  const splat = useMemo(() => {
+    if (!fontLoaded) return null;
+
+    return textSplats({
+      text: "MARBLE EXPLORER",
+      font: '"Karrik", Arial',
+      color: new THREE.Color(1, 1, 1),
+      rgb: new THREE.Color(1, 1, 1),
+      fontSize: 32,
+      textAlign: "center",
+      dotRadius: 0.5,
+    });
+  }, [fontLoaded]);
+
   useEffect(() => {
     return () => {
-      splat.dispose();
+      splat?.dispose();
     };
   }, [splat]);
 
@@ -46,6 +45,3 @@ export const HubTitle = (props: Partial<ThreeElements["primitive"]>) => {
     />
   );
 };
-/*
- * {"position":{"x":-5.964,"y":1.747,"z":1.454}}
- */
