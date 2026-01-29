@@ -15,7 +15,7 @@
     - [x] Adjust `y` position and `scale` for optimal readability and aesthetic.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Integration & Styling' (Protocol in workflow.md)
 
-## Phase 3: Cleanup & Final Check
-- [ ] Task: Verify Hub Title visibility and alignment
-    - [ ] Ensure the title is correctly aligned and visible across different window sizes.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Cleanup & Final Check' (Protocol in workflow.md)
+## Phase 3: Cleanup & Final Check [checkpoint: cc6351e]
+- [x] Task: Verify Hub Title visibility and alignment
+    - [x] Ensure the title is correctly aligned and visible across different window sizes.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Cleanup & Final Check' (Protocol in workflow.md)
