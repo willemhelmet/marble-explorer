@@ -6,7 +6,7 @@ export const Hub = (props: Partial<ThreeElements["primitive"]>) => {
   // Load the local lobby splat
   const splat = useMemo(() => {
     return new SplatMesh({
-      url: "/marble-explorer-lobby.spz",
+      url: "/lobby.sog",
     });
   }, []);
 
