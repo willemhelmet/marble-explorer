@@ -16,13 +16,13 @@
     - [x] Update `src/Scene.tsx` to conditionally render `<Hub />` instead of the placeholder grid.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Component Development' (Protocol in workflow.md)
 
-## Phase 3: Logic & Transitions
+## Phase 3: Logic & Transitions [checkpoint: 5438c4b]
 - [x] Task: Handle Hub transitions
     - [x] Write tests for world transition logic (returning to hub).
     - [x] Ensure `socketManager.ts` or relevant service correctly triggers the Hub state when "returning home".
 - [x] Task: Verify Portal Spawning in Hub
     - [x] Manually verify that `<PortalSpawner />` works correctly with the new Hub background.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Logic & Transitions' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Logic & Transitions' (Protocol in workflow.md)
 
 ## Phase 4: Cleanup & Polish
 - [ ] Task: Remove obsolete grid/placeholder code
