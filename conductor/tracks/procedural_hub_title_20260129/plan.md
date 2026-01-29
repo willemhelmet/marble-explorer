@@ -1,12 +1,12 @@
 # Plan: Procedural Hub Title Splat
 
-## Phase 1: Logic & Utility Setup
+## Phase 1: Logic & Utility Setup [checkpoint: 6c1740a]
 - [x] Task: Research `textSplats` usage
     - [x] Verify `textSplats` export in `@sparkjsdev/spark`.
 - [x] Task: Create Title component structure
     - [x] Write tests for `<HubTitle />` component in `src/components/marble/HubTitle.test.tsx`.
     - [x] Implement `src/components/marble/HubTitle.tsx` using `textSplats`.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Logic & Utility Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Logic & Utility Setup' (Protocol in workflow.md)
 
 ## Phase 2: Integration & Styling
 - [ ] Task: Integrate HubTitle into Hub
