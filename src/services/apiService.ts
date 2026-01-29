@@ -26,10 +26,15 @@ const proxyUrl = (url: string): string => {
   return url;
 };
 
+export interface FetchWorldResponse {
+  assets: WorldAssets;
+  displayName: string;
+}
+
 export const fetchWorldAssets = async (
   urlOrId: string,
   providedApiKey?: string | null,
-): Promise<WorldAssets> => {
+): Promise<FetchWorldResponse> => {
   const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
   if (!apiKey) {
     throw new Error("Missing Marble API Key.");
@@ -74,9 +79,12 @@ export const fetchWorldAssets = async (
     }
 
     return {
-      splatUrl: proxyUrl(splatUrl),
-      meshUrl: proxyUrl(data.assets.mesh?.collider_mesh_url || ""),
-      panoUrl: proxyUrl(data.assets.imagery?.pano_url || ""),
+      assets: {
+        splatUrl: proxyUrl(splatUrl),
+        meshUrl: proxyUrl(data.assets.mesh?.collider_mesh_url || ""),
+        panoUrl: proxyUrl(data.assets.imagery?.pano_url || ""),
+      },
+      displayName: data.display_name || "Untitled World",
     };
   } catch (err) {
     console.error("Fetch World Assets Error:", err);

@@ -33,6 +33,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
   const switchWorld = useMyStore((state) => state.switchWorld);
   const setAssets = useMyStore((state) => state.setAssets);
+  const setDisplayName = useMyStore((state) => state.setDisplayName);
   const apiKey = useMyStore((state) => state.apiKey);
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
@@ -236,13 +237,17 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         setWorldAnchorPosition(new THREE.Vector3(0, 1, 0));
         setWorldAnchorOrientation(new THREE.Euler(0, 0, 0));
         setAssets(null);
+        setDisplayName("Hub");
         switchWorld("hub");
       } else {
         // Traveling to a dynamic world
         const targetWorldId = extractWorldIdFromUrl(portal.url);
         if (targetWorldId) {
           // 1. Fetch assets FIRST before switching worlds
-          const assets = await fetchWorldAssets(portal.url, apiKey);
+          const { assets, displayName } = await fetchWorldAssets(
+            portal.url,
+            apiKey,
+          );
 
           // 2. Atomic update of world state
           // We anchor the new world to the player's EXACT absolute position
@@ -259,6 +264,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
 
           setWorldAnchorOrientation(newOrientation);
           setAssets(assets);
+          setDisplayName(displayName);
           switchWorld(targetWorldId);
         }
       }
