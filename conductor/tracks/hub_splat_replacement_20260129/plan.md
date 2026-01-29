@@ -7,14 +7,14 @@
     - [x] Update `gameSlice.ts` or `worldSlice.ts` to include a explicit "hub" state if not already present.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Asset Setup' (Protocol in workflow.md)
 
-## Phase 2: Component Development
+## Phase 2: Component Development [checkpoint: b451c3c]
 - [x] Task: Create Hub component structure
     - [x] Write tests for `<Hub />` component in `src/components/Hub.test.tsx`.
     - [x] Implement `src/components/Hub.tsx` using `@sparkjsdev/spark` to render the lobby splat.
 - [x] Task: Integrate Hub into Scene
     - [x] Write tests in `src/Scene.test.tsx` to verify Hub rendering based on state.
     - [x] Update `src/Scene.tsx` to conditionally render `<Hub />` instead of the placeholder grid.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Component Development' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Component Development' (Protocol in workflow.md)
 
 ## Phase 3: Logic & Transitions
 - [ ] Task: Handle Hub transitions
