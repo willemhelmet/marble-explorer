@@ -15,13 +15,32 @@ vi.mock('@sparkjsdev/spark', async () => {
         (this as any).options = options;
       }
       dispose = vi.fn();
+      setWorldModifier = vi.fn();
+      updateVersion = vi.fn();
     },
     textSplats: (args: unknown) => {
         textSplatsSpy(args);
-        return { dispose: vi.fn() };
+        return { 
+            dispose: vi.fn(),
+            setWorldModifier: vi.fn(),
+            updateVersion: vi.fn(),
+        };
     },
     dyno: {
-        Dyno: class {},
+        Dyno: class {
+            apply = vi.fn().mockReturnValue({ gsplat: {} });
+        },
+        DynoFloat: class {
+            constructor(public options: { value: number }) {}
+            set value(v: number) { this.options.value = v; }
+            get value() { return this.options.value; }
+        },
+        DynoVec3: class {
+            constructor(public options: { value: number[] }) {}
+            set value(v: number[]) { this.options.value = v; }
+            get value() { return this.options.value; }
+        },
+        dynoBlock: vi.fn(),
         defineGsplat: 'defineGsplat',
         unindent: (s: string) => s,
         unindentLines: (s: string) => s,
@@ -32,7 +51,14 @@ vi.mock('@sparkjsdev/spark', async () => {
 
 vi.mock('@react-three/fiber', () => ({
   useThree: vi.fn(() => ({ camera: {}, gl: {} })),
+  useFrame: vi.fn(),
   extend: vi.fn(),
+}));
+
+vi.mock('../../dynos/textFloatingDyno', () => ({
+  TextFloatingDyno: {
+    apply: vi.fn().mockReturnValue({ gsplat: {} }),
+  },
 }));
 
 // Mock document.fonts
