@@ -17,11 +17,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Component Development' (Protocol in workflow.md)
 
 ## Phase 3: Logic & Transitions
-- [ ] Task: Handle Hub transitions
-    - [ ] Write tests for world transition logic (returning to hub).
-    - [ ] Ensure `socketManager.ts` or relevant service correctly triggers the Hub state when "returning home".
-- [ ] Task: Verify Portal Spawning in Hub
-    - [ ] Manually verify that `<PortalSpawner />` works correctly with the new Hub background.
+- [x] Task: Handle Hub transitions
+    - [x] Write tests for world transition logic (returning to hub).
+    - [x] Ensure `socketManager.ts` or relevant service correctly triggers the Hub state when "returning home".
+- [x] Task: Verify Portal Spawning in Hub
+    - [x] Manually verify that `<PortalSpawner />` works correctly with the new Hub background.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Logic & Transitions' (Protocol in workflow.md)
 
 ## Phase 4: Cleanup & Polish
