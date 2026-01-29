@@ -8,12 +8,12 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Asset Setup' (Protocol in workflow.md)
 
 ## Phase 2: Component Development
-- [ ] Task: Create Hub component structure
-    - [ ] Write tests for `<Hub />` component in `src/components/Hub.test.tsx`.
-    - [ ] Implement `src/components/Hub.tsx` using `@sparkjsdev/spark` to render the lobby splat.
-- [ ] Task: Integrate Hub into Scene
-    - [ ] Write tests in `src/Scene.test.tsx` to verify Hub rendering based on state.
-    - [ ] Update `src/Scene.tsx` to conditionally render `<Hub />` instead of the placeholder grid.
+- [x] Task: Create Hub component structure
+    - [x] Write tests for `<Hub />` component in `src/components/Hub.test.tsx`.
+    - [x] Implement `src/components/Hub.tsx` using `@sparkjsdev/spark` to render the lobby splat.
+- [x] Task: Integrate Hub into Scene
+    - [x] Write tests in `src/Scene.test.tsx` to verify Hub rendering based on state.
+    - [x] Update `src/Scene.tsx` to conditionally render `<Hub />` instead of the placeholder grid.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Component Development' (Protocol in workflow.md)
 
 ## Phase 3: Logic & Transitions

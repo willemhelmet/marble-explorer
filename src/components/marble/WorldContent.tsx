@@ -1,7 +1,7 @@
 import { useMemo, memo } from "react";
 import { useThree } from "@react-three/fiber";
-import { Grid } from "@react-three/drei";
 import { SparkRenderer } from "./SparkRenderer";
+import { Hub } from "./Hub";
 import { Splat } from "./Splat";
 //import { WorldCollider } from "./WorldCollider";
 import { Portal } from "../Portal";
@@ -48,14 +48,7 @@ export const WorldContent = memo(
 
           {/* Geometry & Physics */}
           {isHub ? (
-            <>
-              <Grid
-                position={[0, -1, 0]}
-                infiniteGrid={true}
-                sectionColor={"#bbb"}
-                cellColor={"#444"}
-              />
-            </>
+            <Hub />
           ) : (
             assets && (
               <Splat
