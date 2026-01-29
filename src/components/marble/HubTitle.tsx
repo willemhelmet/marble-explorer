@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { textSplats, dyno } from "@sparkjsdev/spark";
 import { type ThreeElements, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -7,9 +7,6 @@ import { TextFloatingDyno } from "../../dynos/textFloatingDyno";
 export const HubTitle = (props: Partial<ThreeElements["primitive"]>) => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  // Time uniform for the dyno
-  const uTime = useMemo(() => new dyno.DynoFloat({ value: 0 }), []);
-
   useEffect(() => {
     // Wait for the custom font to load before rasterizing
     document.fonts.load('64px "Karrik"').then(() => {
@@ -17,10 +14,15 @@ export const HubTitle = (props: Partial<ThreeElements["primitive"]>) => {
     });
   }, []);
 
-  const splat = useMemo(() => {
-    if (!fontLoaded) return null;
+  if (!fontLoaded) return null;
 
-    const mesh = textSplats({
+  return <HubTitleInner {...props} />;
+};
+
+const HubTitleInner = (props: Partial<ThreeElements["primitive"]>) => {
+  const [data] = useState(() => {
+    const uTime = new dyno.DynoFloat({ value: 0 });
+    const splat = textSplats({
       text: "Marble Explorer",
       font: '"Karrik", Arial',
       color: new THREE.Color(1, 1, 1),
@@ -30,39 +32,34 @@ export const HubTitle = (props: Partial<ThreeElements["primitive"]>) => {
       dotRadius: 0.5,
     });
 
-    return mesh;
-  }, [fontLoaded]);
+    splat.worldModifier = dyno.dynoBlock(
+      { gsplat: dyno.Gsplat },
+      { gsplat: dyno.Gsplat },
+      ({ gsplat }) => ({
+        gsplat: TextFloatingDyno.apply({
+          gsplat,
+          uTime,
+        }).gsplat,
+      }),
+    );
 
-  useEffect(() => {
-    if (splat) {
-      splat.worldModifier = dyno.dynoBlock(
-        { gsplat: dyno.Gsplat },
-        { gsplat: dyno.Gsplat },
-        ({ gsplat }) => ({
-          gsplat: TextFloatingDyno.apply({
-            gsplat,
-            uTime: uTime,
-          }).gsplat,
-        }),
-      );
-    }
-  }, [splat, uTime]);
+    return { uTime, splat };
+  });
+
+  const { splat } = data;
+  const uTimeRef = useRef(data.uTime);
 
   useFrame((state) => {
-    if (splat) {
-      uTime.value = state.clock.getElapsedTime();
-      // Force update to apply dyno changes
-      (splat as any).updateVersion();
-    }
+    uTimeRef.current.value = state.clock.getElapsedTime();
+    // Force update to apply dyno changes
+    splat.updateVersion();
   });
 
   useEffect(() => {
     return () => {
-      splat?.dispose();
+      splat.dispose();
     };
   }, [splat]);
-
-  if (!splat) return null;
 
   return (
     <primitive

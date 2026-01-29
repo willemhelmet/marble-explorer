@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SplatMesh, dyno } from "@sparkjsdev/spark";
 import * as THREE from "three";
 import { useMyStore } from "../../store/store";
@@ -13,32 +13,42 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
   const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
   const splatUrl = assets?.splatUrl;
 
+  if (!splatUrl) return null;
+
+  // Using splatUrl as a key ensures SplatInner remounts when the URL changes,
+  // allowing us to use stable initialization patterns.
+  return (
+    <SplatInner
+      key={splatUrl}
+      splatUrl={splatUrl}
+      worldAnchorPosition={worldAnchorPosition}
+      {...props}
+    />
+  );
+};
+
+const SplatInner = ({
+  splatUrl,
+  worldAnchorPosition,
+  ...props
+}: {
+  splatUrl: string;
+  worldAnchorPosition: THREE.Vector3 | null;
+} & Partial<ThreeElements["primitive"]>) => {
   const revealRef = useRef({ progress: 0 });
   const [animationStarted, setAnimationStarted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Create uniforms
-  const originUniform = useMemo(
-    () =>
-      new dyno.DynoVec3({
-        value: worldAnchorPosition
-          ? worldAnchorPosition.clone()
-          : new THREE.Vector3(0, 0, 0),
-      }),
-    [worldAnchorPosition],
-  );
-  const revealProgressUniform = useMemo(
-    () => new dyno.DynoFloat({ value: 0.0 }),
-    [],
-  );
-  const maxRadiusUniform = useMemo(
-    () => new dyno.DynoFloat({ value: 50.0 }),
-    [],
-  );
+  // Initialize uniforms and mesh in a single stable useState block
+  const [data] = useState(() => {
+    const originUniform = new dyno.DynoVec3({
+      value: worldAnchorPosition
+        ? worldAnchorPosition.clone()
+        : new THREE.Vector3(0, 0, 0),
+    });
+    const revealProgressUniform = new dyno.DynoFloat({ value: 0.0 });
+    const maxRadiusUniform = new dyno.DynoFloat({ value: 50.0 });
 
-  // 1. Use useMemo to create the mesh synchronously
-  const splat = useMemo(() => {
-    if (!splatUrl) return null;
     const mesh = new SplatMesh({
       url: splatUrl,
       onLoad: () => setIsLoaded(true),
@@ -55,8 +65,25 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
         }),
       ),
     });
-    return mesh;
-  }, [splatUrl, originUniform, revealProgressUniform, maxRadiusUniform]);
+
+    return { originUniform, revealProgressUniform, maxRadiusUniform, mesh };
+  });
+
+  const {
+    originUniform,
+    revealProgressUniform,
+    maxRadiusUniform,
+    mesh: splat,
+  } = data;
+
+  const originUniformRef = useRef(originUniform);
+
+  // Update origin uniform when worldAnchorPosition changes
+  useEffect(() => {
+    if (worldAnchorPosition) {
+      originUniformRef.current.value.copy(worldAnchorPosition);
+    }
+  }, [worldAnchorPosition]);
 
   useFrame(() => {
     if (splat) {
@@ -70,20 +97,18 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
             : 0;
 
           if (distToSpawn < 20.0) {
-            originUniform.value.copy(characterStatus.position);
+            originUniformRef.current.value.copy(characterStatus.position);
           } else if (worldAnchorPosition) {
-            originUniform.value.copy(worldAnchorPosition);
+            originUniformRef.current.value.copy(worldAnchorPosition);
           }
         } else {
           // Once animation starts, we follow the player directly
-          originUniform.value.copy(characterStatus.position);
+          originUniformRef.current.value.copy(characterStatus.position);
         }
       }
 
       // Force update to ensure uniforms are applied if needed
-      if ((splat as any).updateVersion) {
-        (splat as any).updateVersion();
-      }
+      splat.updateVersion();
     }
   });
 
@@ -109,7 +134,7 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
 
         // Calculate max radius from bounding box relative to current origin
         const box = splat.getBoundingBox();
-        
+
         let radius = 0;
         if (box.isEmpty()) {
           radius = 100.0;
@@ -125,7 +150,7 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
             new THREE.Vector3(box.max.x, box.max.y, box.min.z),
             new THREE.Vector3(box.max.x, box.max.y, box.max.z),
           ];
-          
+
           for (const corner of corners) {
             radius = Math.max(radius, originUniform.value.distanceTo(corner));
           }
@@ -160,26 +185,15 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
       startReveal();
     },
     {
-      dependencies: [
-        splat,
-        isLoaded,
-        animationStarted,
-        revealProgressUniform,
-        originUniform,
-        maxRadiusUniform,
-        worldAnchorPosition,
-      ],
+      dependencies: [splat, isLoaded, animationStarted, worldAnchorPosition],
     },
   );
 
-  // 2. Important: Cleanup memory when the component unmounts or url changes
   useEffect(() => {
     return () => {
-      splat?.dispose();
+      splat.dispose();
     };
   }, [splat]);
-
-  if (!splat) return null;
 
   return (
     <>
@@ -187,3 +201,4 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
     </>
   );
 };
+

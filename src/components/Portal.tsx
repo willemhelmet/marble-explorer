@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Sphere } from "@react-three/drei";
 import { useMyStore } from "../store/store";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
@@ -65,39 +65,13 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   }, [portal.status]);
 
   // --- Procedural Splat Setup ---
-  // Using useMemo for stable dyno objects
-  const statusColor = useMemo(() => dyno.dynoVec3([1, 1, 1]), []);
-  const uTime = useMemo(() => dyno.dynoFloat(0), []);
-  const uHover = useMemo(() => dyno.dynoFloat(0), []);
-  const uCameraPos = useMemo(() => dyno.dynoVec3([0, 0, 0]), []);
-  const uPortalPos = useMemo(() => dyno.dynoVec3([0, 0, 0]), []);
+  const [data] = useState(() => {
+    const statusColor = dyno.dynoVec3([1, 1, 1]);
+    const uTime = dyno.dynoFloat(0);
+    const uHover = dyno.dynoFloat(0);
+    const uCameraPos = dyno.dynoVec3([0, 0, 0]);
+    const uPortalPos = dyno.dynoVec3([0, 0, 0]);
 
-  useEffect(() => {
-    const [r, g, b] = getStatusColor();
-    // eslint-disable-next-line react-hooks/immutability
-    statusColor.value[0] = r;
-
-    statusColor.value[1] = g;
-
-    statusColor.value[2] = b;
-
-    if (isHovered) {
-      // Lighten/Highlight on hover
-      statusColor.value[0] *= 1.2;
-      statusColor.value[1] *= 1.2;
-      statusColor.value[2] *= 1.2;
-    }
-  }, [getStatusColor, isHovered, statusColor]);
-
-  useEffect(() => {
-    gsap.to(uHover, {
-      value: isHovered ? 1.0 : 0.0,
-      duration: 0.5,
-      ease: "power2.out",
-    });
-  }, [isHovered, uHover]);
-
-  const splatMesh = useMemo(() => {
     const mesh = new SplatMesh({
       constructSplats: (splats) =>
         constructSpherePoints({
@@ -120,30 +94,70 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           }).gsplat,
         }),
       ),
-      onFrame: ({ mesh, time }) => {
-        // eslint-disable-next-line react-hooks/immutability
-        uTime.value = time;
-
-        // Use getWorldPosition to get absolute world coordinates
-        const tempVec = new THREE.Vector3();
-        
-        camera.getWorldPosition(tempVec);
-        uCameraPos.value[0] = tempVec.x;
-        uCameraPos.value[1] = tempVec.y;
-        uCameraPos.value[2] = tempVec.z;
-
-        if (groupRef.current) {
-          groupRef.current.getWorldPosition(tempVec);
-          uPortalPos.value[0] = tempVec.x;
-          uPortalPos.value[1] = tempVec.y;
-          uPortalPos.value[2] = tempVec.z;
-        }
-
-        mesh.updateVersion();
-      },
     });
-    return mesh;
-  }, [statusColor, uTime, uHover, uCameraPos, uPortalPos, camera]);
+
+    return { statusColor, uTime, uHover, uCameraPos, uPortalPos, mesh };
+  });
+
+  const {
+    statusColor,
+    uHover,
+    mesh: splatMesh,
+  } = data;
+
+  const statusColorRef = useRef(statusColor);
+  const uHoverRef = useRef(uHover);
+  const uTimeRef = useRef(data.uTime);
+  const uCameraPosRef = useRef(data.uCameraPos);
+  const uPortalPosRef = useRef(data.uPortalPos);
+  const tempVec = useRef(new THREE.Vector3());
+
+  useFrame(({ clock }) => {
+    uTimeRef.current.value = clock.getElapsedTime();
+
+    // Use getWorldPosition to get absolute world coordinates
+    camera.getWorldPosition(tempVec.current);
+    uCameraPosRef.current.value[0] = tempVec.current.x;
+    uCameraPosRef.current.value[1] = tempVec.current.y;
+    uCameraPosRef.current.value[2] = tempVec.current.z;
+
+    if (groupRef.current) {
+      groupRef.current.getWorldPosition(tempVec.current);
+      uPortalPosRef.current.value[0] = tempVec.current.x;
+      uPortalPosRef.current.value[1] = tempVec.current.y;
+      uPortalPosRef.current.value[2] = tempVec.current.z;
+    }
+
+    splatMesh.updateVersion();
+  });
+
+  useEffect(() => {
+    const [r, g, b] = getStatusColor();
+    statusColorRef.current.value[0] = r;
+    statusColorRef.current.value[1] = g;
+    statusColorRef.current.value[2] = b;
+
+    if (isHovered) {
+      // Lighten/Highlight on hover
+      statusColorRef.current.value[0] *= 1.2;
+      statusColorRef.current.value[1] *= 1.2;
+      statusColorRef.current.value[2] *= 1.2;
+    }
+  }, [getStatusColor, isHovered]);
+
+  useEffect(() => {
+    gsap.to(uHoverRef.current, {
+      value: isHovered ? 1.0 : 0.0,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+  }, [isHovered]);
+
+  useEffect(() => {
+    return () => {
+      splatMesh.dispose();
+    };
+  }, [splatMesh]);
 
   // --- Distributed Polling Logic ---
   useEffect(() => {
@@ -301,7 +315,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   return (
     <group position={portal.position} ref={groupRef}>
       {/* The Procedural Splat */}
-      <primitive object={splatMesh} />
+      {splatMesh && <primitive object={splatMesh} />}
 
       {/* The Interaction Proxy Sphere */}
       <Sphere
