@@ -6,7 +6,7 @@ This plan outlines the steps to replace the default loader with a sleek, minimal
 Prepare the application state to make the world's `display_name` available to the `Loader` component.
 
 - [x] Task: Update `worldSlice.ts` to ensure `display_name` is persisted and accessible. (3998bde)
-- [ ] Task: Ensure the `apiService.ts` correctly extracts and stores the `display_name` when a world is fetched.
+- [x] Task: Ensure the `apiService.ts` correctly extracts and stores the `display_name` when a world is fetched. (1a8d7d6)
 - [ ] Task: Conductor - User Manual Verification 'State & Data Preparation' (Protocol in workflow.md)
 
 ## Phase 2: Loader Stylization & Integration
