@@ -1,11 +1,11 @@
 # Plan: Local Hub Splat Replacement
 
-## Phase 1: Foundation & Asset Setup
+## Phase 1: Foundation & Asset Setup [checkpoint: 46a24df]
 - [x] Task: Verify and organize local splat asset
     - [x] Ensure `public/marble-explorer-lobby.spz` exists and is valid.
 - [x] Task: Define Hub state and types
     - [x] Update `gameSlice.ts` or `worldSlice.ts` to include a explicit "hub" state if not already present.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Asset Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Asset Setup' (Protocol in workflow.md)
 
 ## Phase 2: Component Development
 - [ ] Task: Create Hub component structure
