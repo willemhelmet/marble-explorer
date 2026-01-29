@@ -39,6 +39,7 @@ export interface WorldSlice {
 
   // --- Current World State (Moved from PortalSlice) ---
   assets: WorldAssets | null;
+  displayName: string | null;
   error: string | null;
   worldAnchorPosition: Vector3;
   worldAnchorOrientation: Euler;
@@ -60,6 +61,7 @@ export interface WorldSlice {
 
   // --- Current World Actions ---
   setAssets: (assets: WorldAssets | null) => void;
+  setDisplayName: (name: string | null) => void;
   setError: (error: string | null) => void;
   setWorldAnchorPosition: (position: Vector3) => void;
   setWorldAnchorOrientation: (orientation: Euler) => void;
@@ -75,6 +77,7 @@ export const createWorldSlice: StateCreator<WorldSlice, [], [], WorldSlice> = (
 
   // Current World State
   assets: null,
+  displayName: null,
   error: null,
   worldAnchorPosition: new Vector3(0, 1, 0),
   worldAnchorOrientation: new Euler(0, 0, 0),
@@ -153,6 +156,7 @@ export const createWorldSlice: StateCreator<WorldSlice, [], [], WorldSlice> = (
 
   // Current World Actions
   setAssets: (assets) => set({ assets }),
+  setDisplayName: (name) => set({ displayName: name }),
   setError: (error) => set({ error }),
   setWorldAnchorPosition: (position) => set({ worldAnchorPosition: position }),
   setWorldAnchorOrientation: (orientation) =>
