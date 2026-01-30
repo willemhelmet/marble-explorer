@@ -1,6 +1,6 @@
 import { type WorldAssets } from "../store/worldSlice";
 
-const API_BASE_URL = "https://api.worldlabs.ai/marble/v1";
+const SERVER_API_BASE = "https://marble-explorer.rcdis.co/api";
 
 /**
  * Extracts the UUID world_id from a Marble URL.
@@ -33,44 +33,34 @@ export interface FetchWorldResponse {
 
 export const fetchWorldAssets = async (
   urlOrId: string,
-  providedApiKey?: string | null,
 ): Promise<FetchWorldResponse> => {
-  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
-  if (!apiKey) {
-    throw new Error("Missing Marble API Key.");
-  }
-
   const worldId = extractWorldIdFromUrl(urlOrId);
   if (!worldId) {
     throw new Error("Invalid Marble URL or World ID.");
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/worlds/${worldId}`, {
+    const response = await fetch(`${SERVER_API_BASE}/worlds/${worldId}`, {
       method: "GET",
       headers: {
-        "WLT-Api-Key": apiKey,
         "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
       if (response.status === 401)
-        throw new Error("Unauthorized: Invalid API Key");
+        throw new Error("Unauthorized: Invalid API Key on server");
       if (response.status === 404) throw new Error("World not found");
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
-    //console.log(data);
 
     if (!data.assets || !data.assets.splats || !data.assets.splats.spz_urls) {
       throw new Error("Invalid API Response: Missing assets");
     }
 
-    // Removed full_res, default to 500k, then 100k
     const splatUrl =
-      // data.world.assets.splats.spz_urls.full_res ||
       data.assets.splats.spz_urls["500k"] ||
       data.assets.splats.spz_urls["100k"];
 
@@ -109,7 +99,6 @@ interface UploadInfo {
 
 interface MediaAsset {
   id: string;
-  // ... other media asset properties if known
 }
 
 interface MediaAssetPrepareUploadResponse {
@@ -119,20 +108,18 @@ interface MediaAssetPrepareUploadResponse {
 
 /**
  * Uploads a media asset to the Marble API in two steps:
- * 1. Prepare upload (get signed URL).
- * 2. Upload file content to signed URL.
+ * 1. Prepare upload (get signed URL) via server proxy.
+ * 2. Upload file content to signed URL (direct to storage).
  */
 export async function uploadMediaAsset(
   file: File | Blob,
   fileName: string,
   kind: MediaAssetKind,
-  providedApiKey?: string | null,
 ): Promise<string> {
-  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
   const extension = fileName.split(".").pop() || "jpg";
 
-  // 1. Prepare Upload
-  const prepareUrl = `${API_BASE_URL}/media-assets:prepare_upload`;
+  // 1. Prepare Upload via Server Proxy
+  const prepareUrl = `${SERVER_API_BASE}/media-assets/prepare_upload`;
   const preparePayload: MediaAssetPrepareUploadRequest = {
     file_name: fileName,
     extension: extension,
@@ -142,7 +129,6 @@ export async function uploadMediaAsset(
   const prepareRes = await fetch(prepareUrl, {
     method: "POST",
     headers: {
-      "WLT-Api-Key": apiKey,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(preparePayload),
@@ -155,7 +141,7 @@ export async function uploadMediaAsset(
   const prepareData: MediaAssetPrepareUploadResponse = await prepareRes.json();
   const { media_asset, upload_info } = prepareData;
 
-  // 2. Upload to Signed URL
+  // 2. Upload to Signed URL (Direct to storage, bypasses server)
   const uploadRes = await fetch(upload_info.upload_url, {
     method: upload_info.upload_method,
     headers: {
@@ -208,25 +194,18 @@ export interface GenerateWorldOptions {
 
 export const generateWorld = async (
   options: GenerateWorldOptions,
-  providedApiKey?: string | null,
 ): Promise<GetOperationResponse<World>> => {
-  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
   let mediaAssetId: string | undefined;
-
-  if (!apiKey) {
-    throw new Error("Missing Marble API Key.");
-  }
 
   if (options.image) {
     mediaAssetId = await uploadMediaAsset(
       options.image,
       options.image.name,
       "image",
-      apiKey,
     );
   }
 
-  const generateUrl = `${API_BASE_URL}/worlds:generate`;
+  const generateUrl = `${SERVER_API_BASE}/worlds/generate`;
   const generatePayload: GenerateWorldRequest = {
     display_name: options.displayName || options.image?.name || "New World",
     model: "Marble 0.1-plus",
@@ -247,7 +226,6 @@ export const generateWorld = async (
       is_pano: false,
     };
   } else {
-    // Already set as text type, just ensure prompt is there
     generatePayload.world_prompt.text_prompt =
       options.prompt || "A beautiful landscape";
   }
@@ -255,7 +233,6 @@ export const generateWorld = async (
   const res = await fetch(generateUrl, {
     method: "POST",
     headers: {
-      "WLT-Api-Key": apiKey,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(generatePayload),
@@ -287,8 +264,7 @@ export interface GetOperationResponse<T = unknown> {
 }
 
 /**
- * Fetches the status and result of a long-running operation (e.g., world generation, media asset processing).
- * Poll this endpoint to check the status of a long-running operation.
+ * Fetches the status and result of a long-running operation via server proxy.
  *
  * @param operationId - The operation ID
  * @returns Operation object with status, result, or error
@@ -296,18 +272,10 @@ export interface GetOperationResponse<T = unknown> {
  */
 export const getOperation = async <T = unknown>(
   operationId: string,
-  providedApiKey?: string | null,
 ): Promise<GetOperationResponse<T>> => {
-  const apiKey = providedApiKey || import.meta.env.VITE_MARBLE_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("Missing Marble API Key.");
-  }
-
-  const response = await fetch(`${API_BASE_URL}/operations/${operationId}`, {
+  const response = await fetch(`${SERVER_API_BASE}/operations/${operationId}`, {
     method: "GET",
     headers: {
-      "WLT-Api-Key": apiKey,
       "Content-Type": "application/json",
     },
   });
@@ -317,7 +285,7 @@ export const getOperation = async <T = unknown>(
       throw new Error("Operation not found");
     }
     if (response.status === 401) {
-      throw new Error("Unauthorized: Invalid API Key");
+      throw new Error("Unauthorized: Invalid API Key on server");
     }
     throw new Error(`API Error: ${response.status} ${response.statusText}`);
   }

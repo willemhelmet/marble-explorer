@@ -28,7 +28,7 @@ Implement the proxy endpoints on the server.
 ## Phase 3: Client-Side Migration
 Update the frontend to communicate with the new server endpoints.
 
-- [ ] Task: Refactor `apiService.ts`
+- [~] Task: Refactor `apiService.ts`
     - [ ] Update `apiService.ts` to point to the local server's `/api` endpoints.
     - [ ] Remove API key requirements from the client-side service and UI.
 - [ ] Task: Verify end-to-end flow

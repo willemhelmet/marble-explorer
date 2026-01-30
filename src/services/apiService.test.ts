@@ -46,7 +46,7 @@ describe('apiService', () => {
         json: () => Promise.resolve(mockResponse)
       });
 
-      const result = await fetchWorldAssets('12345678-1234-1234-1234-123456789012', 'fake-api-key');
+      const result = await fetchWorldAssets('12345678-1234-1234-1234-123456789012');
       
       expect(result.displayName).toBe('Test World');
       expect(result.assets.splatUrl).toBe('https://cdn.example.com/splat.spz');

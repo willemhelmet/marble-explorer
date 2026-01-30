@@ -34,7 +34,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
   const switchWorld = useMyStore((state) => state.switchWorld);
   const setAssets = useMyStore((state) => state.setAssets);
   const setDisplayName = useMyStore((state) => state.setDisplayName);
-  const apiKey = useMyStore((state) => state.apiKey);
+
   const setWorldAnchorPosition = useMyStore(
     (state) => state.setWorldAnchorPosition,
   );
@@ -185,7 +185,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
       try {
         const op = await getOperation<World>(
           portal.pendingOperationId!,
-          apiKey,
         );
         if (op.done) {
           if (op.error) {
@@ -218,7 +217,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     portal.pendingOperationId,
     // remotePlayers is intentionally omitted to prevent interval reset
     currentWorldId,
-    apiKey,
   ]);
 
   // Sync global hover for crosshair
@@ -246,7 +244,6 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
           // 1. Fetch assets FIRST before switching worlds
           const { assets, displayName } = await fetchWorldAssets(
             portal.url,
-            apiKey,
           );
 
           // 2. Atomic update of world state

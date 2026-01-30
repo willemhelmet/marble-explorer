@@ -4,13 +4,6 @@ import { Instructions } from "./Instructions.tsx";
 export const PauseMenu = () => {
   const isMobile = useMyStore((state) => state.isMobile);
   const resume = useMyStore((state) => state.resume);
-  const setApiKey = useMyStore((state) => state.setApiKey);
-  
-  const handleResetKey = () => {
-    setApiKey(null);
-    // Directly setting state for navigation
-    useMyStore.setState({ status: "intro" });
-  };
 
   return (
     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 bg-black/80 text-white p-4">
@@ -23,13 +16,6 @@ export const PauseMenu = () => {
           onClick={resume}
         >
           Resume
-        </button>
-
-        <button
-          className="w-full px-8 py-3 text-sm font-bold text-neutral-400 bg-neutral-900 border border-neutral-700 rounded-lg hover:bg-neutral-800 hover:text-white transition-all cursor-pointer"
-          onClick={handleResetKey}
-        >
-          Change API Key
         </button>
       </div>
 

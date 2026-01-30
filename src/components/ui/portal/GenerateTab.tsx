@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { generateWorld } from "../../../services/apiService";
-import { useMyStore } from "../../../store/store";
 
 interface GenerateTabProps {
   onEngaged: (operationId: string) => void;
@@ -12,7 +11,6 @@ export const GenerateTab = ({ onEngaged, onCancel }: GenerateTabProps) => {
   const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<string>("");
-  const apiKey = useMyStore((state) => state.apiKey);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,13 +18,10 @@ export const GenerateTab = ({ onEngaged, onCancel }: GenerateTabProps) => {
     setStatus("Initiating generation...");
 
     try {
-      const op = await generateWorld(
-        {
-          prompt,
-          image: image || undefined,
-        },
-        apiKey,
-      );
+      const op = await generateWorld({
+        prompt,
+        image: image || undefined,
+      });
 
       console.log("Generate World Operation started:", op.operation_id);
       onEngaged(op.operation_id);
