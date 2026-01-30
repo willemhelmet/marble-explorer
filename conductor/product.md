@@ -20,6 +20,7 @@ This project is a personal technical demo designed to explore the integration of
 - **Visual State Feedback:** The procedural portal sphere undergoes visual color transformations and dynamic, noise-driven idle animations (pulsing, rippling) to reflect the API's current status and react to user interaction.
 - **World Registry & Persistent Multi-Portal Navigation:** A multiplayer system that manages portals across worlds, allowing users to create portals that persist in a central database and are shared across all connected clients.
 - **Seamless World Transition:** The portal displays the fetched panorama image once loading is complete.
+- **Minimalist Loading Experience:** A sleek, solid black loading screen utilizing the project's custom typography (Karrik) and a subtle progress indicator to maintain immersion during world transitions.
 - **Procedural World Reveal:** Upon entering a new world, the environment is revealed via a dynamic, player-centric expansion animation with a glowing edge, replacing instant scene switching.
 - **Immersive Exploration:** First-person (WASD + Mouse) movement allowing the user to walk into the portal to view the loaded world, with physics-based collisions against the downloaded mesh.
 - **Lifecycle Management:** Gracefully handling URL switches by disposing of old assets and initializing new ones without memory leaks or state conflicts.
