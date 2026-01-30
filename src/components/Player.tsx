@@ -33,7 +33,7 @@ export const Player = () => {
       ecctrlApi.current.resetLinVel();
 
       // 3. Reset camera rotation to the requested orientation
-      camera.rotation.copy(rotation);
+      camera.quaternion.copy(rotation);
 
       // 4. Consume the request
       clearTeleportRequest();
@@ -53,7 +53,7 @@ export const Player = () => {
       // Throttled movement sync (20Hz / every 50ms)
       const now = state.clock.getElapsedTime();
       if (now - lastSendTime.current > 0.05) {
-        socketManager.sendMovement(characterStatus.position, camera.rotation);
+        socketManager.sendMovement(characterStatus.position, camera.quaternion);
         lastSendTime.current = now;
       }
     }

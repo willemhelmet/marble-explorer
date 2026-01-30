@@ -1,33 +1,23 @@
 import { type StateCreator } from "zustand";
-import { Euler, Vector3 } from "three";
+import { Euler, Vector3, Quaternion } from "three";
 
 export interface RemotePlayer {
   id: string;
   position: Vector3;
-  rotation: Euler;
+  rotation: Quaternion;
   room: string;
 }
 
 export interface PlayerSlice {
-
   // --- State ---
-
   remotePlayers: Map<string, RemotePlayer>;
-
-  teleportRequest: { position: Vector3; rotation: Euler } | null;
-
-
+  teleportRequest: { position: Vector3; rotation: Quaternion } | null;
 
   // --- Actions ---
-
   syncPlayers: (players: RemotePlayer[]) => void;
-
   removePlayer: (id: string) => void;
-
   requestTeleport: (position: Vector3, rotation: Euler) => void;
-
   clearTeleportRequest: () => void;
-
 }
 
 
@@ -83,11 +73,11 @@ export const createPlayerSlice: StateCreator<
 
 
   requestTeleport: (position, rotation) =>
-
     set(() => ({
-
-      teleportRequest: { position, rotation },
-
+      teleportRequest: {
+        position,
+        rotation: new Quaternion().setFromEuler(rotation),
+      },
     })),
 
 

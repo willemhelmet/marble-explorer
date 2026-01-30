@@ -18,19 +18,18 @@ export const RemotePlayer = ({ player }: { player: RemotePlayerType }) => {
 
     // 2. Interpolate Body Yaw (Y-axis only)
     if (bodyRef.current) {
-      // Extract Yaw from player rotation
-      const targetYaw = new Quaternion().setFromEuler(
-        new Euler(0, player.rotation.y, 0),
-      );
+      // Extract Yaw from player quaternion
+      const euler = new Euler().setFromQuaternion(player.rotation, "YXZ");
+      const targetYaw = new Quaternion().setFromEuler(new Euler(0, euler.y, 0));
       bodyRef.current.quaternion.slerp(targetYaw, smoothing * delta);
     }
 
     // 3. Interpolate Head Pitch (X-axis only)
     if (headRef.current) {
-      // Extract Pitch from player rotation
-      // Note: Head is child of Body, so it inherits Yaw. We only apply local Pitch.
+      // Extract Pitch from player quaternion
+      const euler = new Euler().setFromQuaternion(player.rotation, "YXZ");
       const targetPitch = new Quaternion().setFromEuler(
-        new Euler(player.rotation.x, 0, 0),
+        new Euler(euler.x, 0, 0),
       );
       headRef.current.quaternion.slerp(targetPitch, smoothing * delta);
     }

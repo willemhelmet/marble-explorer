@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { useMyStore } from "../store/store";
-import { Vector3, Euler } from "three";
+import { Vector3, Quaternion } from "three";
 import { type RemotePlayer } from "../store/playerSlice";
 import { type Portal } from "../store/worldSlice";
 
@@ -8,7 +8,7 @@ import { type Portal } from "../store/worldSlice";
 interface RawPlayer {
   id: string;
   position: [number, number, number];
-  rotation: [number, number, number];
+  rotation: [number, number, number, number]; // [x, y, z, w]
   room: string;
 }
 
@@ -37,7 +37,7 @@ interface ClientToServerEvents {
   join_scene: (sceneName: string) => void;
   move: (
     position: [number, number, number],
-    rotation: [number, number, number],
+    rotation: [number, number, number, number], // [x, y, z, w]
   ) => void;
   create_portal: (portal: {
     x: number;
@@ -79,7 +79,7 @@ class SocketManager {
         .map((p) => ({
           id: p.id,
           position: new Vector3(...p.position),
-          rotation: new Euler(...p.rotation),
+          rotation: new Quaternion(...p.rotation),
           room: p.room,
         }));
 
@@ -158,12 +158,13 @@ class SocketManager {
     return this.socket?.id || null;
   }
 
-  public sendMovement(position: Vector3, rotation: Euler) {
+  public sendMovement(position: Vector3, rotation: Quaternion) {
     if (!this.socket) return;
     this.socket.emit("move", position.toArray(), [
       rotation.x,
       rotation.y,
       rotation.z,
+      rotation.w,
     ]);
   }
 
