@@ -1,0 +1,8 @@
+{
+  "track_id": "hub_return_reset_20260130",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-30T12:00:00Z",
+  "updated_at": "2026-01-30T12:00:00Z",
+  "description": "when a user enters a portal that has it's url pointing to 'hub', it should reset the player position back to the default"
+}
