@@ -64,7 +64,7 @@ class SocketManager {
   public connect() {
     if (this.socket?.connected) return;
 
-    const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+    const serverUrl = import.meta.env.VITE_SERVER_URL || "https://marble-explorer.rcdis.co";
     this.socket = io(serverUrl);
 
     this.socket.on("connect", () => {
