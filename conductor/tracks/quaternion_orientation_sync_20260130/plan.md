@@ -19,7 +19,7 @@ Switch the orientation synchronization from Euler angles to Quaternions.
     - [x] Update the `RemotePlayer` component to receive and apply `quaternion` data to the model.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Implementation - Quaternion Migration' (Protocol in workflow.md)
 
-## Phase 3: Hub Reset Refinement
+## Phase 3: Hub Reset Refinement [checkpoint: 45b2dcc]
 Fix the orientation offset bug during hub return.
 
 - [x] Task: Refine `Portal.tsx` and `Player.tsx` teleport logic db0dbd4
