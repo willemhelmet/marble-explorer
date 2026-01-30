@@ -1,0 +1,8 @@
+{
+  "track_id": "revamped_loading_screen_20260129",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-29T15:00:00Z",
+  "updated_at": "2026-01-29T15:00:00Z",
+  "description": "Revamp the loading screen with a minimalist black background, Karrik font, and world display name."
+}

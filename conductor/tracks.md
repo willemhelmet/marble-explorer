@@ -4,5 +4,3 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [x] **Track: Revamped Loading Screen**
-*Link: [./tracks/revamped_loading_screen_20260129/](./tracks/revamped_loading_screen_20260129/)*
