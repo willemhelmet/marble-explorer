@@ -1,6 +1,6 @@
 # Implementation Plan: Quaternion Orientation Sync & Hub Reset Fix
 
-## Phase 1: Research and Infrastructure
+## Phase 1: Research and Infrastructure [checkpoint: 9acb3cc]
 Verify the current synchronization flow and prepare the transition to Quaternions.
 
 - [x] Task: Audit current rotation sync
