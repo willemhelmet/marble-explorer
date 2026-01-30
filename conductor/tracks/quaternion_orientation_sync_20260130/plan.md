@@ -3,10 +3,10 @@
 ## Phase 1: Research and Infrastructure
 Verify the current synchronization flow and prepare the transition to Quaternions.
 
-- [ ] Task: Audit current rotation sync
-    - [ ] Identify where `Euler` is converted to data for `socketManager.sendMovement`.
-    - [ ] Identify how `RemotePlayer.tsx` receives and applies these angles.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Research and Infrastructure' (Protocol in workflow.md)
+- [x] Task: Audit current rotation sync
+    - [x] Identify where `Euler` is converted to data for `socketManager.sendMovement`.
+    - [x] Identify how `RemotePlayer.tsx` receives and applies these angles.
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Research and Infrastructure' (Protocol in workflow.md)
 
 ## Phase 2: Implementation - Quaternion Migration
 Switch the orientation synchronization from Euler angles to Quaternions.
