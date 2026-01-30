@@ -21,6 +21,6 @@ Apply the new design to the `<Loader />` component in `App.tsx` using its custom
 ## Phase 3: Verification & Polishing
 Final checks to ensure the transition is smooth and the UI meets the spec.
 
-- [ ] Task: Test the loading sequence with a real or simulated slow API response to verify the centered layout.
-- [ ] Task: Verify the smooth 300ms transition from the black screen to the 3D scene.
+- [x] Task: Test the loading sequence with a real or simulated slow API response to verify the centered layout.
+- [x] Task: Verify the smooth 300ms transition from the black screen to the 3D scene.
 - [ ] Task: Conductor - User Manual Verification 'Verification & Polishing' (Protocol in workflow.md)
