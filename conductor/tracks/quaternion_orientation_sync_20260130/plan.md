@@ -8,7 +8,7 @@ Verify the current synchronization flow and prepare the transition to Quaternion
     - [x] Identify how `RemotePlayer.tsx` receives and applies these angles.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Research and Infrastructure' (Protocol in workflow.md)
 
-## Phase 2: Implementation - Quaternion Migration
+## Phase 2: Implementation - Quaternion Migration [checkpoint: 77484f3]
 Switch the orientation synchronization from Euler angles to Quaternions.
 
 - [x] Task: Update `socketManager.ts` 1afc2a4
