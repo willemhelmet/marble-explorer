@@ -1,0 +1,8 @@
+{
+  "track_id": "server_api_proxy_20260130",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-30T10:00:00Z",
+  "updated_at": "2026-01-30T10:00:00Z",
+  "description": "Revamp the server to hold the API key and proxy all Marble API requests from the client to ensure cross-user world accessibility."
+}
