@@ -1,0 +1,8 @@
+{
+  "track_id": "quaternion_orientation_sync_20260130",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-01-30T13:00:00Z",
+  "updated_at": "2026-01-30T13:00:00Z",
+  "description": "with the new teleportation feature when a user goes back into the hub, there is mismatch between where remote users are looking, and where their avatar is looking. after testing the return to hub teleportation, the angle of where the other players are looking is incorrect"
+}
