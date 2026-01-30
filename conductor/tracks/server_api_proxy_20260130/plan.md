@@ -13,17 +13,17 @@ Transition the server from a standalone Socket.io instance to an Express-integra
     - [x] Implement a check for `MARBLE_API_KEY` on startup.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Server Infrastructure Update' (Protocol in workflow.md) 665b98c
 
-## Phase 2: REST Endpoint Implementation
+## Phase 2: REST Endpoint Implementation [checkpoint: de0cb41]
 Implement the proxy endpoints on the server.
 
 - [x] Task: Create proxy logic for Marble API cf4bbc9
-    - [ ] Implement `POST /api/worlds` to handle generation requests.
-    - [ ] Implement `GET /api/worlds/:id` to handle retrieval requests.
-    - [ ] Ensure the `Authorization` header with the `MARBLE_API_KEY` is injected into outbound requests.
+    - [x] Implement `POST /api/worlds` to handle generation requests.
+    - [x] Implement `GET /api/worlds/:id` to handle retrieval requests.
+    - [x] Ensure the `Authorization` header with the `MARBLE_API_KEY` is injected into outbound requests.
 - [x] Task: Implement error handling and status forwarding fed29f0
-    - [ ] Write tests to verify that Marble API errors are correctly proxied to the client.
-    - [ ] Implement middleware/handlers to catch fetch errors and return appropriate status codes.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: REST Endpoint Implementation' (Protocol in workflow.md)
+    - [x] Write tests to verify that Marble API errors are correctly proxied to the client.
+    - [x] Implement middleware/handlers to catch fetch errors and return appropriate status codes.
+- [x] Task: Conductor - User Manual Verification 'Phase 2: REST Endpoint Implementation' (Protocol in workflow.md) de0cb41
 
 ## Phase 3: Client-Side Migration
 Update the frontend to communicate with the new server endpoints.
