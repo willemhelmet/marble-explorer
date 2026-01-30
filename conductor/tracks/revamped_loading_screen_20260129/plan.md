@@ -18,9 +18,9 @@ Apply the new design to the `<Loader />` component in `App.tsx` using its custom
 - [x] Task: Verify font-family "Karrik" is correctly applied to all text elements in the loader.
 - [x] Task: Conductor - User Manual Verification 'Loader Stylization - [ ] Task: Conductor - User Manual Verification 'Loader Stylization & Integration' (Protocol in workflow.md) Integration' (Protocol in workflow.md)
 
-## Phase 3: Verification & Polishing
+## Phase 3: Verification ## Phase 3: Verification & Polishing Polishing [checkpoint: 3c0e92f]
 Final checks to ensure the transition is smooth and the UI meets the spec.
 
 - [x] Task: Test the loading sequence with a real or simulated slow API response to verify the centered layout.
 - [x] Task: Verify the smooth 300ms transition from the black screen to the 3D scene.
-- [ ] Task: Conductor - User Manual Verification 'Verification & Polishing' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Verification - [ ] Task: Conductor - User Manual Verification 'Verification & Polishing' (Protocol in workflow.md) Polishing' (Protocol in workflow.md)
