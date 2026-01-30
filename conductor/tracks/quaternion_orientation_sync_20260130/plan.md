@@ -22,10 +22,10 @@ Switch the orientation synchronization from Euler angles to Quaternions.
 ## Phase 3: Hub Reset Refinement
 Fix the orientation offset bug during hub return.
 
-- [ ] Task: Refine `Portal.tsx` and `Player.tsx` teleport logic
-    - [ ] Ensure the teleport request uses a clean "forward" quaternion (identity or [0, 0, 0, 1]).
-    - [ ] Verify that the immediate `sendMovement` call after teleport propagates the correct orientation.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Hub Reset Refinement' (Protocol in workflow.md)
+- [x] Task: Refine `Portal.tsx` and `Player.tsx` teleport logic db0dbd4
+    - [x] Ensure the teleport request uses a clean "forward" quaternion (identity or [0, 0, 0, 1]).
+    - [x] Verify that the immediate `sendMovement` call after teleport propagates the correct orientation.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Hub Reset Refinement' (Protocol in workflow.md)
 
 ## Phase 4: Verification and Cleanup
 Ensure no regressions and stable synchronization.

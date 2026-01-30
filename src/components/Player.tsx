@@ -35,7 +35,10 @@ export const Player = () => {
       // 3. Reset camera rotation to the requested orientation
       camera.quaternion.copy(rotation);
 
-      // 4. Consume the request
+      // 4. Immediately sync movement to server so others see the teleport result instantly
+      socketManager.sendMovement(position, rotation);
+
+      // 5. Consume the request
       clearTeleportRequest();
     }
   }, [teleportRequest, camera, clearTeleportRequest]);
