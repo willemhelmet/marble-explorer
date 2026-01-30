@@ -9,14 +9,14 @@ Prepare the application state to make the world's `display_name` available to th
 - [x] Task: Ensure the `apiService.ts` correctly extracts and stores the `display_name` when a world is fetched. (1a8d7d6)
 - [x] Task: Conductor - User Manual Verification 'State - [ ] Task: Conductor - User Manual Verification 'State & Data Preparation' (Protocol in workflow.md) Data Preparation' (Protocol in workflow.md)
 
-## Phase 2: Loader Stylization & Integration
+## Phase 2: Loader Stylization ## Phase 2: Loader Stylization & Integration Integration [checkpoint: 2996069]
 Apply the new design to the `<Loader />` component in `App.tsx` using its customization props.
 
-- [ ] Task: Define CSS style constants for the minimalist layout (container, bar, data, inner).
-- [ ] Task: Update the `<Loader />` component in `src/App.tsx` with the new styles and `dataInterpolation`.
-- [ ] Task: Modify `dataInterpolation` or the component structure to include the `display_name` from the store.
-- [ ] Task: Verify font-family "Karrik" is correctly applied to all text elements in the loader.
-- [ ] Task: Conductor - User Manual Verification 'Loader Stylization & Integration' (Protocol in workflow.md)
+- [x] Task: Define CSS style constants for the minimalist layout (container, bar, data, inner).
+- [x] Task: Update the `<Loader />` component in `src/App.tsx` with the new styles and `dataInterpolation`.
+- [x] Task: Modify `dataInterpolation` or the component structure to include the `display_name` from the store.
+- [x] Task: Verify font-family "Karrik" is correctly applied to all text elements in the loader.
+- [x] Task: Conductor - User Manual Verification 'Loader Stylization - [ ] Task: Conductor - User Manual Verification 'Loader Stylization & Integration' (Protocol in workflow.md) Integration' (Protocol in workflow.md)
 
 ## Phase 3: Verification & Polishing
 Final checks to ensure the transition is smooth and the UI meets the spec.
