@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { extractWorldIdFromUrl, fetchWorldAssets } from './apiService';
 
 describe('apiService', () => {
@@ -41,7 +41,7 @@ describe('apiService', () => {
         }
       };
 
-      (fetch as any).mockResolvedValue({
+      (fetch as Mock).mockResolvedValue({
         ok: true,
         json: () => Promise.resolve(mockResponse)
       });
