@@ -42,6 +42,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
     (state) => state.setWorldAnchorOrientation,
   );
   const updatePortal = useMyStore((state) => state.updatePortal);
+  const requestTeleport = useMyStore((state) => state.requestTeleport);
 
   const [isHovered, setIsHovered] = useState(false);
   const isTransitioning = useRef(false);
@@ -236,6 +237,13 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
         setWorldAnchorOrientation(new THREE.Euler(0, 0, 0));
         setAssets(null);
         setDisplayName("Hub");
+
+        // Reset player position and physics
+        requestTeleport(
+          new THREE.Vector3(0, 0.8, 5),
+          new THREE.Euler(0, 0, 0),
+        );
+
         switchWorld("hub");
       } else {
         // Traveling to a dynamic world
