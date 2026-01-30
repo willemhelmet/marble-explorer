@@ -1,6 +1,6 @@
 import { type WorldAssets } from "../store/worldSlice";
 
-const SERVER_API_BASE = "https://marble-explorer.rcdis.co/api";
+const SERVER_API_BASE = (import.meta.env.VITE_SERVER_URL || "http://localhost:3000") + "/api";
 
 /**
  * Extracts the UUID world_id from a Marble URL.

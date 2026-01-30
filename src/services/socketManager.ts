@@ -64,7 +64,8 @@ class SocketManager {
   public connect() {
     if (this.socket?.connected) return;
 
-    this.socket = io("https://marble-explorer.rcdis.co");
+    const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+    this.socket = io(serverUrl);
 
     this.socket.on("connect", () => {
       const currentWorld = useMyStore.getState().currentWorldId;

@@ -25,16 +25,16 @@ Implement the proxy endpoints on the server.
     - [x] Implement middleware/handlers to catch fetch errors and return appropriate status codes.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: REST Endpoint Implementation' (Protocol in workflow.md) de0cb41
 
-## Phase 3: Client-Side Migration
+## Phase 3: Client-Side Migration [checkpoint: 0b6d5bf]
 Update the frontend to communicate with the new server endpoints.
 
 - [x] Task: Refactor `apiService.ts` 080a9ae
-    - [ ] Update `apiService.ts` to point to the local server's `/api` endpoints.
-    - [ ] Remove API key requirements from the client-side service and UI.
-- [ ] Task: Verify end-to-end flow
-    - [ ] Test generating a world from the client and ensuring it reaches the server, proxies correctly, and returns data.
-    - [ ] Test retrieving an existing world.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Client-Side Migration' (Protocol in workflow.md)
+    - [x] Update `apiService.ts` to point to the local server's `/api` endpoints.
+    - [x] Remove API key requirements from the client-side service and UI.
+- [x] Task: Verify end-to-end flow 080a9ae
+    - [x] Test generating a world from the client and ensuring it reaches the server, proxies correctly, and returns data.
+    - [x] Test retrieving an existing world.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Client-Side Migration' (Protocol in workflow.md) 0b6d5bf
 
 ## Phase 4: Verification and Cleanup
 Ensure the system is robust and remove any leftover client-side API key logic.
