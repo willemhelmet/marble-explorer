@@ -20,7 +20,9 @@ export const RemotePlayer = ({ player }: { player: RemotePlayerType }) => {
     if (bodyRef.current) {
       // Extract Yaw from player quaternion
       const euler = new Euler().setFromQuaternion(player.rotation, "YXZ");
-      const targetYaw = new Quaternion().setFromEuler(new Euler(0, euler.y, 0));
+      const targetYaw = new Quaternion().setFromEuler(
+        new Euler(0, euler.y, 0, "YXZ"),
+      );
       bodyRef.current.quaternion.slerp(targetYaw, smoothing * delta);
     }
 
@@ -29,7 +31,7 @@ export const RemotePlayer = ({ player }: { player: RemotePlayerType }) => {
       // Extract Pitch from player quaternion
       const euler = new Euler().setFromQuaternion(player.rotation, "YXZ");
       const targetPitch = new Quaternion().setFromEuler(
-        new Euler(euler.x, 0, 0),
+        new Euler(euler.x, 0, 0, "YXZ"),
       );
       headRef.current.quaternion.slerp(targetPitch, smoothing * delta);
     }

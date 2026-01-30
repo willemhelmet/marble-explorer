@@ -160,12 +160,11 @@ class SocketManager {
 
   public sendMovement(position: Vector3, rotation: Quaternion) {
     if (!this.socket) return;
-    this.socket.emit("move", position.toArray(), [
-      rotation.x,
-      rotation.y,
-      rotation.z,
-      rotation.w,
-    ]);
+    this.socket.emit(
+      "move",
+      position.toArray(),
+      rotation.toArray() as [number, number, number, number],
+    );
   }
 
   public createPortal(

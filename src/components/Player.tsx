@@ -36,6 +36,7 @@ export const Player = () => {
       camera.quaternion.copy(rotation);
 
       // 4. Immediately sync movement to server so others see the teleport result instantly
+      characterStatus.position.copy(position);
       socketManager.sendMovement(position, rotation);
 
       // 5. Consume the request
