@@ -8,7 +8,7 @@ Transition the server from a standalone Socket.io instance to an Express-integra
 - [x] Task: Install Express and setup basic server structure f8ea009
     - [ ] Install `express` and `cors` dependencies in `marble-explorer-server`.
     - [ ] Refactor `server.js` to use an Express app to host the Socket.io server.
-- [ ] Task: Configure Environment Variables
+- [x] Task: Configure Environment Variables 920ddbb
     - [ ] Add `dotenv` to the server.
     - [ ] Implement a check for `MARBLE_API_KEY` on startup.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Server Infrastructure Update' (Protocol in workflow.md)
