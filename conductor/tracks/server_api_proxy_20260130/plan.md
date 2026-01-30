@@ -16,7 +16,7 @@ Transition the server from a standalone Socket.io instance to an Express-integra
 ## Phase 2: REST Endpoint Implementation
 Implement the proxy endpoints on the server.
 
-- [ ] Task: Create proxy logic for Marble API
+- [x] Task: Create proxy logic for Marble API cf4bbc9
     - [ ] Implement `POST /api/worlds` to handle generation requests.
     - [ ] Implement `GET /api/worlds/:id` to handle retrieval requests.
     - [ ] Ensure the `Authorization` header with the `MARBLE_API_KEY` is injected into outbound requests.
