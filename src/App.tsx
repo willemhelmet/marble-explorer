@@ -68,7 +68,6 @@ function App() {
   const pause = useMyStore((state) => state.pause);
   const resume = useMyStore((state) => state.resume);
   const editingPortal = useMyStore((state) => state.editingPortal);
-  const displayName = useMyStore((state) => state.displayName);
 
   useEffect(() => {
     socketManager.connect();
