@@ -2,16 +2,16 @@
 
 This plan outlines the steps to transition Marble API calls from the client to a server-side proxy to centralize API key management and ensure cross-user world accessibility.
 
-## Phase 1: Server Infrastructure Update
+## Phase 1: Server Infrastructure Update [checkpoint: 665b98c]
 Transition the server from a standalone Socket.io instance to an Express-integrated server.
 
 - [x] Task: Install Express and setup basic server structure f8ea009
-    - [ ] Install `express` and `cors` dependencies in `marble-explorer-server`.
-    - [ ] Refactor `server.js` to use an Express app to host the Socket.io server.
+    - [x] Install `express` and `cors` dependencies in `marble-explorer-server`.
+    - [x] Refactor `server.js` to use an Express app to host the Socket.io server.
 - [x] Task: Configure Environment Variables 920ddbb
-    - [ ] Add `dotenv` to the server.
-    - [ ] Implement a check for `MARBLE_API_KEY` on startup.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Server Infrastructure Update' (Protocol in workflow.md)
+    - [x] Add `dotenv` to the server.
+    - [x] Implement a check for `MARBLE_API_KEY` on startup.
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Server Infrastructure Update' (Protocol in workflow.md) 665b98c
 
 ## Phase 2: REST Endpoint Implementation
 Implement the proxy endpoints on the server.
