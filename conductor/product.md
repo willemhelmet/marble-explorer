@@ -16,9 +16,10 @@ This project is a personal technical demo designed to explore the integration of
 - **Diegetic Portal UI:** A floating 3D procedural Gaussian splat sphere that, when clicked, opens a 2D UI for URL input.
 - **Immersive Hub Environment:** A high-quality local Gaussian splat (`marble-explorer-lobby.spz`) serves as the central hub, replacing the previous grid placeholder.
 - **Diegetic Hub Branding:** A procedural text splat ("Marble Explorer") floating within the hub environment, providing an immersive title experience.
-- **Dynamic API Interaction:** Real-time fetching of world data (splat, mesh, pano) upon URL confirmation.
+- **Dynamic API Interaction:** Secure, server-side proxying of world data (splat, mesh, pano) upon URL confirmation, centralizing API key management.
 - **Visual State Feedback:** The procedural portal sphere undergoes visual color transformations and dynamic, noise-driven idle animations (pulsing, rippling) to reflect the API's current status and react to user interaction.
 - **World Registry & Persistent Multi-Portal Navigation:** A multiplayer system that manages portals across worlds, allowing users to create portals that persist in a central database and are shared across all connected clients.
+- **Centralized API Security:** All Marble API requests are handled by the server, ensuring that a single API key provides access for all connected users, regardless of who created the world.
 - **Seamless World Transition:** The portal displays the fetched panorama image once loading is complete.
 - **Minimalist Loading Experience:** A sleek, solid black loading screen utilizing the project's custom typography (Karrik) and a subtle progress indicator to maintain immersion during world transitions.
 - **Procedural World Reveal:** Upon entering a new world, the environment is revealed via a dynamic, player-centric expansion animation with a glowing edge, replacing instant scene switching.

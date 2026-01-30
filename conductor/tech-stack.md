@@ -6,8 +6,9 @@
 - **Build Tool:** [Vite](https://vitejs.dev/) - Fast development server and build pipeline.
 
 ## Backend & Real-time
-- **Server:** [Node.js](https://nodejs.org/) - JavaScript runtime for the multiplayer backend.
+- **Server:** [Node.js](https://nodejs.org/) with [Express](https://expressjs.com/) - Integrated REST and WebSocket backend.
 - **Real-time Communication:** [Socket.IO](https://socket.io/) - For bi-directional, event-based communication.
+- **API Proxy:** Built-in proxy for Marble API calls using `fetch`.
 - **Database:** [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) - High-performance, synchronous SQLite library for persistent storage.
 
 ## 3D Rendering & Physics
