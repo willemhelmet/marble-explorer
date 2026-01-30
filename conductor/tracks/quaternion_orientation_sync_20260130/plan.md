@@ -27,11 +27,11 @@ Fix the orientation offset bug during hub return.
     - [x] Verify that the immediate `sendMovement` call after teleport propagates the correct orientation.
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Hub Reset Refinement' (Protocol in workflow.md)
 
-## Phase 4: Verification and Cleanup
+## Phase 4: Verification and Cleanup [checkpoint: d19c5b2]
 Ensure no regressions and stable synchronization.
 
-- [ ] Task: Multi-client testing
-    - [ ] Open two browser windows.
-    - [ ] Test looking up/down (gimbal lock check).
-    - [ ] Test returning to hub and verify avatar orientation in the second window.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Verification and Cleanup' (Protocol in workflow.md)
+- [x] Task: Multi-client testing d19c5b2
+    - [x] Open two browser windows.
+    - [x] Test looking up/down (gimbal lock check).
+    - [x] Test returning to hub and verify avatar orientation in the second window.
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Verification and Cleanup' (Protocol in workflow.md) d19c5b2
