@@ -3,18 +3,17 @@
 ## Phase 1: Research and Infrastructure
 Verify how `bvhecctrl` handles manual teleportation and velocity resets.
 
-- [ ] Task: Investigate `bvhecctrl` API
-    - [ ] Check if `characterStatus` or `BVHEcctrl` props allow for direct position/velocity overrides.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Research and Infrastructure' (Protocol in workflow.md)
-
-## Phase 2: Implementation
-Update the portal navigation logic to include player and physics resets.
-
+- [x] Task: Investigate `bvhecctrl` API 95dd5fa
+    - [x] Check if `characterStatus` or `BVHEcctrl` props allow for direct position/velocity overrides.
+- [ ] Task: Update Store for Teleportation
+    - [ ] Add `teleportRequest` to `PlayerSlice`.
+    - [ ] Add `requestTeleport` action.
+- [ ] Task: Update `Player.tsx`
+    - [ ] Add `ref` to `BVHEcctrl`.
+    - [ ] Listen for `teleportRequest` in a `useEffect`.
+    - [ ] Perform teleport (set position, reset velocity, reset rotation).
 - [ ] Task: Update `Portal.tsx`
-    - [ ] Modify `handleNavigation` to teleport the player when `portal.url === "hub"`.
-    - [ ] Implement rotation reset.
-    - [ ] Implement velocity/physics reset using `bvhecctrl` methods.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Implementation' (Protocol in workflow.md)
+    - [ ] Call `requestTeleport` when navigating to `"hub"`.
 
 ## Phase 3: Verification
 Verify the reset logic works correctly across different worlds.
