@@ -20,7 +20,7 @@ Implement the proxy endpoints on the server.
     - [ ] Implement `POST /api/worlds` to handle generation requests.
     - [ ] Implement `GET /api/worlds/:id` to handle retrieval requests.
     - [ ] Ensure the `Authorization` header with the `MARBLE_API_KEY` is injected into outbound requests.
-- [ ] Task: Implement error handling and status forwarding
+- [x] Task: Implement error handling and status forwarding fed29f0
     - [ ] Write tests to verify that Marble API errors are correctly proxied to the client.
     - [ ] Implement middleware/handlers to catch fetch errors and return appropriate status codes.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: REST Endpoint Implementation' (Protocol in workflow.md)
