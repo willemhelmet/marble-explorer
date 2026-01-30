@@ -15,7 +15,7 @@ import { MobileControls } from "./components/ui/MobileControls.tsx";
 import { ControlsManager } from "./components/ControlsManager.tsx";
 import { useMemo, useEffect } from "react";
 import { socketManager } from "./services/socketManager";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
 const loaderStyles: { [key: string]: CSSProperties } = {
   container: {
