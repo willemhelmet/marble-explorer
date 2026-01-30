@@ -1,4 +1,4 @@
-# Track splat_reveal_dyn_20260126 Context
+# Track revamped_loading_screen_20260129 Context
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)

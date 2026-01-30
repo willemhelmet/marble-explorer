@@ -248,6 +248,7 @@ export const Portal = ({ portal }: { portal: PortalType }) => {
             portal.url,
             apiKey,
           );
+          console.log(`[Portal] Fetched assets for "${displayName}" (${portal.url})`);
 
           // 2. Atomic update of world state
           // We anchor the new world to the player's EXACT absolute position
