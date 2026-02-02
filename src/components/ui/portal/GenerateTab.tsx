@@ -49,19 +49,20 @@ export const GenerateTab = ({ onEngaged, onCancel }: GenerateTabProps) => {
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="font-mono text-sm font-bold uppercase text-neutral-400">
-          Upload Reference Image
-        </label>
+      <div className="flex flex-col gap-2 opacity-50 grayscale">
+        <div className="flex items-center justify-between">
+          <label className="font-mono text-sm font-bold uppercase text-neutral-400">
+            Upload Reference Image
+          </label>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+            Coming Soon
+          </span>
+        </div>
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => {
-            if (e.target.files && e.target.files[0]) {
-              setImage(e.target.files[0]);
-            }
-          }}
-          className="w-full border border-neutral-700 bg-neutral-900 px-4 py-3 font-mono text-white text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700"
+          disabled
+          className="w-full border border-neutral-700 bg-neutral-900 px-4 py-3 font-mono text-white text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-neutral-800 file:text-white cursor-not-allowed"
         />
       </div>
 
