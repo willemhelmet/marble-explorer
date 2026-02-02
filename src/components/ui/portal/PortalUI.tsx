@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useMyStore } from "../../../store/store";
-import { fetchWorldAssets } from "../../../services/apiService";
 import { socketManager } from "../../../services/socketManager";
 import { characterStatus } from "bvhecctrl";
 import { Euler, Quaternion, Vector3 } from "three";
-import { ConnectTab } from "./ConnectTab";
 import { GenerateTab } from "./GenerateTab";
 import { ManageTab } from "./ManageTab";
 import { PortalTabs, type Tab } from "./PortalTabs";
@@ -20,23 +18,9 @@ export const PortalUI = () => {
 
   // Restore selectors for Edit Mode
   const editingPortal = useMyStore((state) => state.editingPortal);
-  const worldRegistry = useMyStore((state) => state.worldRegistry);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
 
-  const [activeTab, setActiveTab] = useState<Tab>("connect");
-
-  const [initialUrl] = useState(() => {
-    if (editingPortal) {
-      const { worldId, portalId } = editingPortal;
-      const existing = worldRegistry[worldId]?.portals.find(
-        (p) => p.id === portalId,
-      );
-      if (existing && existing.url) {
-        return existing.url;
-      }
-    }
-    return "";
-  });
+  const [activeTab, setActiveTab] = useState<Tab>("remix");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -48,75 +32,6 @@ export const PortalUI = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [pause]);
-
-  const handleConnect = async (url: string) => {
-    if (!url.trim()) return;
-
-    let targetPos: Vector3;
-    let targetRot: number;
-
-    if (editingPortal) {
-      // --- EDIT MODE ---
-      const { worldId, portalId } = editingPortal;
-      const existing = worldRegistry[worldId]?.portals.find(
-        (p) => p.id === portalId,
-      );
-
-      if (!existing) {
-        closePortalUI();
-        return;
-      }
-
-      targetPos = existing.position;
-      targetRot = existing.rotationY;
-
-      socketManager.removePortal(worldId, portalId);
-    } else {
-      // --- CREATE MODE ---
-      const userQuat = new Quaternion(
-        characterStatus.quaternion.x,
-        characterStatus.quaternion.y,
-        characterStatus.quaternion.z,
-        characterStatus.quaternion.w,
-      );
-
-      const userEuler = new Euler(0, 0, 0, "YXZ");
-      userEuler.setFromQuaternion(userQuat);
-      targetRot = userEuler.y;
-
-      const direction = new Vector3(0, 0, 1);
-      direction.applyQuaternion(userQuat);
-      direction.y = 0;
-      direction.normalize();
-      direction.multiplyScalar(1.5);
-
-      const globalSpawnPos = new Vector3(
-        characterStatus.position.x,
-        characterStatus.position.y,
-        characterStatus.position.z,
-      ).add(direction);
-
-      targetPos = globalSpawnPos.clone().sub(worldAnchorPosition);
-      const worldQuat = new Quaternion().setFromEuler(worldAnchorOrientation);
-      worldQuat.invert();
-      targetPos.applyQuaternion(worldQuat);
-    }
-
-    socketManager.createPortal(targetPos, targetRot, url);
-
-    setEditingPortal(null, null);
-    closePortalUI();
-    setError(null);
-
-    try {
-      await fetchWorldAssets(url);
-    } catch (err: unknown) {
-      console.error("Portal Error:", err);
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to fetch world assets";
-      setError(errorMessage);
-    }
-  };
 
   const handleEngaged = (operationId: string) => {
     if (editingPortal) {
@@ -195,17 +110,23 @@ export const PortalUI = () => {
         {/* Content */}
         <div className="p-8">
           <h2 className="mb-6 text-center font-mono text-2xl font-bold uppercase tracking-widest text-white">
-            {activeTab === "connect" && "Connect World"}
+            {activeTab === "remix" && "Remix World"}
             {activeTab === "generate" && "Generate World"}
             {activeTab === "manage" && "Manage Portal"}
           </h2>
 
-          {activeTab === "connect" && (
-            <ConnectTab
-              onCancel={handleCancel}
-              onSubmit={handleConnect}
-              initialUrl={initialUrl}
-            />
+          {activeTab === "remix" && (
+            <div className="flex flex-col items-center justify-center py-12">
+              <span className="font-mono text-sm font-bold uppercase tracking-widest text-neutral-500">
+                Coming Soon
+              </span>
+              <button
+                onClick={handleCancel}
+                className="mt-8 w-full border border-neutral-600 bg-black px-6 py-3 font-mono text-sm font-bold uppercase text-white transition-colors hover:bg-neutral-900"
+              >
+                Abort
+              </button>
+            </div>
           )}
 
           {activeTab === "generate" && (
