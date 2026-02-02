@@ -1,4 +1,4 @@
-export type Tab = "remix" | "generate" | "manage";
+export type Tab = "generate" | "remix" | "connect" | "manage";
 
 interface PortalTabsProps {
   activeTab: Tab;
@@ -28,6 +28,12 @@ export const PortalTabs = ({ activeTab, onTabChange, showManage }: PortalTabsPro
         className={getTabClass("remix")}
       >
         Remix
+      </button>
+      <button
+        onClick={() => onTabChange("connect")}
+        className={getTabClass("connect")}
+      >
+        Connect
       </button>
       {showManage && (
         <button
