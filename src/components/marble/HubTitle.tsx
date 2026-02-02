@@ -23,12 +23,12 @@ const HubTitleInner = (props: Partial<ThreeElements["primitive"]>) => {
   const [data] = useState(() => {
     const uTime = new dyno.DynoFloat({ value: 0 });
     const splat = textSplats({
-      text: "Marble Explorer",
+      text: "Marble\nExplorer",
       font: '"Karrik", Arial',
       color: new THREE.Color(1, 1, 1),
       rgb: new THREE.Color(1, 1, 1),
-      fontSize: 64,
-      textAlign: "center",
+      fontSize: 48,
+      textAlign: "right",
       dotRadius: 0.5,
     });
 
