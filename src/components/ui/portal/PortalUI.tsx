@@ -20,7 +20,7 @@ export const PortalUI = () => {
   const editingPortal = useMyStore((state) => state.editingPortal);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
 
-  const [activeTab, setActiveTab] = useState<Tab>("remix");
+  const [activeTab, setActiveTab] = useState<Tab>("generate");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

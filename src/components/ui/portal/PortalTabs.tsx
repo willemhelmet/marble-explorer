@@ -18,16 +18,16 @@ export const PortalTabs = ({ activeTab, onTabChange, showManage }: PortalTabsPro
   return (
     <div className="flex border-b border-neutral-800">
       <button
-        onClick={() => onTabChange("remix")}
-        className={getTabClass("remix")}
-      >
-        Remix
-      </button>
-      <button
         onClick={() => onTabChange("generate")}
         className={getTabClass("generate")}
       >
         Generate
+      </button>
+      <button
+        onClick={() => onTabChange("remix")}
+        className={getTabClass("remix")}
+      >
+        Remix
       </button>
       {showManage && (
         <button
