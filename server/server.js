@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { initDB, getPortalsForRoom, createPortal, removePortal } from "./db.js";
+import { initDB, getPortalsForRoom, createPortal, updatePortal, removePortal } from "./db.js";
 
 // Initialize database
 const dbPath = process.env.DB_PATH || "disco.db";
@@ -140,6 +140,20 @@ io.on("connection", (socket) => {
       io.to(portalData.from_scene).emit("portal_added", newPortal);
     } catch (error) {
       console.error("Error creating portal:", error.message);
+      socket.emit("portal_error", error.message);
+    }
+  });
+
+  socket.on("update_portal", ({ id, updates, room_name }) => {
+    console.log(`[${socket.id}] update_portal request:`, { id, updates, room_name });
+    try {
+      const updated = updatePortal(id, updates);
+      if (updated) {
+        // Broadcast to all clients in the scene
+        io.to(room_name).emit("portal_updated", { id, updates });
+      }
+    } catch (error) {
+      console.error("Error updating portal:", error.message);
       socket.emit("portal_error", error.message);
     }
   });
