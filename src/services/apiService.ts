@@ -82,81 +82,40 @@ export const fetchWorldAssets = async (
   }
 };
 
-// --- Media Asset Upload Interfaces ---
-export type MediaAssetKind = "image" | "video";
+// --- Base64 Image Helper ---
+const MAX_IMAGE_DIMENSION = 1024;
+const JPEG_QUALITY = 0.8;
 
-interface MediaAssetPrepareUploadRequest {
-  file_name: string;
-  extension: string;
-  kind: MediaAssetKind;
-}
+function compressAndEncodeImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
 
-interface UploadInfo {
-  upload_url: string;
-  upload_method: string;
-  required_headers: Record<string, string>;
-}
+      let { width, height } = img;
+      if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
+        const scale = MAX_IMAGE_DIMENSION / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
 
-interface MediaAsset {
-  id: string;
-}
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, width, height);
 
-interface MediaAssetPrepareUploadResponse {
-  media_asset: MediaAsset;
-  upload_info: UploadInfo;
-}
-
-/**
- * Uploads a media asset to the Marble API in two steps:
- * 1. Prepare upload (get signed URL) via server proxy.
- * 2. Upload file content to signed URL (direct to storage).
- */
-export async function uploadMediaAsset(
-  file: File | Blob,
-  fileName: string,
-  kind: MediaAssetKind,
-): Promise<string> {
-  const extension = fileName.split(".").pop() || "jpg";
-
-  // 1. Prepare Upload via Server Proxy
-  const prepareUrl = `${SERVER_API_BASE}/media-assets/prepare_upload`;
-  const preparePayload: MediaAssetPrepareUploadRequest = {
-    file_name: fileName,
-    extension: extension,
-    kind: kind,
-  };
-
-  const prepareRes = await fetch(prepareUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(preparePayload),
+      const dataUrl = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
+      // Strip the data:image/jpeg;base64, prefix
+      resolve(dataUrl.split(",")[1]);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image"));
+    };
+    img.src = url;
   });
-
-  if (!prepareRes.ok) {
-    throw new Error(`Failed to prepare upload: ${prepareRes.statusText}`);
-  }
-
-  const prepareData: MediaAssetPrepareUploadResponse = await prepareRes.json();
-  const { media_asset, upload_info } = prepareData;
-
-  // 2. Upload to Signed URL (Direct to storage, bypasses server)
-  const uploadRes = await fetch(upload_info.upload_url, {
-    method: upload_info.upload_method,
-    headers: {
-      ...upload_info.required_headers,
-    },
-    body: file,
-  });
-
-  if (!uploadRes.ok) {
-    throw new Error(
-      `Failed to upload media asset to storage: ${uploadRes.statusText}`,
-    );
-  }
-
-  return media_asset.id;
 }
 
 // --- World Generation Interfaces ---
@@ -169,8 +128,9 @@ export interface World {
 }
 
 interface ImagePrompt {
-  source: "media_asset";
-  media_asset_id: string;
+  source: "data_base64";
+  data_base64: string;
+  extension?: string;
 }
 
 interface WorldPrompt {
@@ -195,39 +155,28 @@ export interface GenerateWorldOptions {
 export const generateWorld = async (
   options: GenerateWorldOptions,
 ): Promise<GetOperationResponse<World>> => {
-  let mediaAssetId: string | undefined;
-
-  if (options.image) {
-    mediaAssetId = await uploadMediaAsset(
-      options.image,
-      options.image.name,
-      "image",
-    );
-  }
-
   const generateUrl = `${SERVER_API_BASE}/worlds/generate`;
   const generatePayload: GenerateWorldRequest = {
     display_name: options.displayName || options.image?.name || "New World",
     model: "Marble 0.1-plus",
     world_prompt: {
-      type: "text", // Default to text
+      type: "text",
       text_prompt: options.prompt || "A beautiful landscape",
     },
   };
 
-  if (mediaAssetId) {
+  if (options.image) {
+    const base64 = await compressAndEncodeImage(options.image);
     generatePayload.world_prompt = {
       type: "image",
       image_prompt: {
-        source: "media_asset",
-        media_asset_id: mediaAssetId,
+        source: "data_base64",
+        data_base64: base64,
+        extension: "jpg",
       },
       text_prompt: options.prompt || undefined,
       is_pano: false,
     };
-  } else {
-    generatePayload.world_prompt.text_prompt =
-      options.prompt || "A beautiful landscape";
   }
 
   const res = await fetch(generateUrl, {
