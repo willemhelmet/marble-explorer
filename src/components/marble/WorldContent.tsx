@@ -3,10 +3,12 @@ import { useThree } from "@react-three/fiber";
 import { SparkRenderer } from "./SparkRenderer";
 import { Hub } from "./Hub";
 import { Splat } from "./Splat";
+import { RemixTransition } from "./RemixTransition";
 //import { WorldCollider } from "./WorldCollider";
 import { Portal } from "../Portal";
 import { Vector3, Euler } from "three";
 import type { WorldAssets, World as WorldData } from "../../store/worldSlice";
+import type { RemixTransitionState } from "../../store/remixSlice";
 
 interface WorldContentProps {
   currentWorldId: string;
@@ -14,6 +16,7 @@ interface WorldContentProps {
   worldAnchorPos: Vector3;
   worldAnchorRot: Euler;
   currentWorld: WorldData | undefined;
+  remixTransition: RemixTransitionState;
 }
 
 /**
@@ -30,6 +33,7 @@ export const WorldContent = memo(
     worldAnchorPos,
     worldAnchorRot,
     currentWorld,
+    remixTransition,
   }: WorldContentProps) => {
     const renderer = useThree((state) => state.gl);
     const isHub = currentWorldId === "hub";
@@ -49,6 +53,8 @@ export const WorldContent = memo(
           {/* Geometry & Physics */}
           {isHub ? (
             <Hub />
+          ) : remixTransition.isActive ? (
+            <RemixTransition />
           ) : (
             assets && (
               <Splat

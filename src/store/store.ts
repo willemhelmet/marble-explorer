@@ -3,12 +3,14 @@ import { type GameSlice, createGameSlice } from "./gameSlice";
 //import { type PortalSlice, createPortalSlice } from "./portalSlice";
 import { type WorldSlice, createWorldSlice } from "./worldSlice";
 import { type PlayerSlice, createPlayerSlice } from "./playerSlice";
+import { type RemixSlice, createRemixSlice } from "./remixSlice";
 
-export type StoreState = GameSlice & WorldSlice & PlayerSlice;
+export type StoreState = GameSlice & WorldSlice & PlayerSlice & RemixSlice;
 
 export const useMyStore = create<StoreState>()((...a) => ({
   ...createGameSlice(...a),
   //...createPortalSlice(...a),
   ...createWorldSlice(...a),
   ...createPlayerSlice(...a),
+  ...createRemixSlice(...a),
 }));

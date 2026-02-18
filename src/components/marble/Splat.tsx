@@ -11,6 +11,7 @@ import { useGSAP } from "@gsap/react";
 export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
   const assets = useMyStore((state) => state.assets);
   const worldAnchorPosition = useMyStore((state) => state.worldAnchorPosition);
+  const skipNextReveal = useMyStore((state) => state.skipNextReveal);
   const splatUrl = assets?.splatUrl;
 
   if (!splatUrl) return null;
@@ -22,6 +23,7 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
       key={splatUrl}
       splatUrl={splatUrl}
       worldAnchorPosition={worldAnchorPosition}
+      skipReveal={skipNextReveal}
       {...props}
     />
   );
@@ -30,11 +32,14 @@ export const Splat = (props: Partial<ThreeElements["primitive"]>) => {
 const SplatInner = ({
   splatUrl,
   worldAnchorPosition,
+  skipReveal,
   ...props
 }: {
   splatUrl: string;
   worldAnchorPosition: THREE.Vector3 | null;
+  skipReveal?: boolean;
 } & Partial<ThreeElements["primitive"]>) => {
+  const setSkipNextReveal = useMyStore((state) => state.setSkipNextReveal);
   const revealRef = useRef({ progress: 0 });
   const [animationStarted, setAnimationStarted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -77,6 +82,7 @@ const SplatInner = ({
   } = data;
 
   const originUniformRef = useRef(originUniform);
+  const revealProgressUniformRef = useRef(revealProgressUniform);
 
   // Update origin uniform when worldAnchorPosition changes
   useEffect(() => {
@@ -116,6 +122,15 @@ const SplatInner = ({
   useGSAP(
     (_context, contextSafe) => {
       if (!splat || !isLoaded || animationStarted || !contextSafe) return;
+
+      // Skip reveal if coming from a remix transition
+      if (skipReveal) {
+        revealProgressUniformRef.current.value = 1.0;
+        revealRef.current.progress = 1.0;
+        setAnimationStarted(true);
+        setSkipNextReveal(false);
+        return;
+      }
 
       const startReveal = contextSafe(() => {
         // Ensure origin is as accurate as possible before calculating radius
@@ -185,7 +200,7 @@ const SplatInner = ({
       startReveal();
     },
     {
-      dependencies: [splat, isLoaded, animationStarted, worldAnchorPosition],
+      dependencies: [splat, isLoaded, animationStarted, worldAnchorPosition, skipReveal],
     },
   );
 

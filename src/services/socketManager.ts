@@ -24,6 +24,15 @@ interface ServerPortal {
   pending_operation_id: string | null;
 }
 
+interface ServerRemix {
+  id: number;
+  scene_name: string;
+  remix_world_id: string;
+  name: string;
+  prompt: string | null;
+  created_at: string;
+}
+
 interface ServerToClientEvents {
   players: (players: RawPlayer[]) => void;
   portals: (portals: ServerPortal[]) => void;
@@ -31,6 +40,10 @@ interface ServerToClientEvents {
   portal_updated: (data: { id: number; updates: Partial<ServerPortal> }) => void;
   portal_removed: (id: number) => void;
   portal_error: (msg: string) => void;
+  remixes: (remixes: ServerRemix[]) => void;
+  remix_added: (remix: ServerRemix) => void;
+  remix_removed: (id: number) => void;
+  remix_error: (msg: string) => void;
 }
 
 interface ClientToServerEvents {
@@ -55,6 +68,13 @@ interface ClientToServerEvents {
     room_name: string;
   }) => void;
   remove_portal: (data: { id: number; room_name: string }) => void;
+  create_remix: (remix: {
+    scene_name: string;
+    remix_world_id: string;
+    name: string;
+    prompt?: string;
+  }) => void;
+  remove_remix: (data: { id: number; room_name: string }) => void;
 }
 
 class SocketManager {
@@ -140,6 +160,34 @@ class SocketManager {
     this.socket.on("portal_error", (msg) => {
       console.error("Server Portal Error:", msg);
     });
+
+    // --- Remix Events ---
+    this.socket.on("remixes", (serverRemixes) => {
+      const mapped = serverRemixes.map((r) => ({
+        id: String(r.id),
+        name: r.name,
+        prompt: r.prompt || undefined,
+        remoteId: r.remix_world_id,
+      }));
+      useMyStore.getState().setRemixes(mapped);
+    });
+
+    this.socket.on("remix_added", (r) => {
+      useMyStore.getState().addRemix({
+        id: String(r.id),
+        name: r.name,
+        prompt: r.prompt || undefined,
+        remoteId: r.remix_world_id,
+      });
+    });
+
+    this.socket.on("remix_removed", (id) => {
+      useMyStore.getState().removeRemix(String(id));
+    });
+
+    this.socket.on("remix_error", (msg) => {
+      console.error("Server Remix Error:", msg);
+    });
   }
 
   public disconnect() {
@@ -214,6 +262,29 @@ class SocketManager {
     if (!this.socket) return;
     this.socket.emit("remove_portal", {
       id: Number(portalId),
+      room_name: worldId,
+    });
+  }
+
+  public createRemix(
+    sceneName: string,
+    remixWorldId: string,
+    name: string,
+    prompt?: string,
+  ) {
+    if (!this.socket) return;
+    this.socket.emit("create_remix", {
+      scene_name: sceneName,
+      remix_world_id: remixWorldId,
+      name,
+      prompt,
+    });
+  }
+
+  public removeRemix(worldId: string, remixId: string) {
+    if (!this.socket) return;
+    this.socket.emit("remove_remix", {
+      id: Number(remixId),
       room_name: worldId,
     });
   }

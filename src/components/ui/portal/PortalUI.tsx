@@ -7,6 +7,7 @@ import { Euler, Quaternion, Vector3 } from "three";
 import { ConnectTab } from "./ConnectTab";
 import { GenerateTab } from "./GenerateTab";
 import { ManageTab } from "./ManageTab";
+import { RemixTab } from "./RemixTab";
 import { PortalTabs, type Tab } from "./PortalTabs";
 
 export const PortalUI = () => {
@@ -22,8 +23,9 @@ export const PortalUI = () => {
   const editingPortal = useMyStore((state) => state.editingPortal);
   const worldRegistry = useMyStore((state) => state.worldRegistry);
   const setEditingPortal = useMyStore((state) => state.setEditingPortal);
+  const portalUIInitialTab = useMyStore((state) => state.portalUIInitialTab);
 
-  const [activeTab, setActiveTab] = useState<Tab>("generate");
+  const [activeTab, setActiveTab] = useState<Tab>(portalUIInitialTab);
 
   const [initialUrl] = useState(() => {
     if (editingPortal) {
@@ -206,17 +208,7 @@ export const PortalUI = () => {
           )}
 
           {activeTab === "remix" && (
-            <div className="flex flex-col items-center justify-center py-12">
-              <span className="font-mono text-sm font-bold uppercase tracking-widest text-neutral-500">
-                Coming Soon
-              </span>
-              <button
-                onClick={handleCancel}
-                className="mt-8 w-full border border-neutral-600 bg-black px-6 py-3 font-mono text-sm font-bold uppercase text-white transition-colors hover:bg-neutral-900"
-              >
-                Abort
-              </button>
-            </div>
+            <RemixTab onCancel={handleCancel} />
           )}
 
           {activeTab === "connect" && (

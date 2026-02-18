@@ -17,6 +17,7 @@ export const Scene = () => {
   const currentWorld = useMyStore(
     (state) => state.worldRegistry[state.currentWorldId],
   );
+  const remixTransition = useMyStore((state) => state.remixTransition);
 
   return (
     <>
@@ -30,6 +31,7 @@ export const Scene = () => {
         worldAnchorPos={worldAnchorPosition}
         worldAnchorRot={worldAnchorRotation}
         currentWorld={currentWorld}
+        remixTransition={remixTransition}
       />
 
       <FloorCollider />

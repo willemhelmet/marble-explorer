@@ -39,5 +39,16 @@ export const PortalSpawner = () => {
     openPortalUI,
   ]);
 
+  useEffect(() => {
+    return subscribeKeys(
+      (state) => state.remix,
+      (pressed) => {
+        if (pressed && status === "playing") {
+          openPortalUI("remix");
+        }
+      },
+    );
+  }, [subscribeKeys, status, openPortalUI]);
+
   return null;
 };

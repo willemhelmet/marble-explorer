@@ -2,6 +2,73 @@ import { type WorldAssets } from "../store/worldSlice";
 
 const SERVER_API_BASE = (import.meta.env.VITE_SERVER_URL || "https://marble-explorer.rcdis.co") + "/api";
 
+// --- Rate Limiting / Retry ---
+async function requestWithRetry<T>(
+  requestFn: () => Promise<T>,
+  maxRetries = 3,
+): Promise<T> {
+  let lastError: unknown;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await requestFn();
+    } catch (err: unknown) {
+      lastError = err;
+      const status = (err as { status?: number }).status;
+      if (status === 429 && i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+        console.warn(
+          `[apiService] Rate limited (429). Retrying in ${delay.toFixed(0)}ms...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastError;
+}
+
+// --- Metadata Cache (immutable world data, safe to cache indefinitely) ---
+const metadataCache = new Map<string, unknown>();
+const metadataInflight = new Map<string, Promise<unknown>>();
+
+export const fetchWorldMetadata = async (worldId: string): Promise<unknown> => {
+  const cached = metadataCache.get(worldId);
+  if (cached) return cached;
+
+  const inflight = metadataInflight.get(worldId);
+  if (inflight) return inflight;
+
+  const promise = requestWithRetry(async () => {
+    const response = await fetch(`${SERVER_API_BASE}/worlds/${worldId}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const error = new Error(
+        `API Error: ${response.status} ${response.statusText}`,
+      );
+      (error as unknown as { status: number }).status = response.status;
+      throw error;
+    }
+
+    return await response.json();
+  })
+    .then((data) => {
+      metadataCache.set(worldId, data);
+      metadataInflight.delete(worldId);
+      return data;
+    })
+    .catch((err) => {
+      metadataInflight.delete(worldId);
+      throw err;
+    });
+
+  metadataInflight.set(worldId, promise);
+  return promise;
+};
+
 /**
  * Extracts the UUID world_id from a Marble URL.
  * Supports standard format: https://marble.worldlabs.ai/world/{uuid}
@@ -40,21 +107,8 @@ export const fetchWorldAssets = async (
   }
 
   try {
-    const response = await fetch(`${SERVER_API_BASE}/worlds/${worldId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status === 401)
-        throw new Error("Unauthorized: Invalid API Key on server");
-      if (response.status === 404) throw new Error("World not found");
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any = await fetchWorldMetadata(worldId);
 
     if (!data.assets || !data.assets.splats || !data.assets.splats.spz_urls) {
       throw new Error("Invalid API Response: Missing assets");
@@ -79,6 +133,21 @@ export const fetchWorldAssets = async (
   } catch (err) {
     console.error("Fetch World Assets Error:", err);
     throw err;
+  }
+};
+
+/**
+ * Fetches thumbnail URL for a world from cached metadata.
+ */
+export const fetchWorldThumbnail = async (
+  worldId: string,
+): Promise<string | null> => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any = await fetchWorldMetadata(worldId);
+    return data.assets?.thumbnail_url || data.assets?.imagery?.pano_url || null;
+  } catch {
+    return null;
   }
 };
 
@@ -179,18 +248,26 @@ export const generateWorld = async (
     };
   }
 
-  const res = await fetch(generateUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(generatePayload),
-  });
+  const res = await requestWithRetry(async () => {
+    const response = await fetch(generateUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(generatePayload),
+    });
 
-  if (!res.ok) {
-    const errorBody = await res.text();
-    throw new Error(`Generation failed: ${res.status} ${errorBody}`);
-  }
+    if (!response.ok) {
+      const errorBody = await response.text();
+      const error = new Error(
+        `Generation failed: ${response.status} ${errorBody}`,
+      );
+      (error as unknown as { status: number }).status = response.status;
+      throw error;
+    }
+
+    return response;
+  });
 
   return await res.json();
 };
@@ -222,22 +299,78 @@ export interface GetOperationResponse<T = unknown> {
 export const getOperation = async <T = unknown>(
   operationId: string,
 ): Promise<GetOperationResponse<T>> => {
-  const response = await fetch(`${SERVER_API_BASE}/operations/${operationId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const res = await requestWithRetry(async () => {
+    const response = await fetch(
+      `${SERVER_API_BASE}/operations/${operationId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const error = new Error(
+        `API Error: ${response.status} ${response.statusText}`,
+      );
+      (error as unknown as { status: number }).status = response.status;
+      throw error;
+    }
+
+    return response;
   });
 
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error("Operation not found");
-    }
-    if (response.status === 401) {
-      throw new Error("Unauthorized: Invalid API Key on server");
-    }
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
-  }
+  return await res.json();
+};
 
-  return await response.json();
+// --- Generate World from Base64 Image (for remix) ---
+export interface GenerateWorldFromImageOptions {
+  prompt: string;
+  imageBase64: string; // raw base64 data (no data URI prefix)
+  displayName?: string;
+  isPano?: boolean;
+}
+
+export const generateWorldFromImage = async (
+  options: GenerateWorldFromImageOptions,
+): Promise<GetOperationResponse<World>> => {
+  const generateUrl = `${SERVER_API_BASE}/worlds/generate`;
+  const generatePayload = {
+    display_name: options.displayName || "Remixed World",
+    model: "Marble 0.1-plus",
+    world_prompt: {
+      type: "image" as const,
+      text_prompt: options.prompt || undefined,
+      image_prompt: {
+        source: "data_base64" as const,
+        data_base64: options.imageBase64,
+        extension: "png",
+      },
+      is_pano: options.isPano ?? true,
+    },
+  };
+
+  const res = await requestWithRetry(async () => {
+    const response = await fetch(generateUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(generatePayload),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      const error = new Error(
+        `Generation failed: ${response.status} ${errorBody}`,
+      );
+      (error as unknown as { status: number }).status = response.status;
+      throw error;
+    }
+
+    return response;
+  });
+
+  return await res.json();
 };
